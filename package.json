@@ -1,0 +1,42 @@
+{
+  "name": "sitemap-parser",
+  "version": "0.0.1",
+  "description": "parser for XML Sitemaps",
+  "homepage": "https://github.com/hawaiianchimp/sitemap-parser",
+  "keywords": [
+    "parse",
+    "sitemap",
+    "xml",
+    "robots.txt",
+    "sitemaps"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hawaiianchimp/sitemap-parser.git"
+  },
+  "author": {
+    "name": "Sean Thomas Burke",
+    "email": "sean@seantburke.com"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha test"
+  },
+  "maintainers": [
+    {
+      "name": "Sean Thomas Burke",
+      "email": "sean@seantburke.com"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "devDependencies": {
+    "mocha": "^1.21.4"
+  },
+  "dependencies": {
+    "request": "^2.40.0",
+    "underscore": "^1.6.0",
+    "xml2js": "^0.4.4"
+  }
+}
