@@ -1,10 +1,9 @@
 ##Sitemap-parser
+
 =================
-
 Parse through sitemaps to get all the urls for your crawler.
-`sitemaps
 
-``Simple Implementation
+####Simple Implementation
 
     var sitemap = require("sitemap-parser");
 
