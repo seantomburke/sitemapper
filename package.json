@@ -28,6 +28,9 @@
       "email": "sean@seantburke.com"
     }
   ],
+  "directories": {
+    "lib": "lib"
+  },
   "engines": {
     "node": ">= 0.6.0"
   },
