@@ -1,19 +1,39 @@
-var assert = require("assert"),
-	Entry = require("../lib/entry");
 
-describe('Array', function(){
-	describe('.indexOf()', function(){
-		it('should equal -1 when the value is not present', function(){
-			assert.equal(-1,[1,2,3].indexOf(5));
-			assert.equal(-1,[1,2,3].indexOf(0));
- 		});
- 	});
-});
+var async = require('async'),
+	assert = require("assert"),
+	should = require("should"),
+	sitemap = require("../lib/sitemap"),
+	isurl = require("is-url");
 
-describe('Entry', function(){
-	describe('()', function(){
-		it('should return json object', function(){
-			console.log(Entry);
-		})
+sitemaps = ['http://www.walmart.com/sitemaps.xml', 'http://www.cbs.com/sitemaps.xml'];
+
+(function(){
+	sitemap.getSites("http://www.cbs.com/sitemaps/show/show_siteMap_index.xml", function(err,sites){
+				sitemaps = sites;
+				sites.should.be.Array;
+			});
+})();
+
+
+var sitemaps;
+describe('sitemap', function(){
+	describe('getSites', function(){
+		it('sites should be an array', function(done){
+			sitemap.getSites("http://www.cbs.com/sitemaps/show/show_siteMap_index.xml", function(err,sites){
+				sitemaps = sites;
+				sites.should.be.Array;
+				done();
+			});
+		});
+	});
+	describe('URL checks', function(){
+		for(key in sitemaps)
+		{
+			(function(site){
+				it(site + ' should be a URL', function(){
+					isurl(site).should.be.true;
+				});
+			})(sitemaps[key]);
+		}
 	});
 });
