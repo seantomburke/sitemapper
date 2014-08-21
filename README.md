@@ -7,9 +7,7 @@ Parse through sitemaps to get all the urls for your crawler.
 
     var sitemap = require("sitemap-parser");
 
-    sitemap.parse("http://www.cbs.com/sitemaps/video/video_sitemap_index.xml", function(err, data){
-    		console.log(data);
-    		//data
-    		//urls
-    });
+	sitemap.getSites("http://www.cbs.com/sitemaps/show/show_siteMap_index.xml", function(err, sites){
+		console.log(err, sites);
+	});
 
