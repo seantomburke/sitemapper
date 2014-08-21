@@ -18,8 +18,15 @@ sitemaps = ['http://www.walmart.com/sitemaps.xml', 'http://www.cbs.com/sitemaps.
 var sitemaps;
 describe('sitemap', function(){
 	describe('getSites', function(){
-		it('sites should be an array', function(done){
+		it('CBS sitemaps should be an array', function(done){
 			sitemap.getSites("http://www.cbs.com/sitemaps/show/show_siteMap_index.xml", function(err,sites){
+				sitemaps = sites;
+				sites.should.be.Array;
+				done();
+			});
+		});
+		it('Walmart sitemaps should be an array', function(done){
+			sitemap.getSites("http://www.walmart.com/sitemap_tp1.xml.gz", function(err,sites){
 				sitemaps = sites;
 				sites.should.be.Array;
 				done();
