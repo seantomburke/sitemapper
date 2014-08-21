@@ -1,22 +1,33 @@
 {
-  "name": "sitemap-parser",
+  "name": "sitemapper",
   "version": "0.0.1",
-  "description": "parser for XML Sitemaps",
-  "homepage": "https://github.com/hawaiianchimp/sitemap-parser",
+  "description": "Parser for XML Sitemaps to be used with Robots.txt and web crawlers",
   "keywords": [
     "parse",
     "sitemap",
     "xml",
     "robots.txt",
-    "sitemaps"
+    "sitemaps",
+    "crawlers",
+    "webcrawler"
   ],
+  "homepage": "http://github.com/hawaiianchimp/sitemap-parser",
+  "bugs": {
+    "url": "http://github.com/hawaiianchimp/sitemap-parser/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "main": "./lib/sitemap",
   "repository": {
     "type": "git",
     "url": "git://github.com/hawaiianchimp/sitemap-parser.git"
   },
   "author": {
     "name": "Sean Thomas Burke",
-    "email": "sean@seantburke.com"
+    "email": "sean@seantburke.com",
+    "url": "http://www.seantburke.com"
   },
   "scripts": {
     "start": "node index.js",
@@ -25,11 +36,13 @@
   "maintainers": [
     {
       "name": "Sean Thomas Burke",
-      "email": "sean@seantburke.com"
+      "email": "sean@seantburke.com",
+      "url": "http://www.seantburke.com"
     }
   ],
   "directories": {
-    "lib": "lib"
+    "lib": "./lib",
+    "test": "./test"
   },
   "engines": {
     "node": ">= 0.6.0"
