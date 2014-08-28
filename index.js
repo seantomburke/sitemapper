@@ -8,6 +8,11 @@ var sitemap = require("./lib/sitemap");
 //  	if(!err)console.log(sites);else console.log(err);
 // });
 
-sitemap.getSites("http://www.rakuten.com/sitemapxml/sitemapindex.xml", function(err,sites){
+sitemap.getSites("http://www.walmart.com/sitemap_ip.xml", function(err,sites){
  	if(!err)console.log(sites);else console.log(err);
 });
+
+// sitemap.getSites("http://www.rakuten.com/sitemapxml/sitemapindex.xml", function(err,sites){
+//  	if(!err)console.log(sites);else console.log(err);
+// });
+
