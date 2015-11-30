@@ -1,6 +1,6 @@
 {
   "name": "sitemapper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Parser for XML Sitemaps to be used with Robots.txt and web crawlers",
   "keywords": [
     "parse",
