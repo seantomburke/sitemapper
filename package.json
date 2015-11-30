@@ -12,6 +12,7 @@
     "webcrawler"
   ],
   "homepage": "http://github.com/hawaiianchimp/sitemap-parser",
+  "tonicExampleFilename": "example.js",
   "bugs": {
     "url": "http://github.com/hawaiianchimp/sitemap-parser/issues"
   },
