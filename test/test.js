@@ -19,6 +19,7 @@ var sitemaps;
 describe('sitemap', function(){
 	describe('getSites', function(){
 		it('CBS sitemaps should be an array', function(done){
+			this.timeout(20000);
 			sitemap.getSites("http://www.cbs.com/sitemaps/show/show_siteMap_index.xml", function(err,sites){
 				sitemaps = sites;
 				sites.should.be.Array;
@@ -26,6 +27,7 @@ describe('sitemap', function(){
 			});
 		});
 		it('Walmart sitemaps should be an array', function(done){
+			this.timeout(20000);
 			sitemap.getSites("http://www.walmart.com/sitemap_tp1.xml.gz", function(err,sites){
 				sitemaps = sites;
 				sites.should.be.Array;
