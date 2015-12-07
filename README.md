@@ -1,4 +1,4 @@
-## Sitemap-parser
+## Sitemap-parser [![Build Status](https://travis-ci.org/hawaiianchimp/sitemap-parser.svg?branch=master)](https://travis-ci.org/hawaiianchimp/sitemap-parser)
 
 Parse through sitemaps to get all the urls for your crawler.
 
