@@ -5,38 +5,57 @@ var async = require('async'),
 	sitemap = require("../lib/sitemap"),
 	isurl = require("is-url");
 
-sitemaps = ['http://www.walmart.com/sitemaps.xml', 'http://www.cbs.com/sitemaps.xml'];
+var sitemaps = ['http://www.walmart.com/sitemaps.xml', 'http://www.cbs.com/sitemaps.xml'];
 
 (function(){
 	sitemap.getSites("http://www.cbs.com/sitemaps/show/show_siteMap_index.xml", function(err,sites){
-				sitemaps = sites;
-				sites.should.be.Array;
+				if(sites){
+					sitemaps = sites;
+					sites.should.be.Array;
+				}
+				else if(err){
+					console.log(err);
+				}
 			});
 })();
-
 
 var sitemaps;
 describe('sitemap', function(){
 	describe('getSites', function(){
+		
 		it('CBS sitemaps should be an array', function(done){
-			this.timeout(20000);
-			sitemap.getSites("http://www.cbs.com/sitemaps/show/show_siteMap_index.xml", function(err,sites){
-				sitemaps = sites;
-				sites.should.be.Array;
-				done();
+			this.timeout(30000);
+			sitemap.getSites("http://www.cbs.com/sitemaps/image/photo_sitemap_index.xml", function(err,sites){
+				if(sites){
+					sitemaps = sites;
+					sites.should.be.Array;
+					done();
+				}
+				else if(err){
+					console.log(err);
+					done();
+				}
 			});
 		});
-		it('Walmart sitemaps should be an array', function(done){
-			this.timeout(20000);
-			sitemap.getSites("http://www.walmart.com/sitemap_tp1.xml.gz", function(err,sites){
-				sitemaps = sites;
-				sites.should.be.Array;
-				done();
+		
+		it('Seantburke.com sitemaps should be an array', function(done){
+			this.timeout(30000);
+			sitemap.getSites("http://wp.seantburke.com/sitemap.xml", function(err,sites){
+				if(sites){
+					sitemaps = sites;
+					sites.should.be.Array;
+					done();
+				}
+				else if(err){
+					console.log(err);
+					done();
+				}
 			});
 		});
 	});
+	
 	describe('URL checks', function(){
-		for(key in sitemaps)
+		for(var key in sitemaps)
 		{
 			(function(site){
 				it(site + ' should be a URL', function(){
