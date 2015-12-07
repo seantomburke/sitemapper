@@ -6,7 +6,7 @@ Parse through sitemaps to get all the urls for your crawler.
 ```javascript
 var sitemap = require('sitemapper');
 
-sitemap.getSites('http://www.cbs.com/sitemaps/show/show_siteMap_index.xml', function(err, sites) {
+sitemap.getSites('http://wp.seantburke.com/sitemap.xml', function(err, sites) {
 	if(!err) {
 		console.log(sites);
 	}
