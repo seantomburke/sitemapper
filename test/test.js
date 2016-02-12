@@ -8,7 +8,7 @@ var async = require('async'),
 var sitemaps = ['http://www.walmart.com/sitemaps.xml', 'http://www.cbs.com/sitemaps.xml'];
 
 (function(){
-	sitemap.getSites("http://www.cbs.com/sitemaps/show/show_siteMap_index.xml", function(err,sites){
+	sitemap.getSites("https://www.google.com/work/sitemap.xml", function(err,sites){
 				if(sites){
 					sitemaps = sites;
 					sites.should.be.Array;
@@ -25,7 +25,7 @@ describe('sitemap', function(){
 		
 		it('CBS sitemaps should be an array', function(done){
 			this.timeout(30000);
-			sitemap.getSites("http://www.cbs.com/sitemaps/image/photo_sitemap_index.xml", function(err,sites){
+			sitemap.getSites("https://www.google.com/work/sitemap.xml", function(err,sites){
 				if(sites){
 					sitemaps = sites;
 					sites.should.be.Array;
