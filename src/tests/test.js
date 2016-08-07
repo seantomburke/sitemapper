@@ -36,26 +36,13 @@ describe('sitemap', function () {
       });
     });
 
-    it('Walmart sitemaps should be an array', function (done) {
+    it('Seantburke.com sitemaps should be an array', function (done) {
       this.timeout(30000);
       sitemapper.getSites('http://wp.seantburke.com/sitemap.xml', function (err, sites) {
         if (sites) {
           sitemaps = sites;
           sites.should.be.Array;
           sites.length.should.be.above(2);
-        } else {
-          console.log(err);
-        }
-        done();
-      });
-    });
-
-    it('Seantburke.com sitemaps should be an array', function (done) {
-      this.timeout(30000);
-      sitemapper.getSites('http://www.walmart.com/sitemap_ip.xml', function (err, sites) {
-        if (sites) {
-          sitemaps = sites;
-          sites.should.be.Array;
         } else {
           console.log(err);
         }
