@@ -30,7 +30,7 @@ describe('sitemap', function () {
           sites.should.be.Array;
           sites.length.should.be.above(2);
           done();
-        } else if (err) {
+        } else {
           console.log(err);
           done();
         }
@@ -45,7 +45,7 @@ describe('sitemap', function () {
           sites.should.be.Array;
           sites.length.should.be.above(2);
           done();
-        } else if (err) {
+        } else {
           console.log(err);
           done();
         }
@@ -59,7 +59,7 @@ describe('sitemap', function () {
           sitemaps = sites;
           sites.should.be.Array;
           done();
-        } else if (err) {
+        } else {
           console.log(err);
           done();
         }

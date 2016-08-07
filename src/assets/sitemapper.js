@@ -34,11 +34,12 @@ class Sitemapper {
         xmlParse.parseString(body, (err, data) => {
           callback(err, data);
         });
-        return;
       } else if (!err) {
         err = new Error('Sitemapper: Server returned a non-200 status');
+        callback(err, 'Error');
+      } else {
+        callback(err, 'Error');
       }
-      callback(err, 'Error');
     });
   }
 
