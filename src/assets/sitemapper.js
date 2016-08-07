@@ -29,9 +29,9 @@ class Sitemapper {
    */
   parse(url, callback) {
     this.url = url;
-    request(this.url, function (err, response, body) {
+    request(this.url, (err, response, body) => {
       if (!err && response.statusCode === 200) {
-        xmlParse.parseString(body, function (err, data) {
+        xmlParse.parseString(body, (err, data) => {
           callback(err, data);
         });
         return;
@@ -60,12 +60,12 @@ class Sitemapper {
    * @param {getSitesCallback} callback
    */
   getSites(url, callback) {
+    let self = this;
     this.parse(url, function read(err, data) {
-      var self = this;
-      var error;
-      var sites = [];
-      var sUrlSize = 1;
-      var parseCount = 0;
+      let error;
+      let sites = [];
+      const sUrlSize = 1;
+      let parseCount = 0;
 
       if (!err && data) {
         if (data.urlset) {
@@ -76,18 +76,15 @@ class Sitemapper {
             callback(error, sites);
           }
         } else if (data.sitemapindex) {
-          var sitemapUrls = _.flatten(_.pluck(data.sitemapindex.sitemap, 'loc'));
-          sUrlSize = _.size(sitemapUrls);
-          _.each(sitemapUrls, function (url) {
+          const sitemapUrls = _.flatten(_.pluck(data.sitemapindex.sitemap, 'loc'));
+          _.each(sitemapUrls, (url) => {
             self.parse(url, read);
-          });
+          }, this);
         } else {
-          // error = 'no valid xml';
           callback(err, sites);
         }
       } else {
-        error = err;
-        callback(error, sites);
+        callback(err, sites);
       }
     });
   }

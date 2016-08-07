@@ -34,7 +34,7 @@
     "postinstall": "rm -rf lib && broccoli build lib",
     "prestart": "rm -rf lib && broccoli build lib",
     "pretest": "rm -rf lib && broccoli build lib",
-    "start": "node ./lib/sitemapper.js",
+    "start": "node index.js",
     "test": "mocha ./lib/test.js"
   },
   "maintainers": [
