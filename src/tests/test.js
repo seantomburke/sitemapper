@@ -2,13 +2,13 @@
 var async = require('async'),
   assert = require('assert'),
   should = require('should'),
-  sitemap = require('./sitemapper.js'),
+  sitemapper = require('./sitemapper.js'),
   isurl = require('is-url');
 
 var sitemaps = ['http://www.walmart.com/sitemaps.xml', 'http://www.cbs.com/sitemaps.xml'];
 
 (function () {
-  sitemap.getSites('https://www.google.com/work/sitemap.xml', function (err, sites) {
+  sitemapper.getSites('https://www.google.com/work/sitemap.xml', function (err, sites) {
     if (sites) {
       sitemaps = sites;
       sites.should.be.Array;
@@ -23,9 +23,24 @@ var sitemaps;
 describe('sitemap', function () {
   describe('getSites', function () {
 
-    it('CBS sitemaps should be an array', function (done) {
+    it('Google sitemaps should be an array', function (done) {
       this.timeout(30000);
-      sitemap.getSites('https://www.google.com/work/sitemap.xml', function (err, sites) {
+      sitemapper.getSites('https://www.google.com/work/sitemap.xml', function (err, sites) {
+        if (sites) {
+          sitemaps = sites;
+          sites.should.be.Array;
+          done();
+        }
+        else if (err) {
+          console.log(err);
+          done();
+        }
+      });
+    });
+
+    it('Walmart sitemaps should be an array', function (done) {
+      this.timeout(30000);
+      sitemapper.getSites('http://www.walmart.com/sitemaps.xml', function (err, sites) {
         if (sites) {
           sitemaps = sites;
           sites.should.be.Array;
@@ -40,7 +55,7 @@ describe('sitemap', function () {
 
     it('Seantburke.com sitemaps should be an array', function (done) {
       this.timeout(30000);
-      sitemap.getSites('http://wp.seantburke.com/sitemap.xml', function (err, sites) {
+      sitemapper.getSites('http://wp.seantburke.com/sitemap.xml', function (err, sites) {
         if (sites) {
           sitemaps = sites;
           sites.should.be.Array;
@@ -62,5 +77,15 @@ describe('sitemap', function () {
         });
       })(sitemaps[key]);
     }
+  });
+
+  describe('Sitemapper class', () => {
+    it('should have parse method', () => {
+      sitemapper.parse.should.be.Function;
+    });
+
+    it('should have getSites method', () => {
+      sitemapper.getSites.should.be.Function;
+    });
   });
 });

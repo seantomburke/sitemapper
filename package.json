@@ -35,7 +35,7 @@
     "prestart": "rm -rf lib && broccoli build lib",
     "pretest": "rm -rf lib && broccoli build lib",
     "start": "node ./lib/sitemapper.js",
-    "test": "mocha test"
+    "test": "mocha ./lib/test.js"
   },
   "maintainers": [
     {
