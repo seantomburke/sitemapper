@@ -31,9 +31,11 @@
     "url": "http://www.seantburke.com"
   },
   "scripts": {
+    "postinstall": "rm -rf lib && broccoli build lib",
+    "prestart": "rm -rf lib && broccoli build lib",
+    "pretest": "rm -rf lib && broccoli build lib",
     "start": "node ./lib/sitemapper.js",
-    "test": "mocha test",
-    "prepublish": "rm -rf lib && broccoli build lib"
+    "test": "mocha test"
   },
   "maintainers": [
     {
@@ -63,6 +65,7 @@
   },
   "dependencies": {
     "broccoli": "^0.16.9",
+    "broccoli-cli": "^1.0.0",
     "request": "^2.40.0",
     "underscore": "^1.6.0",
     "xml2js": "^0.4.4"
