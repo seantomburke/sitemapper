@@ -11,10 +11,10 @@
     "crawlers",
     "webcrawler"
   ],
-  "homepage": "http://github.com/hawaiianchimp/sitemap-parser",
+  "homepage": "http://github.com/hawaiianchimp/sitemapper",
   "tonicExampleFilename": "example.js",
   "bugs": {
-    "url": "http://github.com/hawaiianchimp/sitemap-parser/issues"
+    "url": "http://github.com/hawaiianchimp/sitemapper/issues"
   },
   "license": "MIT",
   "files": [
@@ -23,7 +23,7 @@
   "main": "./lib/sitemap",
   "repository": {
     "type": "git",
-    "url": "git://github.com/hawaiianchimp/sitemap-parser.git"
+    "url": "git://github.com/hawaiianchimp/sitemapper.git"
   },
   "author": {
     "name": "Sean Thomas Burke",
