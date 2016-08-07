@@ -50,6 +50,8 @@ class Sitemapper {
    * @param {URL} data.url - URL of sitemap
    * @param {Array} data.urlset - Array of returned URLs
    * @param {String} data.urlset.url - single Url
+   * @param {Object} data.sitemapindex - index of sitemap
+   * @param {String} data.sitemapindex.sitemap - Sitemap
    */
 
   /**
@@ -64,7 +66,6 @@ class Sitemapper {
       var sites = [];
       var sUrlSize = 1;
       var parseCount = 0;
-      console.log('parsing');
 
       if (!err && data) {
         if (data.urlset) {
@@ -77,12 +78,11 @@ class Sitemapper {
         } else if (data.sitemapindex) {
           var sitemapUrls = _.flatten(_.pluck(data.sitemapindex.sitemap, 'loc'));
           sUrlSize = _.size(sitemapUrls);
-          //console.log(sitemapUrls);
           _.each(sitemapUrls, function (url) {
             self.parse(url, read);
           });
         } else {
-          error = 'no valid xml';
+          // error = 'no valid xml';
           callback(err, sites);
         }
       } else {
