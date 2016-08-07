@@ -30,15 +30,12 @@ class Sitemapper {
   parse(url, callback) {
     this.url = url;
     request(this.url, (err, response, body) => {
-      if (!err && response.statusCode === 200) {
+      if (response.statusCode === 200) {
         xmlParse.parseString(body, (err, data) => {
           callback(err, data);
         });
-      } else if (!err) {
-        err = new Error('Sitemapper: Server returned a non-200 status');
-        callback(err, 'Error');
       } else {
-        callback(err, 'Error');
+        callback(err, {err, response, body});
       }
     });
   }
