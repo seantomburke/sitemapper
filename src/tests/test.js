@@ -12,7 +12,7 @@ var sitemaps = ['http://www.walmart.com/sitemaps.xml', 'http://www.cbs.com/sitem
     if (sites) {
       sitemaps = sites;
       sites.should.be.Array;
-    } else if (err) {
+    } else {
       console.log(err);
     }
   });
@@ -29,11 +29,10 @@ describe('sitemap', function () {
           sitemaps = sites;
           sites.should.be.Array;
           sites.length.should.be.above(2);
-          done();
         } else {
           console.log(err);
-          done();
         }
+        done();
       });
     });
 
@@ -44,11 +43,10 @@ describe('sitemap', function () {
           sitemaps = sites;
           sites.should.be.Array;
           sites.length.should.be.above(2);
-          done();
         } else {
           console.log(err);
-          done();
         }
+        done();
       });
     });
 
@@ -58,11 +56,10 @@ describe('sitemap', function () {
         if (sites) {
           sitemaps = sites;
           sites.should.be.Array;
-          done();
         } else {
           console.log(err);
-          done();
         }
+        done();
       });
     });
   });
