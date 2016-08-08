@@ -74,6 +74,7 @@
     "should": "^10.0.0"
   },
   "dependencies": {
+    "deprecate": "^0.1.0",
     "es6-promise": "^3.2.1",
     "request-promise": "^4.1.0",
     "xml2js-es6-promise": "^1.0.3"

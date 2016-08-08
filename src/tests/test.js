@@ -27,8 +27,8 @@ describe('Sitemapper', function () {
       sitemapper.parse.should.be.Function;
     });
 
-    it('should have getSites method', () => {
-      sitemapper.getSites.should.be.Function;
+    it('should have fetch method', () => {
+      sitemapper.fetch.should.be.Function;
     });
 
     it('should contruct with a url', () => {
@@ -56,11 +56,11 @@ describe('Sitemapper', function () {
     });
   });
 
-  describe('getSites Method resolves sites to array', function () {
+  describe('fetch Method resolves sites to array', function () {
     it('http://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
       const url = 'http://wp.seantburke.com/sitemap.xml';
-      sitemapper.getSites(url)
+      sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
           data.url.should.equal(url);
@@ -74,7 +74,7 @@ describe('Sitemapper', function () {
     it('giberish.giberish should be fail silently with an empty array', function (done) {
       this.timeout(30000);
       const url = 'http://giberish.giberish';
-      sitemapper.getSites(url)
+      sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
           done();
@@ -85,7 +85,7 @@ describe('Sitemapper', function () {
     it('https://www.google.com/work/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
       const url = 'https://www.google.com/work/sitemap.xml';
-      sitemapper.getSites(url)
+      sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
           data.url.should.equal(url);
@@ -99,7 +99,7 @@ describe('Sitemapper', function () {
     it('http://www.cnn.com/sitemaps/sitemap-index.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
       const url = 'http://www.cnn.com/sitemaps/sitemap-index.xml';
-      sitemapper.getSites(url)
+      sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
           data.url.should.equal(url);
