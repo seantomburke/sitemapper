@@ -1,73 +1,114 @@
-/*global describe*/
-var async = require('async'),
-  assert = require('assert'),
-  should = require('should'),
-  sitemapper = require('./sitemapper.js'),
-  isurl = require('is-url');
+/* global describe,it */
+import async from 'async';
+import assert from 'assert';
+import should from 'should';
+import isUrl from 'is-url';
 
-var sitemaps = ['http://www.walmart.com/sitemaps.xml', 'http://www.cbs.com/sitemaps.xml'];
+import Sitemapper from './sitemapper.js';
+let sitemapper;
 
-(function () {
-  sitemapper.getSites('https://www.google.com/work/sitemap.xml', function (err, sites) {
-    if (sites) {
-      sitemaps = sites;
-      sites.should.be.Array;
-    } else {
-      console.log(err);
-    }
+describe('Sitemapper', function () {
+
+  beforeEach(() => {
+    sitemapper = new Sitemapper();
   });
-})();
 
-var sitemaps;
-describe('sitemap', function () {
-  describe('getSites', function () {
+  describe('Sitemapper Class', function () {
 
-    it('Google sitemaps should be an array', function (done) {
-      this.timeout(30000);
-      sitemapper.getSites('https://www.google.com/work/sitemap.xml', function (err, sites) {
-        if (sites) {
-          sitemaps = sites;
-          sites.should.be.Array;
-          sites.length.should.be.above(2);
-        } else {
-          console.log(err);
-        }
-        done();
-      });
+    it('should have initializeTimeout method', () => {
+      sitemapper.initializeTimeout.should.be.Function;
     });
 
-    it('Seantburke.com sitemaps should be an array', function (done) {
-      this.timeout(30000);
-      sitemapper.getSites('http://wp.seantburke.com/sitemap.xml', function (err, sites) {
-        if (sites) {
-          sitemaps = sites;
-          sites.should.be.Array;
-          sites.length.should.be.above(2);
-        } else {
-          console.log(err);
-        }
-        done();
-      });
+    it('should have crawl method', () => {
+      sitemapper.crawl.should.be.Function;
     });
-  });
 
-  describe('URL checks', function () {
-    for (var key in sitemaps) {
-      (function (site) {
-        it(site + ' should be a URL', function () {
-          isurl(site).should.be.true;
-        });
-      })(sitemaps[key]);
-    }
-  });
-
-  describe('Sitemapper class', function () {
     it('should have parse method', () => {
       sitemapper.parse.should.be.Function;
     });
 
-    it('should have getSites method', function () {
-      sitemapper.getSites.should.be.Function;
+    it('should have fetch method', () => {
+      sitemapper.fetch.should.be.Function;
+    });
+
+    it('should contruct with a url', () => {
+      sitemapper = new Sitemapper({
+        url: 'google.com',
+      });
+      sitemapper.url.should.equal('google.com');
+    });
+
+    it('should contruct with a timeout', () => {
+      sitemapper = new Sitemapper({
+        timeout: 1000,
+      });
+      sitemapper.timeout.should.equal(1000);
+    });
+
+    it('should set timeout', () => {
+      sitemapper.timeout = 1000;
+      sitemapper.timeout.should.equal(1000);
+    });
+
+    it('should set url', () => {
+      sitemapper.url = 1000;
+      sitemapper.url.should.equal(1000);
+    });
+  });
+
+  describe('fetch Method resolves sites to array', function () {
+    it('http://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
+      this.timeout(30000);
+      const url = 'http://wp.seantburke.com/sitemap.xml';
+      sitemapper.fetch(url)
+        .then(data => {
+          data.sites.should.be.Array;
+          data.url.should.equal(url);
+          data.sites.length.should.be.above(2);
+          isUrl(data.sites[0]).should.be.true;
+          done();
+        })
+        .catch(error => console.error(error));
+    });
+
+    it('giberish.giberish should be fail silently with an empty array', function (done) {
+      this.timeout(30000);
+      const url = 'http://giberish.giberish';
+      sitemapper.fetch(url)
+        .then(data => {
+          data.sites.should.be.Array;
+          done();
+        })
+        .catch(error => console.error(error));
+    });
+
+    it('https://www.google.com/work/sitemap.xml sitemaps should be an array', function (done) {
+      this.timeout(30000);
+      const url = 'https://www.google.com/work/sitemap.xml';
+      sitemapper.fetch(url)
+        .then(data => {
+          data.sites.should.be.Array;
+          data.url.should.equal(url);
+          data.sites.length.should.be.above(2);
+          isUrl(data.sites[0]).should.be.true;
+          done();
+        })
+        .catch(error => console.error(error));
+    });
+
+    it('http://www.cnn.com/sitemaps/sitemap-index.xml sitemaps should be an array', function (done) {
+      this.timeout(30000);
+      const url = 'http://www.cnn.com/sitemaps/sitemap-index.xml';
+      sitemapper.timeout = 5000;
+      sitemapper.fetch(url)
+        .then(data => {
+          data.sites.should.be.Array;
+          data.url.should.equal(url);
+          data.sites.length.should.be.above(2);
+          isUrl(data.sites[0]).should.be.true;
+          done();
+        })
+        .catch(error => console.error(error));
     });
   });
 });

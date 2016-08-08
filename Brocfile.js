@@ -8,8 +8,9 @@ const pkg = require('./package.json');
 
 const assetsSource = 'src/assets';
 const testsSource = 'src/tests';
+const examplesSource = 'src/examples';
 
-const es6 = esTranspiler('src', {});
+const es6 = esTranspiler('src', { browserPolyfill: true });
 
 const srcES6 = Funnel(es6, {
   include: ['assets/**/*']
@@ -17,6 +18,10 @@ const srcES6 = Funnel(es6, {
 
 const testES6 = Funnel(es6, {
   include: ['tests/**/*']
+});
+
+const exampleES6 = Funnel(es6, {
+  include: ['examples/**/*']
 });
 
 const src = concat(srcES6, {
@@ -29,4 +34,4 @@ const test = concat(testES6, {
   outputFile: '/test.js'
 });
 
-module.exports = mergeTrees([src, test]);
+module.exports = mergeTrees([src, test, exampleES6]);
