@@ -11,6 +11,7 @@
 import xmlParse from 'xml2js-es6-promise';
 import request from 'request-promise';
 import { Promise } from 'es6-promise';
+import deprecate from 'deprecate';
 
 /**
  * @typedef {Object} Sitemapper
@@ -38,12 +39,13 @@ export default class Sitemapper {
   /**
    * Gets the sites from a sitemap.xml with a given URL
    *
+   * @public
    * @param {string} [url] - the Sitemaps url (e.g http://wp.seantburke.com/sitemap.xml)
    * @returns {Promise<SitesData>}
-   * @example sitemapper.getSites('example.xml')
+   * @example sitemapper.fetch('example.xml')
    *                    .then((sites) => console.log(sites));
    */
-  getSites(url = this.url) {
+  fetch(url = this.url) {
     this.url = this.url || url;
     return new Promise((resolve) => this.crawl(url).then(sites => resolve({ url, sites })));
   }
@@ -176,6 +178,18 @@ export default class Sitemapper {
         return resolve([]);
       });
     });
+  }
+
+
+  /**
+   * Gets the sites from a sitemap.xml with a given URL
+   * @deprecated
+   */
+  getSites(url = this.url) {
+    deprecate('Please upgrade to sitemapper@2.0.0 to use promises instead of callbacks.' +
+      'Use `.fetch()` instead of .getSites(). see http://github.com/hawaiianchimp/sitemapper ' +
+      'for more info.');
+    return this.fetch(url);
   }
 }
 
