@@ -1,6 +1,6 @@
 # Sitemapper
 
-[src/assets/sitemapper.js:19-194](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L19-L194 "Source code on GitHub")
+[src/assets/sitemapper.js:19-194](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L19-L194 "Source code on GitHub")
 
 **Parameters**
 
@@ -8,7 +8,7 @@
 
 ## constructor
 
-[src/assets/sitemapper.js:32-37](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L32-L37 "Source code on GitHub")
+[src/assets/sitemapper.js:32-37](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L32-L37 "Source code on GitHub")
 
 Construct the Sitemapper class
 
@@ -27,7 +27,7 @@ let sitemap = new Sitemapper({
 
 ## fetch
 
-[src/assets/sitemapper.js:48-51](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L48-L51 "Source code on GitHub")
+[src/assets/sitemapper.js:48-51](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L48-L51 "Source code on GitHub")
 
 Gets the sites from a sitemap.xml with a given URL
 
@@ -46,7 +46,7 @@ Returns **Promise&lt;SitesData&gt;**
 
 ## getSites
 
-[src/assets/sitemapper.js:188-193](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L188-L193 "Source code on GitHub")
+[src/assets/sitemapper.js:188-193](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L188-L193 "Source code on GitHub")
 
 Gets the sites from a sitemap.xml with a given URL
 
@@ -56,7 +56,7 @@ Gets the sites from a sitemap.xml with a given URL
 
 ## timeout
 
-[src/assets/sitemapper.js:70-72](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L70-L72 "Source code on GitHub")
+[src/assets/sitemapper.js:70-72](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L70-L72 "Source code on GitHub")
 
 Set the timeout
 
@@ -72,7 +72,7 @@ sitemapper.timeout = 15000; // 15 seconds
 
 ## timeout
 
-[src/assets/sitemapper.js:59-61](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L59-L61 "Source code on GitHub")
+[src/assets/sitemapper.js:59-61](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L59-L61 "Source code on GitHub")
 
 Get the timeout
 
@@ -86,7 +86,7 @@ Returns **Timeout**
 
 ## url
 
-[src/assets/sitemapper.js:88-90](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L88-L90 "Source code on GitHub")
+[src/assets/sitemapper.js:88-90](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L88-L90 "Source code on GitHub")
 
 Get the url to parse
 
@@ -100,7 +100,7 @@ Returns **string**
 
 ## url
 
-[src/assets/sitemapper.js:79-81](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L79-L81 "Source code on GitHub")
+[src/assets/sitemapper.js:79-81](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L79-L81 "Source code on GitHub")
 
 **Parameters**
 
@@ -114,7 +114,7 @@ sitemapper.url = 'http://wp.seantburke.com/sitemap.xml'
 
 # ParseData
 
-[src/assets/sitemapper.js:19-194](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L19-L194 "Source code on GitHub")
+[src/assets/sitemapper.js:19-194](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L19-L194 "Source code on GitHub")
 
 Resolve handler type for the promise in this.parse()
 
@@ -146,7 +146,7 @@ Resolve handler type for the promise in this.parse()
 
 # SitesArray
 
-[src/assets/sitemapper.js:19-194](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L19-L194 "Source code on GitHub")
+[src/assets/sitemapper.js:19-194](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L19-L194 "Source code on GitHub")
 
 An array of urls
 
@@ -161,7 +161,7 @@ An array of urls
 
 # SitesData
 
-[src/assets/sitemapper.js:19-194](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L19-L194 "Source code on GitHub")
+[src/assets/sitemapper.js:19-194](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L19-L194 "Source code on GitHub")
 
 Resolve handler type for the promise in this.parse()
 
@@ -183,13 +183,13 @@ Resolve handler type for the promise in this.parse()
 
 # Timeout
 
-[src/assets/sitemapper.js:19-194](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L19-L194 "Source code on GitHub")
+[src/assets/sitemapper.js:19-194](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L19-L194 "Source code on GitHub")
 
 Timeout in milliseconds
 
 # xmlParse
 
-[src/assets/sitemapper.js:11-11](https://github.com/hawaiianchimp/sitemapper/blob/ca15464aa213abe722a544cc024dee69766d0130/src/assets/sitemapper.js#L11-L11 "Source code on GitHub")
+[src/assets/sitemapper.js:11-11](https://github.com/hawaiianchimp/sitemapper/blob/a91e18a19ef26b53870bfb3db9d2c6b4d3ad87ae/src/assets/sitemapper.js#L11-L11 "Source code on GitHub")
 
 Sitemap Parser
 
