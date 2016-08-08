@@ -99,6 +99,7 @@ describe('Sitemapper', function () {
     it('http://www.cnn.com/sitemaps/sitemap-index.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
       const url = 'http://www.cnn.com/sitemaps/sitemap-index.xml';
+      sitemapper.timeout = 5000;
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
