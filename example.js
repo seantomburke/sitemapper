@@ -15,6 +15,8 @@ Google.getSites()
     console.log(error);
   });
 
+sitemapper.timeout = 5000;
+
 sitemapper.getSites('http://wp.seantburke.com/sitemap.xml')
   .then(function (data) {
     console.log(data);

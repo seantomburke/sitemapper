@@ -22,23 +22,36 @@ export default class Sitemapper {
    * @params {Object} options to set
    * @params {string} [options.url] - the Sitemap url (e.g http://wp.seantburke.com/sitemap.xml)
    * @params {Timeout} [options.timeout] - @see {timeout}
+   *
+   * @example let sitemap = new Sitemapper({
+   *                                 url: 'http://wp.seantburke.com/sitemap.xml',
+   *                                 timeout: 15000
+   *                               });
    */
   constructor(options) {
     const settings = options || {};
     this.url = settings.url;
     this.timeout = settings.timeout || 15000;
-    this.timeoutArray = {};
+    this.timeoutTable = {};
   }
 
   /**
-   * Timeout in milliseconds
+   * Gets the sites from a sitemap.xml with a given URL
    *
-   * @typedef {Number} Timeout
-   * the number of milliseconds before all requests timeout. The promises will still resolve so
-   * you'll still receive parts of the request, but maybe not all urls
-   * default is 15000 which is 15 seconds
+   * @param {string} [url] - the Sitemaps url (e.g http://wp.seantburke.com/sitemap.xml)
+   * @returns {Promise<SitesData>}
+   * @example sitemapper.getSites('example.xml')
+   *                    .then((sites) => console.log(sites));
+   */
+  getSites(url = this.url) {
+    this.url = this.url || url;
+    return new Promise((resolve) => this.crawl(url).then(sites => resolve({ url, sites })));
+  }
+
+  /**
+   * Get the timeout
    *
-   * @example 15000 - 15 seconds
+   * @example console.log(sitemapper.timeout);
    * @returns {Timeout}
    */
   static get timeout() {
@@ -50,6 +63,7 @@ export default class Sitemapper {
    *
    * @public
    * @param {Timeout} duration
+   * @example sitemapper.timeout = 15000; // 15 seconds
    */
   static set timeout(duration) {
     this.timeout = duration;
@@ -58,7 +72,7 @@ export default class Sitemapper {
   /**
    *
    * @param {string} url - url for making requests. Should be a link to a sitemaps.xml
-   * @example http://wp.seantburke.com/sitemap.xml
+   * @example sitemapper.url = 'http://wp.seantburke.com/sitemap.xml'
    */
   static set url(url) {
     this.url = url;
@@ -67,6 +81,7 @@ export default class Sitemapper {
   /**
    * Get the url to parse
    * @returns {string}
+   * @example console.log(sitemapper.url)
    */
   static get url() {
     return this.url;
@@ -75,9 +90,9 @@ export default class Sitemapper {
   /**
    * Requests the URL and uses xmlParse to parse through and find the data
    *
-   * @public
+   * @private
    * @param {string} [url] - the Sitemaps url (e.g http://wp.seantburke.com/sitemap.xml)
-   * @returns {Promise<ParseData> | Promise<ParseError>}
+   * @returns {Promise<ParseData>}
    */
   parse(url = this.url) {
     const requestOptions = {
@@ -90,27 +105,32 @@ export default class Sitemapper {
       const requester = request(requestOptions)
         .then((response) => {
           if (!response || response.statusCode !== 200) {
-            return resolve({ error: response, data: response });
+            clearTimeout(this.timeoutTable[url]);
+            return resolve({ error: response.error, data: response });
           }
           return xmlParse(response.body);
         })
-        .then(data => resolve({ data }))
-        .catch(error => resolve({ error, data: {} }));
+        .then(data => resolve({ error: null, data }))
+        .catch(response => resolve({ error: response.error, data: {} }));
 
       this.initializeTimeout(url, requester, resolve);
     });
   }
 
   /**
+   * Timeouts are necessary for large xml trees. This will cancel the call if the request is taking
+   * too long, but will still allow the promises to resolve.
    *
-   * @param url
-   * @param requester
-   * @param callback
+   * @private
+   * @param {string} url - url to use as a hash in the timeoutTable
+   * @param {Promise} requester - the promise that creates the web request to the url
+   * @param {Function} callback - the resolve method is used here to resolve the parent promise
    */
   initializeTimeout(url, requester, callback) {
-    // this resolves in order to allow other requests to continue
-    this.timeoutArray[url] = setTimeout(() => {
+    // this resolves instead of rejects in order to allow other requests to continue
+    this.timeoutTable[url] = setTimeout(() => {
       requester.cancel();
+
       callback({
         error: `request timed out after ${this.timeout} milliseconds`,
         data: {},
@@ -119,70 +139,78 @@ export default class Sitemapper {
   }
 
   /**
-   * Gets the sites from a sitemap.xml with a given URL
-   *
-   * @param {string} [url] - the Sitemaps url (e.g http://wp.seantburke.com/sitemap.xml)
-   * @returns {Promise<SitesData> | Promise<ParseError>}
-   */
-  getSites(url = this.url) {
-    this.url = this.url || url;
-    return new Promise((resolve) => this.crawl(url).then(sites => resolve({ url, sites })));
-  }
-
-  /**
    * Recursive function that will go through a sitemaps tree and get all the sites
    *
+   * @private
    * @recursive
    * @param {string} url - the Sitemaps url (e.g http://wp.seantburke.com/sitemap.xml)
-   * @returns {Array} of sitemap urls
+   * @returns {Promise<SitesArray> | Promise<ParseData>}
    */
   crawl(url) {
     return new Promise((resolve) => {
-      this.parse(url).then((response) => {
-        if (response.error) {
-          return resolve(response);
-        }
-        if (response.data && response.data.urlset) {
-          const sites = response.data.urlset.url.map(site => site.loc && site.loc[0]);
+      this.parse(url).then(({ error, data }) => {
+        // The promise resolved, remove the timeout
+        clearTimeout(this.timeoutTable[url]);
+
+        if (error) {
+          // Fail silently
+          return resolve([]);
+        } else if (data && data.urlset) {
+          const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
+
           return resolve([].concat(sites));
-        } else if (response.data.sitemapindex) {
-          const sitemap = response.data.sitemapindex.sitemap.map(map => map.loc && map.loc[0]);
+        } else if (data.sitemapindex) {
+          // Map each child url into a promise to create an array of promises
+          const sitemap = data.sitemapindex.sitemap.map(map => map.loc && map.loc[0]);
           const promiseArray = sitemap.map(site => this.crawl(site));
+
+          // Make sure all the promises resolve then filter and reduce the array
           return Promise.all(promiseArray).then(results => {
             const sites = results.filter(result => !result.error)
               .reduce((prev, curr) => prev.concat(curr), []);
+
             return resolve(sites);
           });
         }
-        return resolve({ url, response });
-      }).catch(error => resolve(error));
+        // Fail silently
+        return resolve([]);
+      });
     });
   }
 }
+
+/**
+ * Timeout in milliseconds
+ *
+ * @typedef {Number} Timeout
+ * the number of milliseconds before all requests timeout. The promises will still resolve so
+ * you'll still receive parts of the request, but maybe not all urls
+ * default is 15000 which is 15 seconds
+ */
 
 /**
  * Resolve handler type for the promise in this.parse()
  *
  * @typedef {Object} ParseData
  *
- * @property {Error} error that either comes from `xmlParse` or `request`
+ * @property {Error} error that either comes from `xmlParse` or `request` or custom error
  * @property {Object} data
  * @property {string} data.url - URL of sitemap
  * @property {Array} data.urlset - Array of returned URLs
  * @property {string} data.urlset.url - single Url
  * @property {Object} data.sitemapindex - index of sitemap
  * @property {string} data.sitemapindex.sitemap - Sitemap
- */
-
-/**
- * Reject handler type for the promise in this.parse()
- *
- * @typedef {Object} ParseError
- *
- * @property {string} url - url that was being requested
- * @property {Error} error - request error @see npm module 'request'
- * @property {Object} response - request response @see npm module 'request'
- * @property {body} body - body of the request @see npm module 'request'
+ * @example {
+ *        error: "There was an error!"
+ *        data: {
+ *          url: 'linkedin.com',
+ *          urlset: [{
+ *            url: 'www.linkedin.com/project1'
+ *          },[{
+ *            url: 'www.linkedin.com/project2'
+ *          }]
+ *        }
+ * }
  */
 
 /**
@@ -191,6 +219,23 @@ export default class Sitemapper {
  * @typedef {Object} SitesData
  *
  * @property {string} url - the original url used to query the data
- * @property {Array} sites - an array with the resulting sitemap urls
+ * @property {SitesArray} sites
+ * @example {
+ *          url: 'linkedin.com/sitemap.xml',
+ *          sites: [
+ *            'linkedin.com/project1',
+ *            'linkedin.com/project2'
+ *            ]
+ *
+ **/
+
+/**
+ * An array of urls
+ *
+ * @typedef {String[]} SitesArray
+ * @example [
+ *            'www.google.com',
+ *            'www.linkedin.com'
+ *          ]
  *
  **/
