@@ -1,6 +1,6 @@
 {
   "name": "sitemapper",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Parser for XML Sitemaps to be used with Robots.txt and web crawlers",
   "keywords": [
     "parse",
@@ -31,11 +31,15 @@
     "url": "http://www.seantburke.com"
   },
   "scripts": {
-    "postinstall": "rm -rf lib && broccoli build lib",
-    "prestart": "rm -rf lib && broccoli build lib",
-    "pretest": "rm -rf lib && broccoli build lib",
-    "start": "node index.js",
-    "test": "mocha ./lib/test.js"
+    "build": "npm run clean && broccoli build lib",
+    "postinstall": "npm run build",
+    "prestart": "npm run build",
+    "pretest": "npm run build",
+    "start": "node lib/examples/index.js",
+    "test": "mocha ./lib/test.js && npm run lint",
+    "lint": "eslint .",
+    "clean": "rm -rf lib",
+    "docs": "documentation -g -o docs.md -f md src/assets/sitemapper.js"
   },
   "maintainers": [
     {
@@ -49,25 +53,30 @@
     "test": "./test"
   },
   "engines": {
-    "node": ">= 0.6.0"
+    "node": ">= 4.0.0"
   },
   "devDependencies": {
-    "async": "^0.9.0",
+    "async": "^2.0.1",
     "babel-cli": "^6.11.4",
     "babel-polyfill": "^6.13.0",
+    "broccoli": "^0.16.9",
+    "broccoli-cli": "^1.0.0",
     "broccoli-babel-transpiler": "^5.5.1",
     "broccoli-concat": "^2.3.4",
     "broccoli-funnel": "^1.0.5",
     "broccoli-merge-trees": "^1.1.3",
-    "is-url": "^1.1.0",
-    "mocha": "^1.21.4",
-    "should": "^4.0.4"
+    "documentation": "^3.0.4",
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb-base": "^5.0.1",
+    "eslint-plugin-import": "^1.12.0",
+    "is-url": "^1.2.2",
+    "mocha": "^3.0.1",
+    "should": "^10.0.0"
   },
   "dependencies": {
-    "broccoli": "^0.16.9",
-    "broccoli-cli": "^1.0.0",
-    "request": "^2.40.0",
-    "underscore": "^1.6.0",
-    "xml2js": "^0.4.4"
+    "deprecate": "^0.1.0",
+    "es6-promise": "^3.2.1",
+    "request-promise": "^4.1.0",
+    "xml2js-es6-promise": "^1.0.3"
   }
 }

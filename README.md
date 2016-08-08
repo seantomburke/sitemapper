@@ -6,16 +6,61 @@
 
 Parse through sitemaps to get all the urls for your crawler.
 
-#### Simple Implementation
+#### Simple Implementation in ES5
 ```javascript
-var sitemap = require('sitemapper');
+var Sitemapper = require('sitemapper');
 
-sitemap.getSites('http://wp.seantburke.com/sitemap.xml', function(err, sites) {
-	if(!err) {
-		console.log(sites);
-	}
-	else {
-		console.log(err);
-	}
+var Google = new Sitemapper({
+  url: 'https://www.google.com/work/sitemap.xml',
+  timeout: 15000 //15 seconds
 });
+
+Google.fetch()
+  .then(function (data) {
+    console.log(data);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+
+// or
+
+
+var sitemap = new Sitemapper();
+sitemapper.timeout = 5000;
+sitemapper.fetch('http://wp.seantburke.com/sitemap.xml')
+  .then(function (data) {
+    console.log(data);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+```
+
+#### Simple Implementation in ES6
+```
+import Sitemapper from 'sitemapper';
+
+const Google = new Sitemapper({
+  url: 'https://www.google.com/work/sitemap.xml',
+  timeout: 15000, // 15 seconds
+});
+
+Google.fetch()
+  .then(data => console.log(data.sites))
+  .catch(error => console.log(error));
+
+
+// or
+
+
+const sitemapper = new Sitemapper();
+sitemapper.timeout = 5000;
+
+sitemapper.fetch('http://wp.seantburke.com/sitemap.xml')
+  .then(({ url, sites }) => console.log(`url:${url}`, 'sites:', sites))
+  .catch(error => console.log(error));
+
 ```
