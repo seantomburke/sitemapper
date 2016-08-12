@@ -1,12 +1,12 @@
 var Sitemapper = require('sitemapper');
 
-var sitemap = new Sitemapper();
-
+// Instantiate an instance with options
 var Google = new Sitemapper({
   url: 'https://www.google.com/work/sitemap.xml',
   timeout: 15000 //15 seconds
 });
 
+// Then fetch
 Google.fetch()
   .then(function (data) {
     console.log(data);
@@ -15,6 +15,8 @@ Google.fetch()
     console.log(error);
   });
 
+// Instantiate an instance with no options
+var sitemapper = new Sitemapper();
 sitemapper.timeout = 5000;
 
 sitemapper.fetch('http://wp.seantburke.com/sitemap.xml')
@@ -40,3 +42,14 @@ sitemapper.fetch('http://www.stubhub.com/new-sitemap/us/sitemap-US-en-index.xml'
   .catch(function (error) {
     console.log(error);
   });
+
+// Version 1.0.0 example which has been deprecated.
+sitemapper.getSites('http://wp.seantburke.com/sitemap.xml', function (err, sites) {
+  if (!err) {
+    console.log(sites);
+  }
+  else {
+    console.log(err);
+  }
+});
+

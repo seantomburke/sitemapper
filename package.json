@@ -1,6 +1,6 @@
 {
   "name": "sitemapper",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Parser for XML Sitemaps to be used with Robots.txt and web crawlers",
   "keywords": [
     "parse",
@@ -32,6 +32,7 @@
   },
   "scripts": {
     "build": "npm run clean && broccoli build lib",
+    "preinstall": "rm -rf node_modules",
     "postinstall": "npm run build",
     "prestart": "npm run build",
     "pretest": "npm run build",
@@ -74,7 +75,6 @@
     "should": "^10.0.0"
   },
   "dependencies": {
-    "deprecate": "^0.1.0",
     "es6-promise": "^3.2.1",
     "request-promise": "^4.1.0",
     "xml2js-es6-promise": "^1.0.3"
