@@ -73,6 +73,7 @@
     "broccoli": "^0.16.9",
     "broccoli-cli": "^1.0.0",
     "es6-promise": "^3.2.1",
+    "request": "^2.74.0",
     "request-promise": "^4.1.0",
     "xml2js-es6-promise": "^1.0.3"
   }
