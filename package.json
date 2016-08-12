@@ -18,8 +18,7 @@
   },
   "license": "MIT",
   "files": [
-    "lib",
-    "Brocfile.js"
+    "lib"
   ],
   "main": "./lib/sitemapper.js",
   "repository": {
