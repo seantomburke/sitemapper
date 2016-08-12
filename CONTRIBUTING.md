@@ -9,7 +9,7 @@ To build the `lib` directory with the compiled assets use this command
 ```bash
 npm run build
 ```
-This uses Broccoli.js to compile the files.
+This uses [Broccoli.js](http://broccolijs.com/) to compile the files. Make sure to run this before submitting a pull request.
 
 ```bash
 # Run examples/index.js
@@ -35,6 +35,7 @@ npm run lint
 
 ###Pull Requests
 
+Be sure to build your code with `npm run build` before making a pull request.
 Pull requests will use [TravisCI](https://travis-ci.com/) to run your code.
 If you would like to be an owner of this repository to approve pull requests, create an issue that I will review.
 

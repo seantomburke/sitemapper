@@ -18,7 +18,8 @@
   },
   "license": "MIT",
   "files": [
-    "lib"
+    "lib",
+    "Brocfile.js"
   ],
   "main": "./lib/sitemapper.js",
   "repository": {
@@ -33,9 +34,6 @@
   "scripts": {
     "broccoli": "broccoli build lib",
     "build": "npm run clean && npm run broccoli",
-    "postinstall": "npm run build",
-    "prestart": "npm run build",
-    "pretest": "npm run build",
     "start": "node lib/examples/index.js",
     "test": "mocha ./lib/test.js && npm run lint",
     "lint": "eslint /src",
