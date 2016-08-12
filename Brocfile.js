@@ -8,7 +8,6 @@ const pkg = require('./package.json');
 
 const assetsSource = 'src/assets';
 const testsSource = 'src/tests';
-const examplesSource = 'src/examples';
 
 const es6 = esTranspiler('src', { browserPolyfill: true });
 

@@ -71,7 +71,7 @@ describe('Sitemapper', function () {
         .catch(error => console.error(error));
     });
 
-    it('giberish.giberish should be fail silently with an empty array', function (done) {
+    it('giberish.giberish should fail silently with an empty array', function (done) {
       this.timeout(30000);
       const url = 'http://giberish.giberish';
       sitemapper.fetch(url)
@@ -109,6 +109,18 @@ describe('Sitemapper', function () {
           done();
         })
         .catch(error => console.error(error));
+    });
+  });
+
+  describe('getSites method', function () {
+    it('getSites should be backwards compatible', function (done) {
+      this.timeout(30000);
+      const url = 'http://wp.seantburke.com/sitemap.xml';
+      sitemapper.getSites(url, (err, sites) => {
+        sites.should.be.Array;
+        isUrl(sites[0]).should.be.true;
+        done();
+      });
     });
   });
 });

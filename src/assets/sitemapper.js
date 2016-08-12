@@ -11,7 +11,6 @@
 import xmlParse from 'xml2js-es6-promise';
 import request from 'request-promise';
 import { Promise } from 'es6-promise';
-import deprecate from 'deprecate';
 
 /**
  * @typedef {Object} Sitemapper
@@ -182,16 +181,32 @@ export default class Sitemapper {
 
 
   /**
+   * /**
    * Gets the sites from a sitemap.xml with a given URL
    * @deprecated
+   * @param {string} url - url to query
+   * @param {getSitesCallback} callback - callback for sites and error
+   * @callback
    */
-  getSites(url = this.url) {
-    deprecate('Please upgrade to sitemapper@2.0.0 to use promises instead of callbacks.' +
-      'Use `.fetch()` instead of .getSites(). see http://github.com/hawaiianchimp/sitemapper ' +
-      'for more info.');
-    return this.fetch(url);
+  getSites(url = this.url, callback) {
+    let err = {};
+    let sites = [];
+    this.fetch(url).then(response => {
+      sites = response.sites;
+    }).catch(error => {
+      err = error;
+    });
+    return callback(err, sites);
   }
 }
+
+/**
+ * Callback for the getSites method
+ *
+ * @callback getSitesCallback
+ * @param {Object} error - error from callback
+ * @param {Array} sites - an Array of sitemaps
+ */
 
 /**
  * Timeout in milliseconds
