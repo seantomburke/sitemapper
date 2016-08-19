@@ -1,6 +1,6 @@
 {
   "name": "sitemapper",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Parser for XML Sitemaps to be used with Robots.txt and web crawlers",
   "keywords": [
     "parse",
@@ -38,7 +38,7 @@
     "pretest": "npm run build",
     "start": "node lib/examples/index.js",
     "test": "mocha ./lib/test.js && npm run lint",
-    "lint": "eslint .",
+    "lint": "eslint /src",
     "clean": "rm -rf lib",
     "docs": "documentation -g -o docs.md -f md src/assets/sitemapper.js"
   },
