@@ -160,7 +160,7 @@ export default class Sitemapper {
           const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
 
           return resolve([].concat(sites));
-        } else if (data.sitemapindex) {
+        } else if (data && data.sitemapindex) {
           // Map each child url into a promise to create an array of promises
           const sitemap = data.sitemapindex.sitemap.map(map => map.loc && map.loc[0]);
           const promiseArray = sitemap.map(site => this.crawl(site));
