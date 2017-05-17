@@ -5,7 +5,7 @@
 [![Inline docs](http://inch-ci.org/github/hawaiianchimp/sitemapper.svg?branch=master)](http://inch-ci.org/github/hawaiianchimp/sitemapper)
 
 Parse through a sitemaps xml to get all the urls for your crawler.
-##Version 2
+## Version 2
 
 ### Installation
 ```bash
@@ -83,13 +83,13 @@ sitemapper.fetch('http://wp.seantburke.com/sitemap.xml')
   .catch(error => console.log(error));
 ```
 
-##Version 1
+## Version 1
 
 ```bash
 npm install sitemapper@1.1.1 --save
 ```
 
-###Simple Example
+### Simple Example
 
 ```javascript
 var Sitemapper = require('sitemapper');
