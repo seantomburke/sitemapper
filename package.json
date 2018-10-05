@@ -18,9 +18,11 @@
   },
   "license": "MIT",
   "files": [
-    "lib"
+    "lib",
+    "sitemapper.d.ts"
   ],
   "main": "./lib/sitemapper.js",
+  "types": "./sitemapper.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/hawaiianchimp/sitemapper.git"
