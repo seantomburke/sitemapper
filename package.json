@@ -69,11 +69,11 @@
     "eslint-plugin-import": "^1.12.0",
     "is-url": "^1.2.2",
     "mocha": "^5.2.0",
+    "broccoli": "^1.1.4",
+    "broccoli-cli": "^1.0.0",
     "should": "^10.0.0"
   },
   "dependencies": {
-    "broccoli": "^1.1.4",
-    "broccoli-cli": "^1.0.0",
     "es6-promise": "^3.2.1",
     "request": "^2.74.0",
     "request-promise": "^4.1.0",
