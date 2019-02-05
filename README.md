@@ -45,7 +45,7 @@ Google.fetch()
 // or
 
 
-var sitemap = new Sitemapper();
+var sitemapper = new Sitemapper();
 
 sitemapper.timeout = 5000;
 sitemapper.fetch('http://wp.seantburke.com/sitemap.xml')
