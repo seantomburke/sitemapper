@@ -8,7 +8,6 @@
 
 import xmlParse from 'xml2js-es6-promise';
 import request from 'request-promise';
-import { Promise } from 'es6-promise';
 
 /**
  * @typedef {Object} Sitemapper
