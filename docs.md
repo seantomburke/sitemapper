@@ -35,12 +35,12 @@
 
 Sitemap Parser
 
-Copyright (c) 2014 Sean Thomas Burke
+Copyright (c) 2020 Sean Thomas Burke
 Licensed under the MIT license.
 
 **Meta**
 
--   **author**: Sean Burke &lt;hawaiianchimp@gmail.com>
+-   **author**: Sean Burke &lt;@seantomburke>
 
 ## SitesArray
 
@@ -52,11 +52,9 @@ Type: [Array][29]&lt;[String][30]>
 
 ```javascript
 [
-           'www.google.com',
-           'www.linkedin.com'
-         ]
-
-*
+  'www.google.com',
+  'www.linkedin.com'
+]
 ```
 
 ## SitesData
@@ -74,13 +72,12 @@ Type: [Object][31]
 
 ```javascript
 {
-         url: 'linkedin.com/sitemap.xml',
-         sites: [
-           'linkedin.com/project1',
-           'linkedin.com/project2'
-           ]
-
-*
+  url: 'linkedin.com/sitemap.xml',
+  sites: [
+    'linkedin.com/project1',
+    'linkedin.com/project2'
+  ]
+}
 ```
 
 ## ParseData
@@ -103,15 +100,15 @@ Type: [Object][31]
 
 ```javascript
 {
-       error: "There was an error!"
-       data: {
-         url: 'linkedin.com',
-         urlset: [{
-           url: 'www.linkedin.com/project1'
-         },[{
-           url: 'www.linkedin.com/project2'
-         }]
-       }
+  error: "There was an error!"
+  data: {
+    url: 'linkedin.com',
+    urlset: [{
+      url: 'www.linkedin.com/project1'
+    },[{
+      url: 'www.linkedin.com/project2'
+    }]
+  }
 }
 ```
 
@@ -148,7 +145,7 @@ Gets the sites from a sitemap.xml with a given URL
 
 ```javascript
 sitemapper.fetch('example.xml')
-                   .then((sites) => console.log(sites));
+ .then((sites) => console.log(sites));
 ```
 
 Returns **[Promise][37]&lt;[SitesData][38]>** 
