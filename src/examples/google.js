@@ -1,4 +1,4 @@
-import Sitemapper from '../sitemapper.js';
+import Sitemapper from '../assets/sitemapper.js';
 
 const Google = new Sitemapper({
   url: 'https://www.google.com/work/sitemap.xml',

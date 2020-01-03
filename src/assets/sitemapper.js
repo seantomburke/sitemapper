@@ -100,7 +100,7 @@ export default class Sitemapper {
       method: 'GET',
       uri: url,
       resolveWithFullResponse: true,
-      gzip: true
+      gzip: true,
     };
 
     return new Promise((resolve) => {
