@@ -1,5 +1,3 @@
-/* global require,module */
-
 /**
  * Sitemap Parser
  *
