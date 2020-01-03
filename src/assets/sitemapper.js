@@ -240,7 +240,7 @@ export default class Sitemapper {
  *       url: 'www.linkedin.com/project2'
  *     }]
  *   }
- *  }
+ * }
  */
 
 /**
@@ -251,21 +251,20 @@ export default class Sitemapper {
  * @property {string} url - the original url used to query the data
  * @property {SitesArray} sites
  * @example {
- *  url: 'linkedin.com/sitemap.xml',
- *  sites: [
- *    'linkedin.com/project1',
- *    'linkedin.com/project2'
- *  ]
- *
- **/
+ *   url: 'linkedin.com/sitemap.xml',
+ *   sites: [
+ *     'linkedin.com/project1',
+ *     'linkedin.com/project2'
+ *   ]
+ * }
+ */
 
 /**
  * An array of urls
  *
  * @typedef {String[]} SitesArray
  * @example [
- *  'www.google.com',
- *  'www.linkedin.com'
+ *   'www.google.com',
+ *   'www.linkedin.com'
  * ]
- *
- **/
+ */

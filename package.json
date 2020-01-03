@@ -60,7 +60,7 @@
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "async": "^3.1.0",
-    "documentation": "^8.1.2",
+    "documentation": "^12.1.4",
     "eslint": "^4.18.2",
     "is-url": "^1.2.2",
     "mocha": "^5.2.0",
