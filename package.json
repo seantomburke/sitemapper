@@ -1,6 +1,6 @@
 {
   "name": "sitemapper",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Parser for XML Sitemaps to be used with Robots.txt and web crawlers",
   "keywords": [
     "parse",
@@ -37,7 +37,7 @@
     "build": "npm run clean && npm run compile",
     "start": "node lib/examples/index.js",
     "test": "mocha ./lib/tests/test.js && npm run lint",
-    "lint": "eslint /src",
+    "lint": "eslint src",
     "clean": "rm -rf lib",
     "docs": "documentation build ./src/assets/sitemapper.js -f md > docs.md"
   },
@@ -61,9 +61,7 @@
     "@babel/preset-env": "^7.7.7",
     "async": "^3.1.0",
     "documentation": "^8.1.2",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb-base": "^5.0.3",
-    "eslint-plugin-import": "^1.12.0",
+    "eslint": "^4.18.2",
     "is-url": "^1.2.2",
     "mocha": "^5.2.0",
     "should": "^10.0.0"

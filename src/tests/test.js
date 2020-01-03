@@ -1,4 +1,3 @@
-/* global describe,it */
 import async from 'async';
 import assert from 'assert';
 import should from 'should';
