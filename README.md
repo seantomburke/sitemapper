@@ -1,5 +1,5 @@
 ## Sitemap-parser
-[![Build Status](https://travis-ci.org/seantomburke/sitemapper.svg?branch=master)](https://travis-ci.org/hawaiianchimp/sitemapper) [![Monthly Downloads](https://img.shields.io/npm/dm/sitemapper.svg)](https://www.npmjs.com/package/sitemapper)
+[![Build Status](https://travis-ci.org/seantomburke/sitemapper.svg?branch=master)](https://travis-ci.org/seantomburke/sitemapper) [![Monthly Downloads](https://img.shields.io/npm/dm/sitemapper.svg)](https://www.npmjs.com/package/sitemapper)
 [![npm version](https://badge.fury.io/js/sitemapper.svg)](https://badge.fury.io/js/sitemapper)
 [![dependencies Status](https://david-dm.org/seantomburke/sitemapper/status.svg)](https://david-dm.org/seantomburke/sitemapper)
 [![Inline docs](https://inch-ci.org/github/seantomburke/sitemapper.svg?branch=master&style=shields)](https://inch-ci.org/github/seantomburke/sitemapper)
