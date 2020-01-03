@@ -1,14 +1,13 @@
 /**
  * Sitemap Parser
  *
- * Copyright (c) 2014 Sean Thomas Burke
+ * Copyright (c) 2020 Sean Thomas Burke
  * Licensed under the MIT license.
- * @author Sean Burke <hawaiianchimp@gmail.com>
+ * @author Sean Burke <@seantomburke>
  */
 
 import xmlParse from 'xml2js-es6-promise';
 import request from 'request-promise';
-import { Promise } from 'es6-promise';
 
 /**
  * @typedef {Object} Sitemapper
@@ -22,9 +21,9 @@ export default class Sitemapper {
    * @params {Timeout} [options.timeout] - @see {timeout}
    *
    * @example let sitemap = new Sitemapper({
-   *                                 url: 'http://wp.seantburke.com/sitemap.xml',
-   *                                 timeout: 15000
-   *                               });
+   *   url: 'http://wp.seantburke.com/sitemap.xml',
+   *   timeout: 15000
+   *  });
    */
   constructor(options) {
     const settings = options || {};
@@ -40,11 +39,10 @@ export default class Sitemapper {
    * @param {string} [url] - the Sitemaps url (e.g http://wp.seantburke.com/sitemap.xml)
    * @returns {Promise<SitesData>}
    * @example sitemapper.fetch('example.xml')
-   *                    .then((sites) => console.log(sites));
+   *  .then((sites) => console.log(sites));
    */
   fetch(url = this.url) {
-    this.url = this.url || url;
-    return new Promise((resolve) => this.crawl(url).then(sites => resolve({ url, sites })));
+    return new Promise(resolve => this.crawl(url).then(sites => resolve({ url, sites })));
   }
 
   /**
@@ -188,6 +186,10 @@ export default class Sitemapper {
    * @callback
    */
   getSites(url = this.url, callback) {
+    console.warn(  // eslint-disable-line no-console
+      'function getSites() is deprecated, please use the function fetch()'
+    );
+
     let err = {};
     let sites = [];
     this.fetch(url).then(response => {
@@ -229,15 +231,15 @@ export default class Sitemapper {
  * @property {Object} data.sitemapindex - index of sitemap
  * @property {string} data.sitemapindex.sitemap - Sitemap
  * @example {
- *        error: "There was an error!"
- *        data: {
- *          url: 'linkedin.com',
- *          urlset: [{
- *            url: 'www.linkedin.com/project1'
- *          },[{
- *            url: 'www.linkedin.com/project2'
- *          }]
- *        }
+ *   error: "There was an error!"
+ *   data: {
+ *     url: 'linkedin.com',
+ *     urlset: [{
+ *       url: 'www.linkedin.com/project1'
+ *     },[{
+ *       url: 'www.linkedin.com/project2'
+ *     }]
+ *   }
  * }
  */
 
@@ -249,21 +251,20 @@ export default class Sitemapper {
  * @property {string} url - the original url used to query the data
  * @property {SitesArray} sites
  * @example {
- *          url: 'linkedin.com/sitemap.xml',
- *          sites: [
- *            'linkedin.com/project1',
- *            'linkedin.com/project2'
- *            ]
- *
- **/
+ *   url: 'linkedin.com/sitemap.xml',
+ *   sites: [
+ *     'linkedin.com/project1',
+ *     'linkedin.com/project2'
+ *   ]
+ * }
+ */
 
 /**
  * An array of urls
  *
  * @typedef {String[]} SitesArray
  * @example [
- *            'www.google.com',
- *            'www.linkedin.com'
- *          ]
- *
- **/
+ *   'www.google.com',
+ *   'www.linkedin.com'
+ * ]
+ */
