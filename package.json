@@ -11,10 +11,10 @@
     "crawlers",
     "webcrawler"
   ],
-  "homepage": "http://github.com/seantomburke/sitemapper",
+  "homepage": "http://github.com/hawaiianchimp/sitemapper",
   "tonicExampleFilename": "example.js",
   "bugs": {
-    "url": "http://github.com/seantomburke/sitemapper/issues"
+    "url": "http://github.com/hawaiianchimp/sitemapper/issues"
   },
   "license": "MIT",
   "files": [
@@ -25,7 +25,7 @@
   "types": "./sitemapper.d.ts",
   "repository": {
     "type": "git",
-    "url": "git://github.com/seantomburke/sitemapper.git"
+    "url": "git://github.com/hawaiianchimp/sitemapper.git"
   },
   "author": {
     "name": "Sean Thomas Burke",
@@ -60,16 +60,16 @@
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "async": "^3.1.0",
-    "documentation": "^12.1.4",
+    "documentation": "^8.1.2",
     "eslint": "^4.18.2",
     "is-url": "^1.2.2",
     "mocha": "^5.2.0",
     "should": "^10.0.0"
   },
   "dependencies": {
+    "es6-promise": "^3.3.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.5",
-    "rsvp": "^4.8.5",
     "xml2js-es6-promise": "^1.1.1"
   }
 }
