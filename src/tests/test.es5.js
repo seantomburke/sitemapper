@@ -1,10 +1,10 @@
-import 'async';
-import 'assert';
-import 'should';
-import isUrl from 'is-url';
+require('async');
+require('assert');
+require('should');
+const isUrl = require('is-url');
 
-import Sitemapper from '../assets/sitemapper.js';
-let sitemapper;
+const Sitemapper = require('../assets/sitemapper.js');
+var sitemapper;
 
 describe('Sitemapper', function () {
 
