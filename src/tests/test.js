@@ -4,7 +4,7 @@ import assert from 'assert';
 import should from 'should';
 import isUrl from 'is-url';
 
-import Sitemapper from './sitemapper.js';
+import Sitemapper from '../assets/sitemapper.js';
 let sitemapper;
 
 describe('Sitemapper', function () {

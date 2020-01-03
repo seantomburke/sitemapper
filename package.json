@@ -1,6 +1,6 @@
 {
   "name": "sitemapper",
-  "version": "2.1.14",
+  "version": "3.0.0",
   "description": "Parser for XML Sitemaps to be used with Robots.txt and web crawlers",
   "keywords": [
     "parse",
@@ -21,7 +21,7 @@
     "lib",
     "sitemapper.d.ts"
   ],
-  "main": "./lib/sitemapper.js",
+  "main": "./lib/assets/sitemapper.js",
   "types": "./sitemapper.d.ts",
   "repository": {
     "type": "git",
@@ -33,13 +33,13 @@
     "url": "http://www.seantburke.com"
   },
   "scripts": {
-    "broccoli": "broccoli build lib",
-    "build": "npm run clean && npm run broccoli",
+    "compile": "babel src -d lib -s",
+    "build": "npm run clean && npm run compile",
     "start": "node lib/examples/index.js",
-    "test": "mocha ./lib/test.js && npm run lint",
+    "test": "mocha ./lib/tests/test.js && npm run lint",
     "lint": "eslint /src",
     "clean": "rm -rf lib",
-    "docs": "documentation -g -o docs.md -f md src/assets/sitemapper.js"
+    "docs": "documentation build ./src/assets/sitemapper.js -f md > docs.md"
   },
   "maintainers": [
     {
@@ -53,30 +53,25 @@
     "test": "./test"
   },
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 6.0.0"
   },
   "devDependencies": {
-    "async": "^2.0.1",
-    "babel-cli": "^6.11.4",
-    "babel-polyfill": "^6.13.0",
-    "broccoli-babel-transpiler": "^7.0.0",
-    "broccoli-concat": "^2.3.4",
-    "broccoli-funnel": "^1.0.5",
-    "broccoli-merge-trees": "^1.1.3",
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "async": "^3.1.0",
     "documentation": "^8.1.2",
-    "eslint": "^3.2.2",
-    "eslint-config-airbnb-base": "^5.0.1",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^5.0.3",
     "eslint-plugin-import": "^1.12.0",
     "is-url": "^1.2.2",
     "mocha": "^5.2.0",
-    "broccoli": "^1.1.4",
-    "broccoli-cli": "^1.0.0",
     "should": "^10.0.0"
   },
   "dependencies": {
-    "es6-promise": "^3.2.1",
-    "request": "^2.74.0",
-    "request-promise": "^4.1.0",
-    "xml2js-es6-promise": "^1.0.3"
+    "es6-promise": "^3.3.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5",
+    "xml2js-es6-promise": "^1.1.1"
   }
 }

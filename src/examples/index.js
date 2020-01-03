@@ -1,4 +1,4 @@
-import Sitemapper from '../sitemapper.js';
+import Sitemapper from '../assets/sitemapper.js';
 
 const sitemapper = new Sitemapper();
 
