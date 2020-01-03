@@ -58,7 +58,6 @@
   "devDependencies": {
     "@babel/cli": "^7.7.7",
     "@babel/core": "^7.7.7",
-    "@babel/plugin-transform-classes": "^7.7.4",
     "@babel/preset-env": "^7.7.7",
     "async": "^3.1.0",
     "babel-plugin-add-module-exports": "^1.0.2",
