@@ -6,7 +6,7 @@ const isUrl = require('is-url');
 const Sitemapper = require('../assets/sitemapper.js');
 var sitemapper;
 
-describe('Sitemapper', function () {
+describe('Sitemapper in ES5', function () {
 
   beforeEach(() => {
     sitemapper = new Sitemapper();
@@ -56,9 +56,9 @@ describe('Sitemapper', function () {
   });
 
   describe('fetch Method resolves sites to array', function () {
-    it('http://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
+    it('https://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
-      const url = 'http://wp.seantburke.com/sitemap.xml';
+      const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
@@ -95,9 +95,9 @@ describe('Sitemapper', function () {
         .catch(error => console.error(error));
     });
 
-    it('http://www.cnn.com/sitemaps/sitemap-index.xml sitemaps should be an array', function (done) {
+    it('https://www.cnn.com/sitemaps/cnn/index.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
-      const url = 'http://www.cnn.com/sitemaps/sitemap-index.xml';
+      const url = 'https://www.cnn.com/sitemaps/cnn/index.xml';
       sitemapper.timeout = 5000;
       sitemapper.fetch(url)
         .then(data => {

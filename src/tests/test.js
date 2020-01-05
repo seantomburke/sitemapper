@@ -6,7 +6,7 @@ import isUrl from 'is-url';
 import Sitemapper from '../assets/sitemapper.js';
 let sitemapper;
 
-describe('Sitemapper', function () {
+describe('Sitemapper in ES6', function () {
 
   beforeEach(() => {
     sitemapper = new Sitemapper();
@@ -58,7 +58,7 @@ describe('Sitemapper', function () {
   describe('fetch Method resolves sites to array', function () {
     it('http://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
-      const url = 'http://wp.seantburke.com/sitemap.xml';
+      const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;

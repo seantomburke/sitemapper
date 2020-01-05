@@ -7,7 +7,10 @@
  */
 
 import xmlParse from 'xml2js-es6-promise';
-import request from 'request-promise-native';
+import axios from 'axios';
+
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
 
 /**
  * @typedef {Object} Sitemapper
@@ -25,11 +28,20 @@ export default class Sitemapper {
    *   timeout: 15000
    *  });
    */
-  constructor(options) {
-    const settings = options || {};
-    this.url = settings.url;
-    this.timeout = settings.timeout || 15000;
-    this.timeoutTable = {};
+  constructor(options = {}) {
+    this.debug = options.debug;
+    this.progress = options.progress;
+    this.timeout = options.timeout || 15000
+    this.timeoutTable = [];
+    this.url = options.url;
+    this.settings = { 
+      timeout: this.timeout,
+      url: this.url,
+      ...options,
+      headers: {
+        ...options.headers,
+      },
+     };
   }
 
   /**
@@ -42,6 +54,8 @@ export default class Sitemapper {
    *  .then((sites) => console.log(sites));
    */
   fetch(url = this.url) {
+    this.url = url;
+    if (this.debug || this.progress) console.log('Fetching urls for ', url); // eslint-disable-line no-console
     return new Promise(resolve => this.crawl(url).then(sites => resolve({ url, sites })));
   }
 
@@ -92,26 +106,40 @@ export default class Sitemapper {
    * @returns {Promise<ParseData>}
    */
   parse(url = this.url) {
+    if (this.debug) console.log('\n[Debug]: Crawling ', url); // eslint-disable-line no-console
     const requestOptions = {
+      ...this.settings,
       method: 'GET',
-      uri: url,
-      resolveWithFullResponse: true,
-      gzip: true,
+      url,
+      timeout: this.timeout,
+      cancelToken: source.token,
     };
 
     return new Promise((resolve) => {
-      const requester = request(requestOptions)
+      axios(requestOptions)
         .then((response) => {
-          if (!response || response.statusCode !== 200) {
+          if (!response || response.status !== 200) {
             clearTimeout(this.timeoutTable[url]);
             return resolve({ error: response.error, data: response });
+          } else if (this.settings.responseType === 'stream') {
+            response.data.pipe(writeable);
+            const chunks = [];
+            writeable.on("data", function (chunk) {
+              chunks.push(chunk);
+            });
+            writeable.on("end", function () {
+              xmlParse(Buffer.concat(chunks));
+            });
           }
-          return xmlParse(response.body);
+          return xmlParse(response.data);
         })
         .then(data => resolve({ error: null, data }))
-        .catch(response => resolve({ error: response.error, data: {} }));
+        .catch(error => {
+          let message = (axios.isCancel(error)) ? 'request timed out' : error.stack; 
+          resolve({ error: message, data: {} });
+        });
 
-      this.initializeTimeout(url, requester, resolve);
+      this.initializeTimeout(url, resolve);
     });
   }
 
@@ -124,10 +152,10 @@ export default class Sitemapper {
    * @param {Promise} requester - the promise that creates the web request to the url
    * @param {Function} callback - the resolve method is used here to resolve the parent promise
    */
-  initializeTimeout(url, requester, callback) {
+  initializeTimeout(url, callback) {
     // this resolves instead of rejects in order to allow other requests to continue
     this.timeoutTable[url] = setTimeout(() => {
-      requester.cancel();
+      source.cancel('Operation canceled by the user.');
 
       callback({
         error: `request timed out after ${this.timeout} milliseconds`,
@@ -152,15 +180,21 @@ export default class Sitemapper {
 
         if (error) {
           // Fail silently
+          if (this.debug) console.debug('[Debug]:', error); // eslint-disable-line no-console
+          else if (this.progress) process.stderr.write('x');
           return resolve([]);
         } else if (data && data.urlset && data.urlset.url) {
           const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
+          if (this.debug) console.debug('[Debug]:', sites.length, ' sites retrieved'); // eslint-disable-line no-console
+          else if (this.progress) process.stdout.write('.');
 
           return resolve([].concat(sites));
         } else if (data && data.sitemapindex) {
           // Map each child url into a promise to create an array of promises
           const sitemap = data.sitemapindex.sitemap.map(map => map.loc && map.loc[0]);
           const promiseArray = sitemap.map(site => this.crawl(site));
+          if (this.debug) console.debug('[Debug]: Diving deeper into', sitemap.length, 'more sitemaps'); // eslint-disable-line no-console
+          else if (this.progress) process.stdout.write('↓');
 
           // Make sure all the promises resolve then filter and reduce the array
           return Promise.all(promiseArray).then(results => {
