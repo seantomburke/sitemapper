@@ -152,6 +152,7 @@ export default class Sitemapper {
 
         if (error) {
           // Fail silently
+          console.error(error);
           return resolve([]);
         } else if (data && data.urlset && data.urlset.url) {
           const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
