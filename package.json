@@ -68,7 +68,6 @@
     "should": "^10.0.0"
   },
   "dependencies": {
-    "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
     "xml2js-es6-promise": "^1.1.1"
   }
