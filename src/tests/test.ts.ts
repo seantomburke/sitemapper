@@ -1,10 +1,12 @@
 import 'async';
 import 'assert';
 import 'should';
-import isUrl from 'is-url';
+import isUrl = require('is-url');
 
+// @ts-ignore
 import Sitemapper from '../assets/sitemapper.js';
-let sitemapper;
+import { SitemapperResponse } from '../../sitemapper';
+let sitemapper: Sitemapper;
 
 describe('Sitemapper', function () {
 
