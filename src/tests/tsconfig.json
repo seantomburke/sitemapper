@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "alwaysStrict": true,
+    "declaration": false,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": [
+      "dom",
+      "esnext"
+    ],
+    "newLine": "lf",
+    "target": "es2015",
+    "baseUrl": "./",
+    "outDir": "../../lib/tests/",
+    "preserveConstEnums": true,
+    "removeComments": false,
+    "strict": true,
+    "noImplicitAny": false
+  },
+  "include": [
+    "./*.ts"
+  ]
+}
