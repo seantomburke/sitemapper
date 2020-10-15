@@ -26,10 +26,11 @@ export default class Sitemapper {
    *  });
    */
   constructor(options) {
-    const settings = options || {};
+    const settings = options || {'requestHeaders': {}};
     this.url = settings.url;
     this.timeout = settings.timeout || 15000;
     this.timeoutTable = {};
+    this.requestHeaders = settings.requestHeaders;
   }
 
   /**
@@ -97,6 +98,7 @@ export default class Sitemapper {
       uri: url,
       resolveWithFullResponse: true,
       gzip: true,
+      headers: this.requestHeaders,
     };
 
     return new Promise((resolve) => {
@@ -109,7 +111,10 @@ export default class Sitemapper {
           return xmlParse(response.body);
         })
         .then(data => resolve({ error: null, data }))
-        .catch(response => resolve({ error: response.error, data: {} }));
+        .catch(response => {
+          console.log(response);
+          resolve({ error: response.error, data: {} })
+        });
 
       this.initializeTimeout(url, requester, resolve);
     });
@@ -150,12 +155,13 @@ export default class Sitemapper {
         // The promise resolved, remove the timeout
         clearTimeout(this.timeoutTable[url]);
 
+        console.log(error);
+
         if (error) {
           // Fail silently
           return resolve([]);
         } else if (data && data.urlset && data.urlset.url) {
           const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
-
           return resolve([].concat(sites));
         } else if (data && data.sitemapindex) {
           // Map each child url into a promise to create an array of promises
