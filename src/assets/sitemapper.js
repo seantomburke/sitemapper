@@ -155,8 +155,6 @@ export default class Sitemapper {
         // The promise resolved, remove the timeout
         clearTimeout(this.timeoutTable[url]);
 
-        console.log(error);
-
         if (error) {
           // Fail silently
           return resolve([]);
