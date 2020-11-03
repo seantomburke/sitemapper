@@ -97,9 +97,9 @@ describe('Sitemapper', function () {
         .catch(error => console.error(error));
     });
 
-    it('http://www.cnn.com/sitemaps/sitemap-index.xml sitemaps should be an array', function (done) {
+    it('https://www.golinks.io/sitemap.xmlsitemaps should be an array', function (done) {
       this.timeout(30000);
-      const url = 'http://www.cnn.com/sitemaps/sitemap-index.xml';
+      const url = 'https://www.golinks.io/sitemap.xml';
       sitemapper.timeout = 5000;
       sitemapper.fetch(url)
         .then(data => {
