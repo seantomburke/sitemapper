@@ -56,9 +56,9 @@ describe('Sitemapper', function () {
   });
 
   describe('fetch Method resolves sites to array', function () {
-    it('http://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
+    it('https://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
-      const url = 'http://wp.seantburke.com/sitemap.xml';
+      const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
@@ -114,7 +114,7 @@ describe('Sitemapper', function () {
   describe('getSites method', function () {
     it('getSites should be backwards compatible', function (done) {
       this.timeout(30000);
-      const url = 'http://wp.seantburke.com/sitemap.xml';
+      const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper.getSites(url, (err, sites) => {
         sites.should.be.Array;
         isUrl(sites[0]).should.be.true;

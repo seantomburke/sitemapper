@@ -17,11 +17,11 @@ export default class Sitemapper {
    * Construct the Sitemapper class
    *
    * @params {Object} options to set
-   * @params {string} [options.url] - the Sitemap url (e.g http://wp.seantburke.com/sitemap.xml)
+   * @params {string} [options.url] - the Sitemap url (e.g https://wp.seantburke.com/sitemap.xml)
    * @params {Timeout} [options.timeout] - @see {timeout}
    *
    * @example let sitemap = new Sitemapper({
-   *   url: 'http://wp.seantburke.com/sitemap.xml',
+   *   url: 'https://wp.seantburke.com/sitemap.xml',
    *   timeout: 15000
    *  });
    */
@@ -36,7 +36,7 @@ export default class Sitemapper {
    * Gets the sites from a sitemap.xml with a given URL
    *
    * @public
-   * @param {string} [url] - the Sitemaps url (e.g http://wp.seantburke.com/sitemap.xml)
+   * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
    * @returns {Promise<SitesData>}
    * @example sitemapper.fetch('example.xml')
    *  .then((sites) => console.log(sites));
@@ -69,7 +69,7 @@ export default class Sitemapper {
   /**
    *
    * @param {string} url - url for making requests. Should be a link to a sitemaps.xml
-   * @example sitemapper.url = 'http://wp.seantburke.com/sitemap.xml'
+   * @example sitemapper.url = 'https://wp.seantburke.com/sitemap.xml'
    */
   static set url(url) {
     this.url = url;
@@ -88,7 +88,7 @@ export default class Sitemapper {
    * Requests the URL and uses xmlParse to parse through and find the data
    *
    * @private
-   * @param {string} [url] - the Sitemaps url (e.g http://wp.seantburke.com/sitemap.xml)
+   * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
    * @returns {Promise<ParseData>}
    */
   parse(url = this.url) {
@@ -141,7 +141,7 @@ export default class Sitemapper {
    *
    * @private
    * @recursive
-   * @param {string} url - the Sitemaps url (e.g http://wp.seantburke.com/sitemap.xml)
+   * @param {string} url - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
    * @returns {Promise<SitesArray> | Promise<ParseData>}
    */
   crawl(url) {
