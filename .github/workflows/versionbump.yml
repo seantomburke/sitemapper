@@ -1,0 +1,44 @@
+name: Bump NPM Version
+
+on:
+  push:
+    branches:
+      - master
+    # file paths to consider in the event. Optional; defaults to all.
+    paths:
+      - 'lib/assets/sitemapper.js'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm test
+      run: |
+        npm test
+      env:
+        CI: true
+    - name: update cache
+      run: |
+        npm run cache
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git diff-index --quiet HEAD || git commit -m "updating cache"
+        git push
+    - name: bump version
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        npm version patch
+        git push
