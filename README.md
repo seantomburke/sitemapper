@@ -18,7 +18,7 @@ const Sitemapper = require('sitemapper');
 
 const sitemap = new Sitemapper();
 
-sitemap.fetch('http://wp.seantburke.com/sitemap.xml').then(function(sites) {
+sitemap.fetch('https://wp.seantburke.com/sitemap.xml').then(function(sites) {
   console.log(sites);
 });
 
@@ -43,7 +43,7 @@ Google.fetch()
 const sitemapper = new Sitemapper();
 sitemapper.timeout = 5000;
 
-sitemapper.fetch('http://wp.seantburke.com/sitemap.xml')
+sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
   .then(({ url, sites }) => console.log(`url:${url}`, 'sites:', sites))
   .catch(error => console.log(error));
 ```
@@ -72,7 +72,7 @@ Google.fetch()
 var sitemapper = new Sitemapper();
 
 sitemapper.timeout = 5000;
-sitemapper.fetch('http://wp.seantburke.com/sitemap.xml')
+sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
   .then(function (data) {
     console.log(data);
   })
@@ -95,7 +95,7 @@ var Sitemapper = require('sitemapper');
 
 var sitemapper = new Sitemapper();
 
-sitemapper.getSites('http://wp.seantburke.com/sitemap.xml', function(err, sites) {
+sitemapper.getSites('https://wp.seantburke.com/sitemap.xml', function(err, sites) {
     if (!err) {
      console.log(sites);
     }

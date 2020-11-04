@@ -13,7 +13,7 @@ Google.fetch()
 
 sitemapper.timeout = 5000;
 
-sitemapper.fetch('http://wp.seantburke.com/sitemap.xml')
+sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
   .then(({ url, sites }) => console.log(`url:${url}`, 'sites:', sites))
   .catch(error => console.log(error));
 

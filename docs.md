@@ -66,7 +66,7 @@ Type: [Object][31]
 ### Properties
 
 -   `url` **[string][30]** the original url used to query the data
--   `sites` **[SitesArray][32]** 
+-   `sites` **[SitesArray][32]**
 
 ### Examples
 
@@ -89,7 +89,7 @@ Type: [Object][31]
 ### Properties
 
 -   `error` **[Error][33]** that either comes from `xmlParse` or `request` or custom error
--   `data` **[Object][31]** 
+-   `data` **[Object][31]**
     -   `data.url` **[string][30]** URL of sitemap
     -   `data.urlset` **[Array][29]** Array of returned URLs
         -   `data.urlset.url` **[string][30]** single Url
@@ -139,7 +139,7 @@ Gets the sites from a sitemap.xml with a given URL
 
 #### Parameters
 
--   `url` **[string][30]?** the Sitemaps url (e.g [http://wp.seantburke.com/sitemap.xml][36]) (optional, default `this.url`)
+-   `url` **[string][30]?** the Sitemaps url (e.g [https://wp.seantburke.com/sitemap.xml][36]) (optional, default `this.url`)
 
 #### Examples
 
@@ -148,7 +148,7 @@ sitemapper.fetch('example.xml')
  .then((sites) => console.log(sites));
 ```
 
-Returns **[Promise][37]&lt;[SitesData][38]>** 
+Returns **[Promise][37]&lt;[SitesData][38]>**
 
 ### getSites
 
@@ -177,7 +177,7 @@ Get the timeout
 console.log(sitemapper.timeout);
 ```
 
-Returns **[Timeout][40]** 
+Returns **[Timeout][40]**
 
 ### timeout
 
@@ -185,7 +185,7 @@ Set the timeout
 
 #### Parameters
 
--   `duration` **[Timeout][40]** 
+-   `duration` **[Timeout][40]**
 
 #### Examples
 
@@ -202,7 +202,7 @@ sitemapper.timeout = 15000; // 15 seconds
 #### Examples
 
 ```javascript
-sitemapper.url = 'http://wp.seantburke.com/sitemap.xml'
+sitemapper.url = 'https://wp.seantburke.com/sitemap.xml'
 ```
 
 ### url
@@ -215,7 +215,7 @@ Get the url to parse
 console.log(sitemapper.url)
 ```
 
-Returns **[string][30]** 
+Returns **[string][30]**
 
 [1]: #xmlparse
 
@@ -287,7 +287,7 @@ Returns **[string][30]**
 
 [35]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[36]: http://wp.seantburke.com/sitemap.xml
+[36]: https://wp.seantburke.com/sitemap.xml
 
 [37]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 

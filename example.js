@@ -19,7 +19,7 @@ Google.fetch()
 var sitemapper = new Sitemapper();
 sitemapper.timeout = 5000;
 
-sitemapper.fetch('http://wp.seantburke.com/sitemap.xml')
+sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
   .then(function (data) {
     console.log(data);
   })
@@ -44,7 +44,7 @@ sitemapper.fetch('http://www.stubhub.com/new-sitemap/us/sitemap-US-en-index.xml'
   });
 
 // Version 1.0.0 example which has been deprecated.
-sitemapper.getSites('http://wp.seantburke.com/sitemap.xml', function (err, sites) {
+sitemapper.getSites('https://wp.seantburke.com/sitemap.xml', function (err, sites) {
   if (!err) {
     console.log(sites);
   }

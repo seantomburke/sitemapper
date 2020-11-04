@@ -58,9 +58,9 @@ describe('Sitemapper', function () {
   });
 
   describe('fetch Method resolves sites to array', function () {
-    it('http://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
+    it('https://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
-      const url = 'http://wp.seantburke.com/sitemap.xml';
+      const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
@@ -69,7 +69,10 @@ describe('Sitemapper', function () {
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
     });
 
     it('giberish.giberish should fail silently with an empty array', function (done) {
@@ -80,7 +83,10 @@ describe('Sitemapper', function () {
           data.sites.should.be.Array;
           done();
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
     });
 
     it('https://www.google.com/work/sitemap.xml sitemaps should be an array', function (done) {
@@ -94,12 +100,15 @@ describe('Sitemapper', function () {
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
     });
 
-    it('http://www.cnn.com/sitemaps/sitemap-index.xml sitemaps should be an array', function (done) {
+    it('https://www.golinks.io/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
-      const url = 'http://www.cnn.com/sitemaps/sitemap-index.xml';
+      const url = 'https://www.golinks.io/sitemap.xml';
       sitemapper.timeout = 5000;
       sitemapper.fetch(url)
         .then(data => {
@@ -109,14 +118,17 @@ describe('Sitemapper', function () {
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
     });
   });
 
   describe('getSites method', function () {
     it('getSites should be backwards compatible', function (done) {
       this.timeout(30000);
-      const url = 'http://wp.seantburke.com/sitemap.xml';
+      const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper.getSites(url, (err, sites) => {
         sites.should.be.Array;
         isUrl(sites[0]).should.be.true;
