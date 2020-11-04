@@ -5,8 +5,8 @@ on:
     branches:
       - master
     # file paths to consider in the event. Optional; defaults to all.
-    paths:
-      - 'lib/assets/sitemapper.js'
+    paths-ignore:
+      - 'package.json'
 
 jobs:
   build:
