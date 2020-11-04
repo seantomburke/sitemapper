@@ -111,10 +111,7 @@ export default class Sitemapper {
           return xmlParse(response.body);
         })
         .then(data => resolve({ error: null, data }))
-        .catch(response => {
-          console.log(response);
-          resolve({ error: response.error, data: {} })
-        });
+        .catch(response => resolve({ error: response.error, data: {} }));
 
       this.initializeTimeout(url, requester, resolve);
     });
