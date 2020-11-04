@@ -7,7 +7,7 @@
  */
 
 import xmlParse from 'xml2js-es6-promise';
-import got from 'got';
+import request from 'request-promise-native';
 
 /**
  * @typedef {Object} Sitemapper
@@ -95,13 +95,14 @@ export default class Sitemapper {
   parse(url = this.url) {
     const requestOptions = {
       method: 'GET',
+      uri: url,
       resolveWithFullResponse: true,
       gzip: true,
       headers: this.requestHeaders,
     };
 
     return new Promise((resolve) => {
-      const requester = got(url, requestOptions)
+      const requester = request(requestOptions)
         .then((response) => {
           if (!response || response.statusCode !== 200) {
             clearTimeout(this.timeoutTable[url]);
@@ -175,7 +176,40 @@ export default class Sitemapper {
       });
     });
   }
+
+
+  /**
+   * /**
+   * Gets the sites from a sitemap.xml with a given URL
+   * @deprecated
+   * @param {string} url - url to query
+   * @param {getSitesCallback} callback - callback for sites and error
+   * @callback
+   */
+  getSites(url = this.url, callback) {
+    console.warn(  // eslint-disable-line no-console
+      '\r\nWarning:', 'function .getSites() is deprecated, please use the function .fetch()\r\n'
+    );
+
+    let err = {};
+    let sites = [];
+    this.fetch(url).then(response => {
+      sites = response.sites;
+    }).catch(error => {
+      err = error;
+    });
+    return callback(err, sites);
+  }
 }
+
+/**
+ * Callback for the getSites method
+ *
+ * @callback getSitesCallback
+ * @param {Object} error - error from callback
+ * @param {Array} sites - an Array of sitemaps
+ */
+
 /**
  * Timeout in milliseconds
  *
