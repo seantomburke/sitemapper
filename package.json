@@ -1,6 +1,6 @@
 {
   "name": "sitemapper",
-  "version": "3.0.10",
+  "version": "3.1.0",
   "description": "Parser for XML Sitemaps to be used with Robots.txt and web crawlers",
   "keywords": [
     "parse",
@@ -53,7 +53,7 @@
     "test": "./test"
   },
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">= 10.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
@@ -73,8 +73,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.8",
+    "got": "^11.8.0",
     "xml2js-es6-promise": "^1.1.1"
   }
 }
