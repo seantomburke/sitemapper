@@ -69,7 +69,10 @@ describe('Sitemapper', function () {
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
     });
 
     it('giberish.giberish should fail silently with an empty array', function (done) {
@@ -80,7 +83,10 @@ describe('Sitemapper', function () {
           data.sites.should.be.Array;
           done();
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
     });
 
     it('https://www.google.com/work/sitemap.xml sitemaps should be an array', function (done) {
@@ -94,10 +100,13 @@ describe('Sitemapper', function () {
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
     });
 
-    it('https://www.golinks.io/sitemap.xmlsitemaps should be an array', function (done) {
+    it('https://www.golinks.io/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
       const url = 'https://www.golinks.io/sitemap.xml';
       sitemapper.timeout = 5000;
@@ -109,7 +118,10 @@ describe('Sitemapper', function () {
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
     });
   });
 

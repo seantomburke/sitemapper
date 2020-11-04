@@ -69,7 +69,7 @@ describe('Sitemapper', function () {
         })
         .catch(error => {
           console.error('Test failed');
-          done();
+          done(error);
         });
     });
 
@@ -83,7 +83,7 @@ describe('Sitemapper', function () {
         })
         .catch(error => {
           console.error('Test failed');
-          done();
+          done(error);
         });
     });
 
@@ -100,7 +100,7 @@ describe('Sitemapper', function () {
         })
         .catch(error => {
           console.error('Test failed');
-          done();
+          done(error);
         });
     });
 
@@ -118,7 +118,7 @@ describe('Sitemapper', function () {
         })
         .catch(error => {
           console.error('Test failed');
-          done();
+          done(error);
         });
     });
   });
