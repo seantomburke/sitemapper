@@ -3,7 +3,7 @@ require('assert');
 require('should');
 const isUrl = require('is-url');
 
-const Sitemapper = require('../assets/sitemapper.js');
+const Sitemapper = require('../../lib/assets/sitemapper.js');
 var sitemapper;
 
 describe('Sitemapper', function () {

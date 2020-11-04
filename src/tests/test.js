@@ -3,7 +3,7 @@ import 'assert';
 import 'should';
 import isUrl from 'is-url';
 
-import Sitemapper from '../assets/sitemapper.js';
+import Sitemapper from '../../lib/assets/sitemapper.js';
 let sitemapper;
 
 describe('Sitemapper', function () {
