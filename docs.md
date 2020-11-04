@@ -3,33 +3,33 @@
 ### Table of Contents
 
 -   [xmlParse][1]
--   [SitesArray][2]
-    -   [Examples][3]
--   [SitesData][4]
-    -   [Properties][5]
-    -   [Examples][6]
--   [ParseData][7]
-    -   [Properties][8]
-    -   [Examples][9]
--   [Timeout][10]
--   [getSitesCallback][11]
-    -   [Parameters][12]
--   [Sitemapper][13]
-    -   [fetch][14]
-        -   [Parameters][15]
-        -   [Examples][16]
-    -   [getSites][17]
-        -   [Parameters][18]
-    -   [timeout][19]
-        -   [Examples][20]
-    -   [timeout][21]
-        -   [Parameters][22]
-        -   [Examples][23]
-    -   [url][24]
-        -   [Parameters][25]
-        -   [Examples][26]
-    -   [url][27]
-        -   [Examples][28]
+-   [Sitemapper][2]
+    -   [fetch][3]
+        -   [Parameters][4]
+        -   [Examples][5]
+    -   [getSites][6]
+        -   [Parameters][7]
+    -   [timeout][8]
+        -   [Examples][9]
+    -   [timeout][10]
+        -   [Parameters][11]
+        -   [Examples][12]
+    -   [url][13]
+        -   [Parameters][14]
+        -   [Examples][15]
+    -   [url][16]
+        -   [Examples][17]
+-   [getSitesCallback][18]
+    -   [Parameters][19]
+-   [Timeout][20]
+-   [ParseData][21]
+    -   [Properties][22]
+    -   [Examples][23]
+-   [SitesData][24]
+    -   [Properties][25]
+    -   [Examples][26]
+-   [SitesArray][27]
+    -   [Examples][28]
 
 ## xmlParse
 
@@ -42,96 +42,9 @@ Licensed under the MIT license.
 
 -   **author**: Sean Burke &lt;@seantomburke>
 
-## SitesArray
-
-An array of urls
-
-Type: [Array][29]&lt;[String][30]>
-
-### Examples
-
-```javascript
-[
-  'www.google.com',
-  'www.linkedin.com'
-]
-```
-
-## SitesData
-
-Resolve handler type for the promise in this.parse()
-
-Type: [Object][31]
-
-### Properties
-
--   `url` **[string][30]** the original url used to query the data
--   `sites` **[SitesArray][32]**
-
-### Examples
-
-```javascript
-{
-  url: 'linkedin.com/sitemap.xml',
-  sites: [
-    'linkedin.com/project1',
-    'linkedin.com/project2'
-  ]
-}
-```
-
-## ParseData
-
-Resolve handler type for the promise in this.parse()
-
-Type: [Object][31]
-
-### Properties
-
--   `error` **[Error][33]** that either comes from `xmlParse` or `request` or custom error
--   `data` **[Object][31]**
-    -   `data.url` **[string][30]** URL of sitemap
-    -   `data.urlset` **[Array][29]** Array of returned URLs
-        -   `data.urlset.url` **[string][30]** single Url
-    -   `data.sitemapindex` **[Object][31]** index of sitemap
-        -   `data.sitemapindex.sitemap` **[string][30]** Sitemap
-
-### Examples
-
-```javascript
-{
-  error: "There was an error!"
-  data: {
-    url: 'linkedin.com',
-    urlset: [{
-      url: 'www.linkedin.com/project1'
-    },[{
-      url: 'www.linkedin.com/project2'
-    }]
-  }
-}
-```
-
-## Timeout
-
-Timeout in milliseconds
-
-Type: [Number][34]
-
-## getSitesCallback
-
-Callback for the getSites method
-
-Type: [Function][35]
-
-### Parameters
-
--   `error` **[Object][31]** error from callback
--   `sites` **[Array][29]** an Array of sitemaps
-
 ## Sitemapper
 
-Type: [Object][31]
+Type: [Object][29]
 
 ### fetch
 
@@ -139,7 +52,7 @@ Gets the sites from a sitemap.xml with a given URL
 
 #### Parameters
 
--   `url` **[string][30]?** the Sitemaps url (e.g [https://wp.seantburke.com/sitemap.xml][36]) (optional, default `this.url`)
+-   `url` **[string][30]?** the Sitemaps url (e.g [https://wp.seantburke.com/sitemap.xml][31]) (optional, default `this.url`)
 
 #### Examples
 
@@ -148,19 +61,19 @@ sitemapper.fetch('example.xml')
  .then((sites) => console.log(sites));
 ```
 
-Returns **[Promise][37]&lt;[SitesData][38]>**
+Returns **[Promise][32]&lt;[SitesData][33]>** 
 
 ### getSites
 
 /\*\*
 Gets the sites from a sitemap.xml with a given URL
 
-Type: [Function][35]
+Type: [Function][34]
 
 #### Parameters
 
 -   `url` **[string][30]** url to query (optional, default `this.url`)
--   `callback` **[getSitesCallback][39]** callback for sites and error
+-   `callback` **[getSitesCallback][35]** callback for sites and error
 
 **Meta**
 
@@ -177,7 +90,7 @@ Get the timeout
 console.log(sitemapper.timeout);
 ```
 
-Returns **[Timeout][40]**
+Returns **[Timeout][36]** 
 
 ### timeout
 
@@ -185,7 +98,7 @@ Set the timeout
 
 #### Parameters
 
--   `duration` **[Timeout][40]**
+-   `duration` **[Timeout][36]** 
 
 #### Examples
 
@@ -215,84 +128,171 @@ Get the url to parse
 console.log(sitemapper.url)
 ```
 
-Returns **[string][30]**
+Returns **[string][30]** 
+
+## getSitesCallback
+
+Callback for the getSites method
+
+Type: [Function][34]
+
+### Parameters
+
+-   `error` **[Object][29]** error from callback
+-   `sites` **[Array][37]** an Array of sitemaps
+
+## Timeout
+
+Timeout in milliseconds
+
+Type: [Number][38]
+
+## ParseData
+
+Resolve handler type for the promise in this.parse()
+
+Type: [Object][29]
+
+### Properties
+
+-   `error` **[Error][39]** that either comes from `xmlParse` or `request` or custom error
+-   `data` **[Object][29]** 
+    -   `data.url` **[string][30]** URL of sitemap
+    -   `data.urlset` **[Array][37]** Array of returned URLs
+        -   `data.urlset.url` **[string][30]** single Url
+    -   `data.sitemapindex` **[Object][29]** index of sitemap
+        -   `data.sitemapindex.sitemap` **[string][30]** Sitemap
+
+### Examples
+
+```javascript
+{
+  error: "There was an error!"
+  data: {
+    url: 'linkedin.com',
+    urlset: [{
+      url: 'www.linkedin.com/project1'
+    },[{
+      url: 'www.linkedin.com/project2'
+    }]
+  }
+}
+```
+
+## SitesData
+
+Resolve handler type for the promise in this.parse()
+
+Type: [Object][29]
+
+### Properties
+
+-   `url` **[string][30]** the original url used to query the data
+-   `sites` **[SitesArray][40]** 
+
+### Examples
+
+```javascript
+{
+  url: 'linkedin.com/sitemap.xml',
+  sites: [
+    'linkedin.com/project1',
+    'linkedin.com/project2'
+  ]
+}
+```
+
+## SitesArray
+
+An array of urls
+
+Type: [Array][37]&lt;[String][30]>
+
+### Examples
+
+```javascript
+[
+  'www.google.com',
+  'www.linkedin.com'
+]
+```
 
 [1]: #xmlparse
 
-[2]: #sitesarray
+[2]: #sitemapper
 
-[3]: #examples
+[3]: #fetch
 
-[4]: #sitesdata
+[4]: #parameters
 
-[5]: #properties
+[5]: #examples
 
-[6]: #examples-1
+[6]: #getsites
 
-[7]: #parsedata
+[7]: #parameters-1
 
-[8]: #properties-1
+[8]: #timeout
 
-[9]: #examples-2
+[9]: #examples-1
 
-[10]: #timeout
+[10]: #timeout-1
 
-[11]: #getsitescallback
+[11]: #parameters-2
 
-[12]: #parameters
+[12]: #examples-2
 
-[13]: #sitemapper
+[13]: #url
 
-[14]: #fetch
+[14]: #parameters-3
 
-[15]: #parameters-1
+[15]: #examples-3
 
-[16]: #examples-3
+[16]: #url-1
 
-[17]: #getsites
+[17]: #examples-4
 
-[18]: #parameters-2
+[18]: #getsitescallback
 
-[19]: #timeout-1
+[19]: #parameters-4
 
-[20]: #examples-4
+[20]: #timeout-2
 
-[21]: #timeout-2
+[21]: #parsedata
 
-[22]: #parameters-3
+[22]: #properties
 
 [23]: #examples-5
 
-[24]: #url
+[24]: #sitesdata
 
-[25]: #parameters-4
+[25]: #properties-1
 
 [26]: #examples-6
 
-[27]: #url-1
+[27]: #sitesarray
 
 [28]: #examples-7
 
-[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
 [30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[31]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[31]: https://wp.seantburke.com/sitemap.xml
 
-[32]: #sitesarray
+[32]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[33]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+[33]: #sitesdata
 
-[34]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[34]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[35]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[35]: #getsitescallback
 
-[36]: https://wp.seantburke.com/sitemap.xml
+[36]: #timeout
 
-[37]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[37]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[38]: #sitesdata
+[38]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[39]: #getsitescallback
+[39]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
 
-[40]: #timeout
+[40]: #sitesarray
