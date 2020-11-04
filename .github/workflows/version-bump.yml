@@ -1,4 +1,4 @@
-name: Bump NPM Version
+name: Bump and release NPM Version
 
 on:
   push:
@@ -13,10 +13,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    outputs:
+      nodeVersion: ${{ steps.bump_version.outputs.version }}
     strategy:
       matrix:
         node-version: [10.x]
-
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -24,8 +25,21 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: bump version
+    - id: bump_version
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        npm version patch
+        echo "::set-output name=version::$(echo $(npm version patch))"
         git push
+    - name: draft release
+    - id: draft_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ jobs.build.outputs.version }}
+        release_name: Release ${{ jobs.build.outputs.version }}
+        body: |
+          Releasing version ${{ jobs.build.outputs.version }} to NPM
+        draft: true
+        prerelease: false
