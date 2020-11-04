@@ -26,10 +26,11 @@ export default class Sitemapper {
    *  });
    */
   constructor(options) {
-    const settings = options || {};
+    const settings = options || {'requestHeaders': {}};
     this.url = settings.url;
     this.timeout = settings.timeout || 15000;
     this.timeoutTable = {};
+    this.requestHeaders = settings.requestHeaders;
   }
 
   /**
@@ -97,6 +98,7 @@ export default class Sitemapper {
       uri: url,
       resolveWithFullResponse: true,
       gzip: true,
+      headers: this.requestHeaders,
     };
 
     return new Promise((resolve) => {
@@ -155,7 +157,6 @@ export default class Sitemapper {
           return resolve([]);
         } else if (data && data.urlset && data.urlset.url) {
           const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
-
           return resolve([].concat(sites));
         } else if (data && data.sitemapindex) {
           // Map each child url into a promise to create an array of promises
