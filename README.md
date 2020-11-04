@@ -1,5 +1,5 @@
 ## Sitemap-parser
-[![Build Status](https://travis-ci.org/seantomburke/sitemapper.svg?branch=master)](https://travis-ci.org/seantomburke/sitemapper) 
+[![Build Status](https://travis-ci.org/seantomburke/sitemapper.svg?branch=master)](https://travis-ci.org/seantomburke/sitemapper)
 [![Monthly Downloads](https://img.shields.io/npm/dm/sitemapper.svg)](https://www.npmjs.com/package/sitemapper)
 [![npm version](https://badge.fury.io/js/sitemapper.svg)](https://badge.fury.io/js/sitemapper)
 [![GitHub license](https://img.shields.io/github/license/seantomburke/sitemapper)](https://github.com/seantomburke/sitemapper/blob/master/LICENSE)
@@ -53,6 +53,25 @@ sitemapper.timeout = 5000;
 sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
   .then(({ url, sites }) => console.log(`url:${url}`, 'sites:', sites))
   .catch(error => console.log(error));
+```
+
+# Options
+
+You can add options on the intial Sitemapper object when instantiating it.
+
++ `requestHeaders`: (Object) - Additional Request Headers
++ `timeout`: (Number) - Maximum timeout for a single URL
+
+```javascript
+
+const sitemapper = new Sitemapper({
+  url: 'https://art-works.community/sitemap.xml',
+  timeout: 15000,
+  requestHeaders: {
+    'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0'
+  }
+});
+
 ```
 
 ### Examples in ES5
