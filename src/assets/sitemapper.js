@@ -7,7 +7,7 @@
  */
 
 import xmlParse from 'xml2js-es6-promise';
-import request from 'request-promise-native';
+import got from 'got';
 
 /**
  * @typedef {Object} Sitemapper
@@ -95,14 +95,13 @@ export default class Sitemapper {
   parse(url = this.url) {
     const requestOptions = {
       method: 'GET',
-      uri: url,
       resolveWithFullResponse: true,
       gzip: true,
       headers: this.requestHeaders,
     };
 
     return new Promise((resolve) => {
-      const requester = request(requestOptions)
+      const requester = got(url, requestOptions)
         .then((response) => {
           if (!response || response.statusCode !== 200) {
             clearTimeout(this.timeoutTable[url]);
