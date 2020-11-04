@@ -26,14 +26,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: bump version
-    - id: bump_version
+      id: bump_version
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         echo "::set-output name=version::$(echo $(npm version patch))"
         git push
     - name: draft release
-    - id: draft_release
+      id: draft_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
