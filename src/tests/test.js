@@ -30,14 +30,14 @@ describe('Sitemapper', function () {
       sitemapper.fetch.should.be.Function;
     });
 
-    it('should contruct with a url', () => {
+    it('should construct with a url', () => {
       sitemapper = new Sitemapper({
         url: 'google.com',
       });
       sitemapper.url.should.equal('google.com');
     });
 
-    it('should contruct with a timeout', () => {
+    it('should construct with a timeout', () => {
       sitemapper = new Sitemapper({
         timeout: 1000,
       });
@@ -114,6 +114,21 @@ describe('Sitemapper', function () {
           data.url.should.equal(url);
           data.sites.length.should.be.above(2);
           isUrl(data.sites[0]).should.be.true;
+          done();
+        })
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
+
+    it('https://www.golinks.io/sitemap.xml sitemaps should return an empty array when timing out', function (done) {
+      this.timeout(30000);
+      const url = 'https://www.golinks.io/sitemap.xml';
+      sitemapper.timeout = 1;
+      sitemapper.fetch(url)
+        .then(data => {
+          data.sites.should.be.Array;
           done();
         })
         .catch(error => {

@@ -101,8 +101,8 @@ export default class Sitemapper {
     };
 
     return new Promise((resolve) => {
-      const requester = got(url, requestOptions)
-        .then((response) => {
+      const requester = got(url, requestOptions);
+        requester.then((response) => {
           if (!response || response.statusCode !== 200) {
             clearTimeout(this.timeoutTable[url]);
             return resolve({ error: response.error, data: response });
