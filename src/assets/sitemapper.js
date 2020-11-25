@@ -43,8 +43,27 @@ export default class Sitemapper {
    * @example sitemapper.fetch('example.xml')
    *  .then((sites) => console.log(sites));
    */
-  fetch(url = this.url) {
-    return new Promise(resolve => this.crawl(url).then(sites => resolve({ url, sites })));
+  async fetch(url = this.url) {
+    try {
+      // crawl the URL
+      const sites = await this.crawl(url);
+
+      // return the url and sites
+      return {
+        url,
+        sites,
+      }
+    } catch (e) {
+      if (this.debug) {
+        console.error(e);
+      }
+
+      // If we run into an error, don't throw, but instead return an empty array
+      return {
+        url,
+        sites: [],
+      }
+    }
   }
 
   /**
@@ -111,28 +130,50 @@ export default class Sitemapper {
    * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
    * @returns {Promise<ParseData>}
    */
-  parse(url = this.url) {
-    const requestOptions = {
-      method: 'GET',
-      resolveWithFullResponse: true,
-      gzip: true,
-      headers: this.requestHeaders,
-    };
+  async parse(url = this.url) {
+    try {
 
-    return new Promise((resolve) => {
+      // setup the response options for the got request
+      const requestOptions = {
+        method: 'GET',
+        resolveWithFullResponse: true,
+        gzip: true,
+        headers: this.requestHeaders,
+      };
+
+      // create a request Promise with the url and request options
       const requester = got(url, requestOptions);
-        requester.then((response) => {
-          if (!response || response.statusCode !== 200) {
-            clearTimeout(this.timeoutTable[url]);
-            return resolve({ error: response.error, data: response });
-          }
-          return parseStringPromise(response.body);
-        })
-        .then(data => resolve({ error: null, data }))
-        .catch(response => resolve({ error: response.error, data: response }));
 
-      this.initializeTimeout(url, requester, resolve);
-    });
+      // initialize the timeout method based on the URL, and pass the request object.
+      this.initializeTimeout(url, requester);
+
+      //
+      const response = await requester;
+
+      // if the response does not have a successful status code then clear the timeout for this url.
+      if (!response || response.statusCode !== 200) {
+        clearTimeout(this.timeoutTable[url]);
+        return { error: response.error, data: response };
+      }
+
+      // otherwise parse the XML that was returned.
+      const data = await parseStringPromise(response.body);
+
+      // return the results
+      return { error: null, data }
+    } catch (error) {
+      //
+      if (error.name === 'CancelError') {
+        return {
+          error: `Request timed out after ${this.timeout} milliseconds for url: '${url}'`,
+          data: error
+        }
+      }
+      return {
+        error: error.error,
+        data: error
+      }
+    }
   }
 
   /**
@@ -142,21 +183,27 @@ export default class Sitemapper {
    * @private
    * @param {string} url - url to use as a hash in the timeoutTable
    * @param {Promise} requester - the promise that creates the web request to the url
-   * @param {Function} callback - the resolve method is used here to resolve the parent promise
    */
-  initializeTimeout(url, requester, callback) {
+  initializeTimeout(url, requester) {
     // this resolves instead of rejects in order to allow other requests to continue
     this.timeoutTable[url] = setTimeout(() => {
+
+      try {
+      // cancel the request
       requester.cancel();
 
-      if (this.debug) {
-        console.debug('crawl timed out');
+      } catch (e) {
+        console.log('*******', e ,'******');
+        if (this.debug) {
+          // If the request was cancelled than the timeout was hit
+          if(e.name === 'CancelError') {
+            console.debug(`Request timed out after ${this.timeout} milliseconds for url: '${url}'`);
+          } else {
+            // otherwise something else happened
+            console.error(e);
+          }
+        }
       }
-
-      callback({
-        error: `request timed out after ${this.timeout} milliseconds for url: '${url}'`,
-        data: {},
-      });
     }, this.timeout);
   }
 
@@ -168,47 +215,52 @@ export default class Sitemapper {
    * @param {string} url - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
    * @returns {Promise<SitesArray> | Promise<ParseData>}
    */
-  crawl(url) {
-    return new Promise((resolve) => {
-      this.parse(url).then(({ error, data }) => {
-        // The promise resolved, remove the timeout
-        clearTimeout(this.timeoutTable[url]);
+  async crawl(url) {
+    try {
+      const { error, data } = await this.parse(url);
+      // The promise resolved, remove the timeout
+      clearTimeout(this.timeoutTable[url]);
 
-        if (error) {
-          if (this.debug) {
-            console.error(`Error occurred during "crawl('${url}')":\n\r Error: ${error}`);
-          }
-          // Fail silently
-          return resolve([]);
-        } else if (data && data.urlset && data.urlset.url) {
-          if (this.debug) {
-            console.debug(`Urlset found during "crawl('${url}')"`);
-          }
-          const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
-          return resolve([].concat(sites));
-        } else if (data && data.sitemapindex) {
-          if (this.debug) {
-            console.debug(`Additional sitemap found during "crawl('${url}')"`);
-          }
-          // Map each child url into a promise to create an array of promises
-          const sitemap = data.sitemapindex.sitemap.map(map => map.loc && map.loc[0]);
-          const promiseArray = sitemap.map(site => this.crawl(site));
-
-          // Make sure all the promises resolve then filter and reduce the array
-          return Promise.all(promiseArray).then(results => {
-            const sites = results.filter(result => !result.error)
-              .reduce((prev, curr) => prev.concat(curr), []);
-
-            return resolve(sites);
-          });
-        }
+      if (error) {
         if (this.debug) {
-            console.error(`Unknown state during "crawl(${url})":`, error, data);
-          }
+          console.error(`Error occurred during "crawl('${url}')":\n\r Error: ${error}`);
+        }
         // Fail silently
-        return resolve([]);
-      });
-    });
+        return [];
+      } else if (data && data.urlset && data.urlset.url) {
+        if (this.debug) {
+          console.debug(`Urlset found during "crawl('${url}')"`);
+        }
+        const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
+        return [].concat(sites);
+      } else if (data && data.sitemapindex) {
+        if (this.debug) {
+          console.debug(`Additional sitemap found during "crawl('${url}')"`);
+        }
+        // Map each child url into a promise to create an array of promises
+        const sitemap = data.sitemapindex.sitemap.map(map => map.loc && map.loc[0]);
+        const promiseArray = sitemap.map(site => this.crawl(site));
+
+        // Make sure all the promises resolve then filter and reduce the array
+        const results = await Promise.all(promiseArray);
+        const sites = results
+          .filter(result => !result.error)
+          .reduce((prev, curr) => prev.concat(curr), []);
+
+        return sites;
+      }
+
+      if (this.debug) {
+        console.error(`Unknown state during "crawl('${url})'":`, error, data);
+      }
+
+      // Fail silently
+      return [];
+    } catch (e) {
+      if (this.debug) {
+        this.debug &&console.error(e);
+      }
+    }
   }
 
 
@@ -220,18 +272,19 @@ export default class Sitemapper {
    * @param {getSitesCallback} callback - callback for sites and error
    * @callback
    */
-  getSites(url = this.url, callback) {
+  async getSites(url = this.url, callback) {
     console.warn(  // eslint-disable-line no-console
       '\r\nWarning:', 'function .getSites() is deprecated, please use the function .fetch()\r\n'
     );
 
     let err = {};
     let sites = [];
-    this.fetch(url).then(response => {
+    try {
+      const response = await this.fetch(url);
       sites = response.sites;
-    }).catch(error => {
-      err = error;
-    });
+    } catch (e) {
+      err = e;
+    }
     return callback(err, sites);
   }
 }
