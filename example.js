@@ -8,7 +8,7 @@ var Google = new Sitemapper({
 });
 
 // Then fetch
-data = Google.fetch()
+Google.fetch()
   .then(function (data) {
     console.log(data);
   })
