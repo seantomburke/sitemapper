@@ -73,9 +73,9 @@ describe('Sitemapper', function () {
         });
     });
 
-    it('giberish.giberish should fail silently with an empty array', function (done) {
+    it('gibberish.gibberish should fail silently with an empty array', function (done) {
       this.timeout(30000);
-      const url = 'http://giberish.giberish';
+      const url = 'http://gibberish.gibberish';
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;

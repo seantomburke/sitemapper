@@ -1,0 +1,25 @@
+{
+    "version": "0.1",
+    "language": "en",
+    "dictionaries": [
+        "bash",
+        "entities",
+        "filetypes",
+        "fullstack",
+        "html",
+        "html-symbol-entities",
+        "misc",
+        "node",
+        "softwareTerms"
+    ],
+    "words": [
+        "sitemapper",
+        "esmodules"
+    ],
+    "allowCompoundWords": true,
+    "flagWords": [],
+    "ignoreWords": [],
+    "ignorePaths": [
+      "node_modules/"
+    ]
+}

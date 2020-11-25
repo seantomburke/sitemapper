@@ -53,7 +53,7 @@ Type: [Array][29]&lt;[String][30]>
 ```javascript
 [
   'www.google.com',
-  'www.linkedin.com'
+  'https://www.linkedin.com'
 ]
 ```
 
@@ -72,10 +72,10 @@ Type: [Object][31]
 
 ```javascript
 {
-  url: 'linkedin.com/sitemap.xml',
+  url: 'https://linkedin.com/sitemap.xml',
   sites: [
-    'linkedin.com/project1',
-    'linkedin.com/project2'
+    'https://linkedin.com/project1',
+    'https://linkedin.com/project2'
   ]
 }
 ```
@@ -102,11 +102,11 @@ Type: [Object][31]
 {
   error: "There was an error!"
   data: {
-    url: 'linkedin.com',
+    url: 'https://linkedin.com',
     urlset: [{
-      url: 'www.linkedin.com/project1'
+      url: 'https://www.linkedin.com/project1'
     },[{
-      url: 'www.linkedin.com/project2'
+      url: 'https://www.linkedin.com/project2'
     }]
   }
 }

@@ -29,13 +29,13 @@
   },
   "author": {
     "name": "Sean Thomas Burke",
-    "email": "sean@seantburke.com",
+    "email": "seantomburke@users.noreply.github.com",
     "url": "http://www.seantburke.com"
   },
   "scripts": {
     "compile": "babel src -d lib -s && tsc --project ./src/tests/",
     "build": "npm run clean && npm run compile",
-    "start": "node lib/examples/index.js",
+    "start": "npm run build && node lib/examples/index.js",
     "test": "npm run build && mocha ./lib/tests/*.js && npm run lint",
     "lint": "eslint src",
     "clean": "rm -rf lib",
@@ -44,7 +44,7 @@
   "maintainers": [
     {
       "name": "Sean Thomas Burke",
-      "email": "sean@seantburke.com",
+      "email": "seantomburke@users.noreply.github.com",
       "url": "http://www.seantburke.com"
     }
   ],
@@ -56,21 +56,24 @@
     "node": ">= 10.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
-    "@types/async": "^3.0.3",
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
+    "@babel/runtime": "^7.12.5",
+    "@types/async": "^3.2.4",
+    "@types/got": "^9.6.11",
     "@types/is-url": "^1.2.28",
-    "@types/mocha": "^5.2.7",
-    "async": "^3.1.0",
-    "babel-plugin-add-module-exports": "^1.0.2",
-    "documentation": "^12.1.4",
-    "eslint": "^4.18.2",
-    "is-url": "^1.2.2",
-    "mocha": "^5.2.0",
+    "@types/mocha": "^8.0.4",
+    "async": "^3.2.0",
+    "babel-plugin-add-module-exports": "^1.0.4",
+    "babel-preset-minify": "^0.5.1",
+    "documentation": "^13.1.0",
+    "eslint": "^7.14.0",
+    "is-url": "^1.2.4",
+    "mocha": "^8.2.1",
     "should": "^13.2.3",
-    "ts-node": "^8.6.1",
-    "typescript": "^3.9.7"
+    "ts-node": "^9.0.0",
+    "typescript": "^4.1.2"
   },
   "dependencies": {
     "got": "^11.8.0",
