@@ -6,7 +6,7 @@
  * @author Sean Burke <@seantomburke>
  */
 
-import xmlParse from 'xml2js-es6-promise';
+import { parseStringPromise } from 'xml2js';
 import got from 'got';
 
 /**
@@ -105,7 +105,7 @@ export default class Sitemapper {
   }
 
   /**
-   * Requests the URL and uses xmlParse to parse through and find the data
+   * Requests the URL and uses parseStringPromise to parse through and find the data
    *
    * @private
    * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
@@ -126,7 +126,7 @@ export default class Sitemapper {
             clearTimeout(this.timeoutTable[url]);
             return resolve({ error: response.error, data: response });
           }
-          return xmlParse(response.body);
+          return parseStringPromise(response.body);
         })
         .then(data => resolve({ error: null, data }))
         .catch(response => resolve({ error: response.error, data: response }));
@@ -258,7 +258,7 @@ export default class Sitemapper {
  *
  * @typedef {Object} ParseData
  *
- * @property {Error} error that either comes from `xmlParse` or `request` or custom error
+ * @property {Error} error that either comes from `parseStringPromise` or `got` or custom error
  * @property {Object} data
  * @property {string} data.url - URL of sitemap
  * @property {Array} data.urlset - Array of returned URLs
