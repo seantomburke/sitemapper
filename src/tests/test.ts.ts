@@ -123,6 +123,22 @@ describe('Sitemapper', function () {
           done(error);
         });
     });
+
+    it('https://www.golinks.io/sitemap.xml sitemaps should return an empty array when timing out', function (done) {
+      this.timeout(30000);
+      const url = 'https://www.golinks.io/sitemap.xml';
+      sitemapper.timeout = 1;
+
+      sitemapper.fetch(url)
+        .then(data => {
+          data.sites.should.be.Array;
+          done();
+        })
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
   });
 
   describe('getSites method', function () {
