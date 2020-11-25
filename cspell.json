@@ -1,0 +1,29 @@
+{
+    "version": "0.1",
+    "language": "en",
+    "dictionaries": [
+        "aws",
+        "bash",
+        "companies",
+        "cpp",
+        "css",
+        "entities",
+        "filetypes",
+        "fullstack",
+        "html",
+        "html-symbol-entities",
+        "misc",
+        "node",
+        "php",
+        "softwareTerms"
+    ],
+    "words": [
+        "sitemapper"
+    ],
+    "allowCompoundWords": true,
+    "flagWords": [],
+    "ignoreWords": [],
+    "ignorePaths": [
+      "node_modules/"
+    ]
+}

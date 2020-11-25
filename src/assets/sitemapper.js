@@ -129,7 +129,7 @@ export default class Sitemapper {
           return xmlParse(response.body);
         })
         .then(data => resolve({ error: null, data }))
-        .catch(response => resolve({ error: response.error, data: {} }));
+        .catch(response => resolve({ error: response.error, data: response }));
 
       this.initializeTimeout(url, requester, resolve);
     });
@@ -154,7 +154,7 @@ export default class Sitemapper {
       }
 
       callback({
-        error: `request timed out after ${this.timeout} milliseconds`,
+        error: `request timed out after ${this.timeout} milliseconds for url: '${url}'`,
         data: {},
       });
     }, this.timeout);
@@ -176,19 +176,19 @@ export default class Sitemapper {
 
         if (error) {
           if (this.debug) {
-            console.error(`Error occurred during "crawl(${url})":\n\r Error: ${error}`);
+            console.error(`Error occurred during "crawl('${url}')":\n\r Error: ${error}`);
           }
           // Fail silently
           return resolve([]);
         } else if (data && data.urlset && data.urlset.url) {
           if (this.debug) {
-            console.debug(`Urlset found during "crawl(${url})"`);
+            console.debug(`Urlset found during "crawl('${url}')"`);
           }
           const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
           return resolve([].concat(sites));
         } else if (data && data.sitemapindex) {
           if (this.debug) {
-            console.debug(`Additional sitemap found during "crawl(${url})"`);
+            console.debug(`Additional sitemap found during "crawl('${url}')"`);
           }
           // Map each child url into a promise to create an array of promises
           const sitemap = data.sitemapindex.sitemap.map(map => map.loc && map.loc[0]);
@@ -203,7 +203,7 @@ export default class Sitemapper {
           });
         }
         if (this.debug) {
-            console.error(`Unknown state during "crawl(${url})"`);
+            console.error(`Unknown state during "crawl(${url})":`, error, data);
           }
         // Fail silently
         return resolve([]);
