@@ -13,7 +13,10 @@ module.exports = (api) => {
     'minify', // minify the Babel code
   ];
   const plugins = [
-    ['add-module-exports']
+    [
+      'add-module-exports',
+      { 'addDefaultProperty': true },
+    ]
   ];
 
   return {
