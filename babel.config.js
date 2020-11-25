@@ -9,12 +9,14 @@ module.exports = (api) => {
           "esmodules": true
         }
       }
-    ]
+    ],
+    'minify',
   ];
   const plugins = [[ {} ]];
 
   return {
     presets,
     plugins,
+    comments: false,
   };
 };
