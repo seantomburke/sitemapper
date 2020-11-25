@@ -6,8 +6,8 @@ const exampleURL = 'https://www.walmart.com/sitemap_topic.xml';
 // Instantiate an instance
 const sitemapper = new Sitemapper({
   url: exampleURL, // url to crawl
-  timeout: 10000, // 10 seconds
   debug: true, // don't show debug logs
+  timeout: 10000, // 10 seconds
 });
 
 /**

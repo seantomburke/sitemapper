@@ -10,7 +10,7 @@ module.exports = (api) => {
         }
       }
     ],
-    'minify',
+    'minify', // minify the Babel code
   ];
   const plugins = [
     ['add-module-exports']
@@ -19,6 +19,6 @@ module.exports = (api) => {
   return {
     presets,
     plugins,
-    comments: false,
+    comments: false, // Remove comments during minification
   };
 };

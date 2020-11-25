@@ -3,6 +3,7 @@ var Sitemapper = require('sitemapper');
 // Instantiate an instance with options
 var Google = new Sitemapper({
   url: 'https://www.google.com/work/sitemap.xml',
+  debug: false,
   timeout: 15000 //15 seconds
 });
 
