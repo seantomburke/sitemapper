@@ -34,18 +34,21 @@ sitemap.fetch('https://wp.seantburke.com/sitemap.xml').then(function(sites) {
 ```javascript
 import Sitemapper from 'sitemapper';
 
-const Google = new Sitemapper({
-  url: 'https://www.google.com/work/sitemap.xml',
-  timeout: 15000, // 15 seconds
-});
+(async () => {
+  const Google = new Sitemapper({
+    url: 'https://www.google.com/work/sitemap.xml',
+    timeout: 15000, // 15 seconds
+  });
 
-Google.fetch()
-  .then(data => console.log(data.sites))
-  .catch(error => console.log(error));
-
+  try {
+    const { sites } = await Google.fetch();
+    console.log(sites);
+  catch (error) {
+    console.log(error);
+  }
+})();
 
 // or
-
 
 const sitemapper = new Sitemapper();
 sitemapper.timeout = 5000;
