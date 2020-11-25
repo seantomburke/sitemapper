@@ -1,26 +1,17 @@
-import Sitemapper from '../assets/sitemapper.js';
+import Sitemapper from '../assets/sitemapper';
 
-const sitemapper = new Sitemapper();
-
-const Google = new Sitemapper({
-  url: 'https://www.google.com/work/sitemap.xml',
-  timeout: 15000, // 15 seconds
+// Instantiate an instance
+const sitemapper = new Sitemapper({
+  url: 'https://www.walmart.com/sitemap_topic.xml',
+  timeout: 100,
+  debug: false,
 });
 
-Google.fetch()
-  .then(data => console.log(data.sites))
-  .catch(error => console.log(error));
-
-sitemapper.timeout = 5000;
-
-sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
-  .then(({ url, sites }) => console.log(`url:${url}`, 'sites:', sites))
-  .catch(error => console.log(error));
-
-sitemapper.fetch('http://www.cnn.com/sitemaps/sitemap-index.xml')
-  .then(data => console.log(data))
-  .catch(error => console.log(error));
-
-sitemapper.fetch('http://www.stubhub.com/new-sitemap/us/sitemap-US-en-index.xml')
-  .then((data) => console.log(data))
-  .catch(error => console.log(error));
+(async () => {
+  try {
+    const data = await sitemapper.fetch();
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+})();

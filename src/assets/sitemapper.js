@@ -31,6 +31,7 @@ export default class Sitemapper {
     this.timeout = settings.timeout || 15000;
     this.timeoutTable = {};
     this.requestHeaders = settings.requestHeaders;
+    this.debug = settings.debug;
   }
 
   /**
@@ -86,6 +87,24 @@ export default class Sitemapper {
   }
 
   /**
+   * Setter for the debug state
+   * @param {Boolean} option - set whether to show debug logs in output.
+   * @example sitemapper.debug = true;
+   */
+  static set debug(option) {
+    this.debug = option;
+  }
+
+  /**
+   * Getter for the debug state
+   * @returns {Boolean}
+   * @example console.log(sitemapper.debug)
+   */
+  static get debug() {
+    return this.debug;
+  }
+
+  /**
    * Requests the URL and uses xmlParse to parse through and find the data
    *
    * @private
@@ -130,6 +149,10 @@ export default class Sitemapper {
     this.timeoutTable[url] = setTimeout(() => {
       requester.cancel();
 
+      if (this.debug) {
+        console.debug('crawl timed out');
+      }
+
       callback({
         error: `request timed out after ${this.timeout} milliseconds`,
         data: {},
@@ -152,12 +175,21 @@ export default class Sitemapper {
         clearTimeout(this.timeoutTable[url]);
 
         if (error) {
+          if (this.debug) {
+            console.error(`Error occurred during "crawl(${url})":\n\r Error: ${error}`);
+          }
           // Fail silently
           return resolve([]);
         } else if (data && data.urlset && data.urlset.url) {
+          if (this.debug) {
+            console.debug(`Urlset found during "crawl(${url})"`);
+          }
           const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
           return resolve([].concat(sites));
         } else if (data && data.sitemapindex) {
+          if (this.debug) {
+            console.debug(`Additional sitemap found during "crawl(${url})"`);
+          }
           // Map each child url into a promise to create an array of promises
           const sitemap = data.sitemapindex.sitemap.map(map => map.loc && map.loc[0]);
           const promiseArray = sitemap.map(site => this.crawl(site));
@@ -170,6 +202,9 @@ export default class Sitemapper {
             return resolve(sites);
           });
         }
+        if (this.debug) {
+            console.error(`Unknown state during "crawl(${url})"`);
+          }
         // Fail silently
         return resolve([]);
       });
