@@ -2,11 +2,7 @@
     "version": "0.1",
     "language": "en",
     "dictionaries": [
-        "aws",
         "bash",
-        "companies",
-        "cpp",
-        "css",
         "entities",
         "filetypes",
         "fullstack",
@@ -14,11 +10,11 @@
         "html-symbol-entities",
         "misc",
         "node",
-        "php",
         "softwareTerms"
     ],
     "words": [
-        "sitemapper"
+        "sitemapper",
+        "esmodules"
     ],
     "allowCompoundWords": true,
     "flagWords": [],

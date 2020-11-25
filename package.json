@@ -29,7 +29,7 @@
   },
   "author": {
     "name": "Sean Thomas Burke",
-    "email": "sean@seantburke.com",
+    "email": "seantomburke@users.noreply.github.com",
     "url": "http://www.seantburke.com"
   },
   "scripts": {
@@ -44,7 +44,7 @@
   "maintainers": [
     {
       "name": "Sean Thomas Burke",
-      "email": "sean@seantburke.com",
+      "email": "seantomburke@users.noreply.github.com",
       "url": "http://www.seantburke.com"
     }
   ],
@@ -65,6 +65,7 @@
     "@types/is-url": "^1.2.28",
     "@types/mocha": "^8.0.4",
     "async": "^3.2.0",
+    "babel-plugin-add-module-exports": "^1.0.4",
     "babel-preset-minify": "^0.5.1",
     "documentation": "^13.1.0",
     "eslint": "^7.14.0",

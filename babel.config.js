@@ -12,7 +12,9 @@ module.exports = (api) => {
     ],
     'minify',
   ];
-  const plugins = [[ {} ]];
+  const plugins = [
+    ['add-module-exports']
+  ];
 
   return {
     presets,

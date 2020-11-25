@@ -32,14 +32,14 @@ describe('Sitemapper', function () {
       sitemapper.fetch.should.be.Function;
     });
 
-    it('should contruct with a url', () => {
+    it('should construct with a url', () => {
       sitemapper = new Sitemapper({
         url: 'google.com',
       });
       sitemapper.url.should.equal('google.com');
     });
 
-    it('should contruct with a timeout', () => {
+    it('should construct with a timeout', () => {
       sitemapper = new Sitemapper({
         timeout: 1000,
       });
@@ -75,9 +75,9 @@ describe('Sitemapper', function () {
         });
     });
 
-    it('giberish.giberish should fail silently with an empty array', function (done) {
+    it('gibberish.gibberish should fail silently with an empty array', function (done) {
       this.timeout(30000);
-      const url = 'http://giberish.giberish';
+      const url = 'http://gibberish.gibberish';
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;

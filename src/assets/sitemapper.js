@@ -268,11 +268,11 @@ export default class Sitemapper {
  * @example {
  *   error: "There was an error!"
  *   data: {
- *     url: 'linkedin.com',
+ *     url: 'https://linkedin.com',
  *     urlset: [{
- *       url: 'www.linkedin.com/project1'
+ *       url: 'https://www.linkedin.com/project1'
  *     },[{
- *       url: 'www.linkedin.com/project2'
+ *       url: 'https://www.linkedin.com/project2'
  *     }]
  *   }
  * }
@@ -286,10 +286,10 @@ export default class Sitemapper {
  * @property {string} url - the original url used to query the data
  * @property {SitesArray} sites
  * @example {
- *   url: 'linkedin.com/sitemap.xml',
+ *   url: 'https://linkedin.com/sitemap.xml',
  *   sites: [
- *     'linkedin.com/project1',
- *     'linkedin.com/project2'
+ *     'https://linkedin.com/project1',
+ *     'https://linkedin.com/project2'
  *   ]
  * }
  */
@@ -299,7 +299,7 @@ export default class Sitemapper {
  *
  * @typedef {String[]} SitesArray
  * @example [
- *   'www.google.com',
- *   'www.linkedin.com'
+ *   'https://www.google.com',
+ *   'https://www.linkedin.com'
  * ]
  */
