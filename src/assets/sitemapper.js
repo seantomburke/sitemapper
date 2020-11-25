@@ -44,25 +44,20 @@ export default class Sitemapper {
    *  .then((sites) => console.log(sites));
    */
   async fetch(url = this.url) {
+    let sites = [];
     try {
       // crawl the URL
-      const sites = await this.crawl(url);
-
-      // return the url and sites
-      return {
-        url,
-        sites,
-      }
+      sites = await this.crawl(url);
     } catch (e) {
       if (this.debug) {
         console.error(e);
       }
+    }
 
-      // If we run into an error, don't throw, but instead return an empty array
-      return {
-        url,
-        sites: [],
-      }
+    // If we run into an error, don't throw, but instead return an empty array
+    return {
+      url,
+      sites,
     }
   }
 
@@ -131,16 +126,15 @@ export default class Sitemapper {
    * @returns {Promise<ParseData>}
    */
   async parse(url = this.url) {
+    // setup the response options for the got request
+    const requestOptions = {
+      method: 'GET',
+      resolveWithFullResponse: true,
+      gzip: true,
+      headers: this.requestHeaders,
+    };
+
     try {
-
-      // setup the response options for the got request
-      const requestOptions = {
-        method: 'GET',
-        resolveWithFullResponse: true,
-        gzip: true,
-        headers: this.requestHeaders,
-      };
-
       // create a request Promise with the url and request options
       const requester = got(url, requestOptions);
 
@@ -162,13 +156,15 @@ export default class Sitemapper {
       // return the results
       return { error: null, data }
     } catch (error) {
-      //
+      // If the request was canceled notify the user of the timeout
       if (error.name === 'CancelError') {
         return {
           error: `Request timed out after ${this.timeout} milliseconds for url: '${url}'`,
           data: error
         }
       }
+
+      // Otherwise notify of another error
       return {
         error: error.error,
         data: error
@@ -185,26 +181,8 @@ export default class Sitemapper {
    * @param {Promise} requester - the promise that creates the web request to the url
    */
   initializeTimeout(url, requester) {
-    // this resolves instead of rejects in order to allow other requests to continue
-    this.timeoutTable[url] = setTimeout(() => {
-
-      try {
-      // cancel the request
-      requester.cancel();
-
-      } catch (e) {
-        console.log('*******', e ,'******');
-        if (this.debug) {
-          // If the request was cancelled than the timeout was hit
-          if(e.name === 'CancelError') {
-            console.debug(`Request timed out after ${this.timeout} milliseconds for url: '${url}'`);
-          } else {
-            // otherwise something else happened
-            console.error(e);
-          }
-        }
-      }
-    }, this.timeout);
+    // this will throw a CancelError which will be handled in the parent that calls this method.
+    this.timeoutTable[url] = setTimeout(() => requester.cancel(), this.timeout);
   }
 
   /**
