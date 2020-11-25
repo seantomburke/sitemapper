@@ -30,7 +30,8 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        echo "::set-output name=version::$(echo $(npm version patch))"
+        echo "::set-output name=version::$(echo $(node -p \"require('./package.json').version.trim()\"))"
+        npm version patch
         git push
   release:
     runs-on: ubuntu-latest
