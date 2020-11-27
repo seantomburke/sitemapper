@@ -260,8 +260,8 @@ export default class Sitemapper {
     try {
       const response = await this.fetch(url);
       sites = response.sites;
-    } catch (e) {
-      err = e;
+    } catch (error) {
+      err = error;
     }
     return callback(err, sites);
   }

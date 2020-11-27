@@ -7,7 +7,7 @@ const exampleURL = 'https://www.walmart.com/sitemap_topic.xml';
 const sitemapper = new Sitemapper({
   url: exampleURL, // url to crawl
   debug: true, // don't show debug logs
-  timeout: 1, // 10 seconds
+  timeout: 10000, // 10 seconds
 });
 
 /**
