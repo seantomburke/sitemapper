@@ -141,7 +141,7 @@ export default class Sitemapper {
       // initialize the timeout method based on the URL, and pass the request object.
       this.initializeTimeout(url, requester);
 
-      //
+      // get the response from the requester promise
       const response = await requester;
 
       // if the response does not have a successful status code then clear the timeout for this url.
@@ -260,8 +260,8 @@ export default class Sitemapper {
     try {
       const response = await this.fetch(url);
       sites = response.sites;
-    } catch (e) {
-      err = e;
+    } catch (error) {
+      err = error;
     }
     return callback(err, sites);
   }
