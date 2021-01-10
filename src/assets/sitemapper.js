@@ -151,7 +151,7 @@ export default class Sitemapper {
       // if the response does not have a successful status code then clear the timeout for this url.
       if (!response || response.statusCode !== 200) {
         clearTimeout(this.timeoutTable[url]);
-        return {error: response.error, data: response};
+        return { error: response.error, data: response };
       }
 
       let responseBody;
@@ -207,7 +207,7 @@ export default class Sitemapper {
    */
   async crawl(url) {
     try {
-      const {error, data} = await this.parse(url);
+      const { error, data } = await this.parse(url);
       // The promise resolved, remove the timeout
       clearTimeout(this.timeoutTable[url]);
 
