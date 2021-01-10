@@ -8,6 +8,9 @@
 
 import { parseStringPromise } from 'xml2js';
 import got from 'got';
+import zlib from 'zlib';
+import Url from 'url';
+import path from 'path';
 
 /**
  * @typedef {Object} Sitemapper
@@ -131,6 +134,7 @@ export default class Sitemapper {
       method: 'GET',
       resolveWithFullResponse: true,
       gzip: true,
+      responseType: 'buffer',
       headers: this.requestHeaders,
     };
 
@@ -150,8 +154,16 @@ export default class Sitemapper {
         return { error: response.error, data: response };
       }
 
+      let responseBody;
+
+      if (this.isGzip(url)) {
+        responseBody = zlib.gunzipSync(Buffer.from(response.body, 'utf8')).toString();
+      } else {
+        responseBody = response.body;
+      }
+
       // otherwise parse the XML that was returned.
-      const data = await parseStringPromise(response.body);
+      const data = await parseStringPromise(responseBody);
 
       // return the results
       return { error: null, data }
@@ -264,6 +276,12 @@ export default class Sitemapper {
       err = error;
     }
     return callback(err, sites);
+  }
+
+  isGzip(url) {
+    const urlParse = Url.parse(url);
+    const ext = path.extname(urlParse.path);
+    return ext === '.gz';
   }
 }
 
