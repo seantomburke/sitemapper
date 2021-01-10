@@ -29,7 +29,7 @@ export default class Sitemapper {
    *  });
    */
   constructor(options) {
-    const settings = options || {'requestHeaders': {}};
+    const settings = options || { 'requestHeaders': {} };
     this.url = settings.url;
     this.timeout = settings.timeout || 15000;
     this.timeoutTable = {};
@@ -151,7 +151,7 @@ export default class Sitemapper {
       // if the response does not have a successful status code then clear the timeout for this url.
       if (!response || response.statusCode !== 200) {
         clearTimeout(this.timeoutTable[url]);
-        return {error: response.error, data: response};
+        return { error: response.error, data: response };
       }
 
       let responseBody;
@@ -166,7 +166,7 @@ export default class Sitemapper {
       const data = await parseStringPromise(responseBody);
 
       // return the results
-      return {error: null, data};
+      return { error: null, data };
     } catch (error) {
       // If the request was canceled notify the user of the timeout
       if (error.name === 'CancelError') {
@@ -207,7 +207,7 @@ export default class Sitemapper {
    */
   async crawl(url) {
     try {
-      const {error, data} = await this.parse(url);
+      const { error, data } = await this.parse(url);
       // The promise resolved, remove the timeout
       clearTimeout(this.timeoutTable[url]);
 
