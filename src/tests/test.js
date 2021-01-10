@@ -137,16 +137,6 @@ describe('Sitemapper', function () {
           done(error);
         });
     });
-  });
-
-  describe('gzipped sitemaps', function () {
-    beforeEach(() => {
-      sitemapper = new Sitemapper({
-        requestHeaders: {
-          'Accept-Encoding': 'gzip,deflate,sdch',
-        }
-      });
-    });
 
     it('https://www.banggood.com/sitemap/products-Toys-Hobbies-and-Robot-5-hu-HU.xml.gz gzip should be a non-empty array', function (done) {
       this.timeout(30000);

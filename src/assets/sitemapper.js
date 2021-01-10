@@ -157,7 +157,7 @@ export default class Sitemapper {
       let responseBody;
 
       if (this.isGzip(url)) {
-        responseBody = await this.inflateResponseBody(response.body);
+        responseBody = await this.decompressResponseBody(response.body);
       } else {
         responseBody = response.body;
       }
@@ -284,7 +284,7 @@ export default class Sitemapper {
     return ext === '.gz';
   }
 
-  inflateResponseBody(body) {
+  decompressResponseBody(body) {
     return new Promise((resolve, reject) => {
       const buffer = Buffer.from(body, 'utf8');
       zlib.gunzip(buffer, function (err, result) {
