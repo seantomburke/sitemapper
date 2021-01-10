@@ -61,7 +61,7 @@ export default class Sitemapper {
     return {
       url,
       sites,
-    }
+    };
   }
 
   /**
@@ -157,7 +157,7 @@ export default class Sitemapper {
       let responseBody;
 
       if (this.isGzip(url)) {
-        responseBody = zlib.gunzipSync(Buffer.from(response.body, 'utf8')).toString();
+        responseBody = await this.inflateResponseBody(response.body);
       } else {
         responseBody = response.body;
       }
@@ -166,21 +166,21 @@ export default class Sitemapper {
       const data = await parseStringPromise(responseBody);
 
       // return the results
-      return { error: null, data }
+      return {error: null, data};
     } catch (error) {
       // If the request was canceled notify the user of the timeout
       if (error.name === 'CancelError') {
         return {
           error: `Request timed out after ${this.timeout} milliseconds for url: '${url}'`,
           data: error
-        }
+        };
       }
 
       // Otherwise notify of another error
       return {
         error: error.error,
         data: error
-      }
+      };
     }
   }
 
@@ -248,7 +248,7 @@ export default class Sitemapper {
       return [];
     } catch (e) {
       if (this.debug) {
-        this.debug &&console.error(e);
+        this.debug && console.error(e);
       }
     }
   }
@@ -261,7 +261,7 @@ export default class Sitemapper {
    * @param {string} url - url to query
    * @param {getSitesCallback} callback - callback for sites and error
    * @callback
-   */
+    */
   async getSites(url = this.url, callback) {
     console.warn(  // eslint-disable-line no-console
       '\r\nWarning:', 'function .getSites() is deprecated, please use the function .fetch()\r\n'
@@ -282,6 +282,19 @@ export default class Sitemapper {
     const urlParse = Url.parse(url);
     const ext = path.extname(urlParse.path);
     return ext === '.gz';
+  }
+
+  inflateResponseBody(body) {
+    return new Promise((resolve, reject) => {
+      const buffer = Buffer.from(body, 'utf8');
+      zlib.gunzip(buffer, function (err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
   }
 }
 
