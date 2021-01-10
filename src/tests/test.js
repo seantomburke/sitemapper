@@ -155,6 +155,32 @@ describe('Sitemapper', function () {
     });
   });
 
+  describe('gzipped sitemaps', function () {
+    beforeEach(() => {
+      sitemapper = new Sitemapper({
+        requestHeaders: {
+          'Accept-Encoding': 'gzip,deflate,sdch',
+        }
+      });
+    });
+
+    it('https://www.banggood.com/sitemap/products-Toys-Hobbies-and-Robot-5-hu-HU.xml.gz gzip should be a non-empty array', function (done) {
+      this.timeout(30000);
+      const url = 'https://www.banggood.com/sitemap/products-Toys-Hobbies-and-Robot-5-hu-HU.xml.gz';
+      sitemapper.timeout = 10000;
+      sitemapper.fetch(url)
+        .then(data => {
+          data.sites.should.be.Array;
+          data.sites.length.should.be.greaterThan(0);
+          done();
+        })
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
+  });
+
   describe('getSites method', function () {
     it('getSites should be backwards compatible', function (done) {
       this.timeout(30000);
