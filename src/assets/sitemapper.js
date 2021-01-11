@@ -8,6 +8,9 @@
 
 import { parseStringPromise } from 'xml2js';
 import got from 'got';
+import zlib from 'zlib';
+import Url from 'url';
+import path from 'path';
 
 /**
  * @typedef {Object} Sitemapper
@@ -26,7 +29,7 @@ export default class Sitemapper {
    *  });
    */
   constructor(options) {
-    const settings = options || {'requestHeaders': {}};
+    const settings = options || { 'requestHeaders': {} };
     this.url = settings.url;
     this.timeout = settings.timeout || 15000;
     this.timeoutTable = {};
@@ -58,7 +61,7 @@ export default class Sitemapper {
     return {
       url,
       sites,
-    }
+    };
   }
 
   /**
@@ -131,6 +134,7 @@ export default class Sitemapper {
       method: 'GET',
       resolveWithFullResponse: true,
       gzip: true,
+      responseType: 'buffer',
       headers: this.requestHeaders,
     };
 
@@ -150,25 +154,33 @@ export default class Sitemapper {
         return { error: response.error, data: response };
       }
 
+      let responseBody;
+
+      if (this.isGzip(url)) {
+        responseBody = await this.decompressResponseBody(response.body);
+      } else {
+        responseBody = response.body;
+      }
+
       // otherwise parse the XML that was returned.
-      const data = await parseStringPromise(response.body);
+      const data = await parseStringPromise(responseBody);
 
       // return the results
-      return { error: null, data }
+      return { error: null, data };
     } catch (error) {
       // If the request was canceled notify the user of the timeout
       if (error.name === 'CancelError') {
         return {
           error: `Request timed out after ${this.timeout} milliseconds for url: '${url}'`,
           data: error
-        }
+        };
       }
 
       // Otherwise notify of another error
       return {
         error: error.error,
         data: error
-      }
+      };
     }
   }
 
@@ -236,7 +248,7 @@ export default class Sitemapper {
       return [];
     } catch (e) {
       if (this.debug) {
-        this.debug &&console.error(e);
+        this.debug && console.error(e);
       }
     }
   }
@@ -249,7 +261,7 @@ export default class Sitemapper {
    * @param {string} url - url to query
    * @param {getSitesCallback} callback - callback for sites and error
    * @callback
-   */
+    */
   async getSites(url = this.url, callback) {
     console.warn(  // eslint-disable-line no-console
       '\r\nWarning:', 'function .getSites() is deprecated, please use the function .fetch()\r\n'
@@ -264,6 +276,25 @@ export default class Sitemapper {
       err = error;
     }
     return callback(err, sites);
+  }
+
+  isGzip(url) {
+    const parsed = Url.parse(url);
+    const ext = path.extname(parsed.path);
+    return ext === '.gz';
+  }
+
+  decompressResponseBody(body) {
+    return new Promise((resolve, reject) => {
+      const buffer = Buffer.from(body);
+      zlib.gunzip(buffer, function (err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
   }
 }
 
