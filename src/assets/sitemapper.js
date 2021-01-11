@@ -255,8 +255,8 @@ export default class Sitemapper {
 
 
   /**
-   * /**
    * Gets the sites from a sitemap.xml with a given URL
+   *
    * @deprecated
    * @param {string} url - url to query
    * @param {getSitesCallback} callback - callback for sites and error
@@ -278,16 +278,28 @@ export default class Sitemapper {
     return callback(err, sites);
   }
 
+  /**
+   * Check to see if the url is a gzipped url
+   *
+   * @param {string} url - url to query
+   * @returns {Boolean}
+   */
   isGzip(url) {
     const parsed = Url.parse(url);
     const ext = path.extname(parsed.path);
     return ext === '.gz';
   }
 
+  /**
+   * Decompress the gzipped response body using zlib.gunzip
+   *
+   * @param {Buffer} body - body of the gzipped file
+   * @returns {Boolean}
+   */
   decompressResponseBody(body) {
     return new Promise((resolve, reject) => {
       const buffer = Buffer.from(body);
-      zlib.gunzip(buffer, function (err, result) {
+      zlib.gunzip(buffer, (err, result) => {
         if (err) {
           reject(err);
         } else {
