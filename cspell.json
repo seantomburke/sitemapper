@@ -14,7 +14,8 @@
     ],
     "words": [
         "sitemapper",
-        "esmodules"
+        "esmodules",
+        "gzipped"
     ],
     "allowCompoundWords": true,
     "flagWords": [],
