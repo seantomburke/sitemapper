@@ -4,10 +4,13 @@ import Sitemapper from '../assets/sitemapper';
 const exampleURL = 'https://www.walmart.com/sitemap_topic.xml';
 
 // Instantiate an instance
-const sitemapper = new Sitemapper({
+let sitemapper = new Sitemapper({
   url: exampleURL, // url to crawl
-  debug: true, // don't show debug logs
-  timeout: 1, // 10 seconds
+  debug: false, // don't show debug logs
+  timeout: 10000, // 10 seconds
+  concurrency: 10, // Number of maximum concurrent sitemap crawl threads
+  retries: 0, // Number of retry attempts in case of error response (e.g. 404 or timeout)
+  returnErrors: true
 });
 
 /**
