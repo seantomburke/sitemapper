@@ -248,13 +248,13 @@ export default class Sitemapper {
 
         // Fail and log error
         return {
-          'error': 
-            {
-              'type': data.name,
-              'url': url,
-              'retries': retryIndex
-            }
-        };
+          sites: [],
+          error: [{
+            'type': data.name,
+            'url': url,
+            'retries': retryIndex
+          }]
+        };  
 
       } else if (data && data.urlset && data.urlset.url) {
         // Handle URLs found inside the sitemap
@@ -295,27 +295,24 @@ export default class Sitemapper {
         return crawlResults;
       }
 
-      // Handle errors without an error name/description
-      if (this.debug) {
-        // Retry on error until you reach the retry limit set in the settings
-        if (retryIndex < this.retries) {
-          if (this.debug) {
-            console.log (`(Retry attempt: ${retryIndex + 1} / ${this.retries}) ${url} due to ${data.name} on previous request`);
-          }
-          return this.crawl(url, retryIndex + 1);
+      // Retry on error until you reach the retry limit set in the settings
+      if (retryIndex < this.retries) {
+        if (this.debug) {
+          console.log (`(Retry attempt: ${retryIndex + 1} / ${this.retries}) ${url} due to ${data.name} on previous request`);
         }
-        console.error(`Unknown state during "crawl('${url})'":`, error, data);
+        return this.crawl(url, retryIndex + 1);
       }
+      console.error(`Unknown state during "crawl('${url})'":`, error, data);
 
       // Fail and log error
       return {
         sites: [],
         error: [{
-          'type': data.name,
+          'type': data.name || "UnknownStateError",
           'url': url,
           'retries': retryIndex
         }]
-      }  
+      };  
 
     } catch (e) {
       if (this.debug) {
