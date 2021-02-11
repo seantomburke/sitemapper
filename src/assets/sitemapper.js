@@ -302,7 +302,9 @@ export default class Sitemapper {
         }
         return this.crawl(url, retryIndex + 1);
       }
-      console.error(`Unknown state during "crawl('${url})'":`, error, data);
+      if (this.debug) {
+        console.error(`Unknown state during "crawl('${url})'":`, error, data);
+      }
 
       // Fail and log error
       return {
