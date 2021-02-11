@@ -310,11 +310,11 @@ export default class Sitemapper {
       // Fail and log error
       return {
         sites: [],
-        error: {
+        error: [{
           'type': data.name,
           'url': url,
           'retries': retryIndex
-        }
+        }]
       }  
 
     } catch (e) {
