@@ -26,7 +26,6 @@ export default class Sitemapper {
    * @params {boolean} [options.debug] - Enables/Disables additional logging
    * @params {integer} [options.concurrency] - The number of concurrent sitemaps to crawl (e.g. 2 will crawl no more than 2 sitemaps at the same time)
    * @params {integer} [options.retries] - The maximum number of retries to attempt when crawling fails (e.g. 1 for 1 retry, 2 attempts in total)
-   * @params {boolean} [options.returnErrors] - Enables/Disables reporting of errors which occured during crawling (e.g false to remove "errors" property from results)
    *
    * @example let sitemap = new Sitemapper({
    *   url: 'https://wp.seantburke.com/sitemap.xml',
@@ -42,7 +41,6 @@ export default class Sitemapper {
     this.debug = settings.debug;
     this.concurrency = settings.concurrency || 10;
     this.retries = settings.retries || 0;
-    this.returnErrors = settings.returnErrors;
   }
 
   /**
@@ -55,33 +53,29 @@ export default class Sitemapper {
    *  .then((sites) => console.log(sites));
    */
   async fetch(url = this.url) {
+    // initialize empty variables
     let results = {
       url: '',
       sites: [],
-      errors: []
+      errors: [],
     };
+
+    // attempt to set the variables with the crawl
     try {
       // crawl the URL
       results = await this.crawl(url);
     } catch (e) {
+      // show errors that may occur
       if (this.debug) {
         console.error(e);
       }
     }
 
-    // If we run into an error, don't throw, but instead return an empty array
-    if (!this.returnErrors) {
-      return {
-        url,
-        sites: results.sites || []
-      };
-    } else {
-      return {
-        url,
-        sites: results.sites || [],
-        errors: results.error || []
-      };
-    }
+    return {
+      url,
+      sites: results.sites || [],
+      errors: results.error || [],
+    };
 
   }
   /**
@@ -224,7 +218,7 @@ export default class Sitemapper {
    * @recursive
    * @param {string} url - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
    * @param {integer} retryIndex - Number of retry attempts fro this URL (e.g. 0 for 1st attempt, 1 for second attempty etc.)
-   * @returns {Promise<SitesArray> | Promise<ParseData>}
+   * @returns {Promise<SitesData>}
    */
   async crawl(url, retryIndex = 0) {
     try {
@@ -249,12 +243,12 @@ export default class Sitemapper {
         // Fail and log error
         return {
           sites: [],
-          error: [{
-            'type': data.name,
-            'url': url,
-            'retries': retryIndex
+          errors: [{
+            type: data.name,
+            url,
+            retries: retryIndex,
           }]
-        };  
+        };
 
       } else if (data && data.urlset && data.urlset.url) {
         // Handle URLs found inside the sitemap
@@ -263,8 +257,8 @@ export default class Sitemapper {
         }
         const sites = data.urlset.url.map(site => site.loc && site.loc[0]);
         return {
-          sites: sites,
-          error: []
+          sites,
+          errors: []
         }
 
       } else if (data && data.sitemapindex) {
@@ -282,17 +276,16 @@ export default class Sitemapper {
         // Make sure all the promises resolve then filter and reduce the array
         const results = await Promise.all(promiseArray);
         const sites = results
-          .filter(result => (result.error.length == 0))
+          .filter(result => (result.errors.length == 0))
           .reduce((prev, curr) => prev.concat(curr.sites), []);
         const errors = results
-          .filter(result => result.error)
-          .reduce((prev, curr) => prev.concat(curr.error), []);
+          .filter(result => result.errors)
+          .reduce((prev, curr) => prev.concat(curr.errors), []);
 
-        const crawlResults = {
-          sites: sites,
-          error: errors
+        return {
+          sites,
+          errors,
         };
-        return crawlResults;
       }
 
       // Retry on error until you reach the retry limit set in the settings
@@ -309,12 +302,12 @@ export default class Sitemapper {
       // Fail and log error
       return {
         sites: [],
-        error: [{
-          'type': data.name || "UnknownStateError",
-          'url': url,
-          'retries': retryIndex
+        errors: [{
+          url,
+          type: data.name || "UnknownStateError",
+          retries: retryIndex
         }]
-      };  
+      };
 
     } catch (e) {
       if (this.debug) {
@@ -479,14 +472,13 @@ export default class Sitemapper {
  * ]
  */
 
- 
 /**
- * An object containing details about the errors which occured during the crawl
+ * An object containing details about the errors which occurred during the crawl
  *
  * @typedef {Object} ErrorData
  *
  * @property {string} type - The error type which was returned
- * @property {string} url - The sitemap URL whihc returned the error
+ * @property {string} url - The sitemap URL which returned the error
  * @property {Number} errors - The total number of retries attempted after receiving the first error
  * @example {
  *    type: 'CancelError',

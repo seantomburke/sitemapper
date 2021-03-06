@@ -138,6 +138,23 @@ describe('Sitemapper', function () {
         });
     });
 
+    it('https://www.golinks.com/blog/sitemap.xml sitemaps should return an empty array when timing out', function (done) {
+      this.timeout(30000);
+      const url = 'https://www.golinks.com/blog/sitemap.xml';
+      sitemapper.timeout = 10000;
+      sitemapper.returnErrors = true;
+      sitemapper.fetch(url)
+        .then(data => {
+          data.sites.should.be.Array;
+          data.errors.should.be.Array;
+          done();
+        })
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
+
     it('https://www.banggood.com/sitemap/category.xml.gz gzip should be a non-empty array', function (done) {
       this.timeout(30000);
       const url = 'https://www.banggood.com/sitemap/category.xml.gz';
