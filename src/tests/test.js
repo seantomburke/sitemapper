@@ -142,7 +142,6 @@ describe('Sitemapper', function () {
       this.timeout(30000);
       const url = 'https://www.golinks.com/blog/sitemap.xml';
       sitemapper.timeout = 10000;
-      sitemapper.returnErrors = true;
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;

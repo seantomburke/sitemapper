@@ -10,7 +10,6 @@ const sitemapper = new Sitemapper({
   timeout: 10000, // 10 seconds
   concurrency: 10, // Number of maximum concurrent sitemap crawl threads
   retries: 0, // Number of retry attempts in case of error response (e.g. 404 or timeout)
-  returnErrors: true
 });
 
 /**
