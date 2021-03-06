@@ -304,7 +304,7 @@ export default class Sitemapper {
         sites: [],
         errors: [{
           url,
-          type: data.name || "UnknownStateError",
+          type: data.name || 'UnknownStateError',
           retries: retryIndex
         }]
       };
@@ -403,7 +403,7 @@ export default class Sitemapper {
  * @property {Object} data.sitemapindex - index of sitemap
  * @property {string} data.sitemapindex.sitemap - Sitemap
  * @example {
- *   error: "There was an error!"
+ *   error: 'There was an error!'
  *   data: {
  *     url: 'https://linkedin.com',
  *     urlset: [{
