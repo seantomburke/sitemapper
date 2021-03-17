@@ -40,6 +40,7 @@ export default class Sitemapper {
     this.debug = settings.debug;
     this.concurrency = settings.concurrency || 10;
     this.retries = settings.retries || 0;
+    this.insecure = settings.insecure || false;
   }
 
   /**
@@ -149,6 +150,9 @@ export default class Sitemapper {
       gzip: true,
       responseType: 'buffer',
       headers: this.requestHeaders,
+      https: {
+        rejectUnauthorized: Boolean(this.insecure)
+      }
     };
 
     try {
