@@ -63,12 +63,14 @@ sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
 You can add options on the initial Sitemapper object when instantiating it.
 
 + `requestHeaders`: (Object) - Additional Request Headers
++ `insecure`: (Boolean) - Ignore invalid certificates
 + `timeout`: (Number) - Maximum timeout for a single URL
 
 ```javascript
 
 const sitemapper = new Sitemapper({
   url: 'https://art-works.community/sitemap.xml',
+  insecure: true,
   timeout: 15000,
   requestHeaders: {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0'

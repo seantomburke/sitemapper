@@ -35,6 +35,7 @@ export default class Sitemapper {
     this.timeoutTable = {};
     this.requestHeaders = settings.requestHeaders;
     this.debug = settings.debug;
+    this.insecure = settings.insecure || false;
   }
 
   /**
@@ -136,6 +137,9 @@ export default class Sitemapper {
       gzip: true,
       responseType: 'buffer',
       headers: this.requestHeaders,
+      https: {
+        rejectUnauthorized: Boolean(this.insecure)
+      }
     };
 
     try {
