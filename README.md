@@ -43,7 +43,7 @@ import Sitemapper from 'sitemapper';
   try {
     const { sites } = await Google.fetch();
     console.log(sites);
-  catch (error) {
+  } catch (error) {
     console.log(error);
   }
 })();
