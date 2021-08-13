@@ -164,9 +164,9 @@ describe('Sitemapper', function () {
       });
     });
 
-    it('https://www.banggood.com/sitemap/products-Toys-Hobbies-and-Robot-5-hu-HU.xml.gz gzip should be a non-empty array', function (done) {
+    it('https://www.banggood.com/sitemap/category-index.xml.gz gzip should be a non-empty array', function (done) {
       this.timeout(30000);
-      const url = 'https://www.banggood.com/sitemap/products-Toys-Hobbies-and-Robot-5-hu-HU.xml.gz';
+      const url = 'https://www.banggood.com/sitemap/category-index.xml.gz';
       sitemapper.timeout = 10000;
       sitemapper.fetch(url)
         .then(data => {
