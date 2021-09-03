@@ -6,6 +6,7 @@ export interface SitemapperResponse {
 export interface SitemapperOptions {
     url?: string;
     timeout?: number;
+    lastmod?: number;
     requestHeaders?: {[name: string]: string};
 }
 
