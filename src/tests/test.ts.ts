@@ -1,7 +1,7 @@
 import 'async';
 import 'assert';
 import 'should';
-import isUrl = require('is-url');
+const isUrl = require('is-url');
 
 // @ts-ignore
 import Sitemapper from '../../lib/assets/sitemapper.js';
@@ -52,8 +52,8 @@ describe('Sitemapper', function () {
     });
 
     it('should set url', () => {
-      sitemapper.url = 1000;
-      sitemapper.url.should.equal(1000);
+      sitemapper.url = 'https://wp.seantburke.com/sitemap.xml';
+      sitemapper.url.should.equal('https://wp.seantburke.com/sitemap.xml');
     });
   });
 

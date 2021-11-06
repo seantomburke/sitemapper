@@ -18,8 +18,7 @@
   },
   "license": "MIT",
   "files": [
-    "lib",
-    "sitemapper.d.ts"
+    "lib"
   ],
   "main": "./lib/assets/sitemapper.js",
   "types": "./sitemapper.d.ts",
@@ -33,12 +32,13 @@
     "url": "http://www.seantburke.com"
   },
   "scripts": {
-    "compile": "babel src -d lib -s && tsc --project ./src/tests/",
+    "compile": "tsc -d --sourceMap --outDir lib -t esnext ./src/**/*.ts && babel lib -d lib -s",
     "build": "npm run clean && npm run compile",
     "start": "npm run build && node lib/examples/index.js",
     "test": "npm run build && mocha ./lib/tests/*.js && npm run lint",
     "lint": "eslint src",
     "clean": "rm -rf lib",
+    "tsc": "tsc",
     "docs": "documentation build ./src/assets/sitemapper.js -f md > docs.md"
   },
   "maintainers": [
