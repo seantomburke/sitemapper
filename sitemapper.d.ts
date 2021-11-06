@@ -1,7 +1,7 @@
 export interface SitemapperResponse {
-    url: string;
-    sites: string[];
-    errors: SitemapperErrorData[];
+  url: string;
+  sites: string[];
+  errors: SitemapperErrorData[];
 }
 
 export interface SitemapperErrorData {
@@ -11,26 +11,26 @@ export interface SitemapperErrorData {
 }
 
 export interface SitemapperOptions {
-    url?: string;
-    timeout?: number;
-    requestHeaders?: {[name: string]: string};
-    debug?: boolean;
-    concurrency?: number;
-    retries?: number;
+  url?: string;
+  timeout?: number;
+  requestHeaders?: {[name: string]: string};
+  debug?: boolean;
+  concurrency?: number;
+  retries?: number;
 }
 
 declare class Sitemapper {
 
-    timeout: number;
+  timeout: number;
 
-    constructor(options: SitemapperOptions)
+  constructor(options: SitemapperOptions)
 
-    /**
-     * Gets the sites from a sitemap.xml with a given URL
-     *
-     * @param url URL to the sitemap.xml file
-     */
-    fetch(url?: string): Promise<SitemapperResponse>;
+  /**
+   * Gets the sites from a sitemap.xml with a given URL
+   *
+   * @param url URL to the sitemap.xml file
+   */
+  fetch(url?: string): Promise<SitemapperResponse>;
 }
 
 export default Sitemapper;

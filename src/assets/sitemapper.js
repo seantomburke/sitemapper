@@ -192,7 +192,7 @@ export default class Sitemapper {
 
       // Otherwise notify of another error
       return {
-        error: error.error,
+        error: `Error occurred: ${error.name}`,
         data: error
       };
     }
@@ -279,7 +279,7 @@ export default class Sitemapper {
           .filter(result => (result.errors.length == 0))
           .reduce((prev, curr) => prev.concat(curr.sites), []);
         const errors = results
-          .filter(result => result.errors)
+          .filter(result => result.errors.length)
           .reduce((prev, curr) => prev.concat(curr.errors), []);
 
         return {

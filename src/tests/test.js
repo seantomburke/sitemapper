@@ -77,9 +77,12 @@ describe('Sitemapper', function () {
     it('gibberish.gibberish should fail silently with an empty array', function (done) {
       this.timeout(30000);
       const url = 'http://gibberish.gibberish';
+      sitemapper.debug = true;
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
+          data.errors.should.be.Array;
+          console.log(data);
           done();
         })
         .catch(error => {
@@ -130,6 +133,8 @@ describe('Sitemapper', function () {
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
+          data.errors.should.be.Array;
+          console.log(data);
           done();
         })
         .catch(error => {
@@ -187,6 +192,7 @@ describe('Sitemapper', function () {
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
+          data.errors.should.be.Array;
           data.sites.length.should.be.greaterThan(0);
           done();
         })

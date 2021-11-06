@@ -79,6 +79,7 @@ describe('Sitemapper', function () {
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
+          data.errors.should.be.Array;
           done();
         })
         .catch(error => {
