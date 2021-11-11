@@ -82,6 +82,8 @@ describe('Sitemapper', function () {
         .then(data => {
           data.sites.should.be.Array;
           data.errors.should.be.Array;
+          data.errors.length.should.be.greaterThan(0);
+          data.errors.length.should.be.greaterThan(0);
           console.log(data);
           done();
         })
