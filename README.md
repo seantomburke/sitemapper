@@ -62,8 +62,12 @@ sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
 
 You can add options on the initial Sitemapper object when instantiating it.
 
-+ `requestHeaders`: (Object) - Additional Request Headers
-+ `timeout`: (Number) - Maximum timeout for a single URL
++ `requestHeaders`: (Object) - Additional Request Headers (e.g. `User-Agent`)
++ `timeout`: (Number) - Maximum timeout in ms for a single URL. Default: 15000 (15 seconds)
++ `url`: (String) - Sitemap URL to crawl
++ `debug`: (Boolean) - Enables/Disables debug console logging. Default: False
++ `concurrency`: (Number) - Sets the maximum number of concurrent sitemap crawling threads. Default: 10
++ `retries`: (Number) - Sets the maximum number of retries to attempt in case of an error response (e.g. 404 or Timeout). Default: 0
 
 ```javascript
 
@@ -73,6 +77,23 @@ const sitemapper = new Sitemapper({
   requestHeaders: {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0'
   }
+});
+
+```
+
+An example using all available options:
+
+```javascript
+
+const sitemapper = new Sitemapper({
+  url: 'https://art-works.community/sitemap.xml',
+  timeout: 15000,
+  requestHeaders: {
+    'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0'
+  },
+  debug: true,
+  concurrency: 2,
+  retries: 1,
 });
 
 ```
