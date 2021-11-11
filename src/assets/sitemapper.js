@@ -74,7 +74,7 @@ export default class Sitemapper {
     return {
       url,
       sites: results.sites || [],
-      errors: results.error || [],
+      errors: results.errors || [],
     };
 
   }
@@ -276,11 +276,11 @@ export default class Sitemapper {
         // Make sure all the promises resolve then filter and reduce the array
         const results = await Promise.all(promiseArray);
         const sites = results
-          .filter(result => (result.errors.length == 0))
-          .reduce((prev, curr) => prev.concat(curr.sites), []);
+          .filter(result => (result.errors.length === 0))
+          .reduce((prev, { sites }) => [...prev, ...sites], []);
         const errors = results
-          .filter(result => result.errors.length)
-          .reduce((prev, curr) => prev.concat(curr.errors), []);
+          .filter(result => (result.errors.length !== 0))
+          .reduce((prev, { errors }) => [...prev, ...errors], []);
 
         return {
           sites,
