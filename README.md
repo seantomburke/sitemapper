@@ -68,7 +68,6 @@ You can add options on the initial Sitemapper object when instantiating it.
 + `debug`: (Boolean) - Enables/Disables debug console logging. Default: False
 + `concurrency`: (Number) - Sets the maximum number of concurrent sitemap crawling threads. Default: 10
 + `retries`: (Number) - Sets the maximum number of retries to attempt in case of an error response (e.g. 404 or Timeout). Default: 0
-+ `requestHeaders`: (Object) - Additional Request Headers
 + `insecure`: (Boolean) - Ignore invalid certificates
 
 ```javascript

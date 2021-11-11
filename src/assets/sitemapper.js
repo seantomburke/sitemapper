@@ -41,6 +41,8 @@ export default class Sitemapper {
     this.concurrency = settings.concurrency || 10;
     this.retries = settings.retries || 0;
     this.insecure = settings.insecure || false;
+    this.concurrency = settings.concurrency || 10;
+    this.retries = settings.retries || 0;
   }
 
   /**
