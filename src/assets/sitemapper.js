@@ -9,9 +9,8 @@
 import { parseStringPromise } from 'xml2js';
 import got from 'got';
 import zlib from 'zlib';
-import Url from 'url';
-import path from 'path';
 import pLimit from 'p-limit';
+import isGzip from 'is-gzip';
 
 /**
  * @typedef {Object} Sitemapper
@@ -154,7 +153,7 @@ export default class Sitemapper {
 
     try {
       // create a request Promise with the url and request options
-      const requester = got(url, requestOptions);
+      const requester = got.get(url, requestOptions);
 
       // initialize the timeout method based on the URL, and pass the request object.
       this.initializeTimeout(url, requester);
@@ -170,7 +169,7 @@ export default class Sitemapper {
 
       let responseBody;
 
-      if (this.isGzip(url)) {
+      if (isGzip(response.rawBody)) {
         responseBody = await this.decompressResponseBody(response.body);
       } else {
         responseBody = response.body;
@@ -339,18 +338,6 @@ export default class Sitemapper {
       err = error;
     }
     return callback(err, sites);
-  }
-
-  /**
-   * Check to see if the url is a gzipped url
-   *
-   * @param {string} url - url to query
-   * @returns {Boolean}
-   */
-  isGzip(url) {
-    const parsed = Url.parse(url);
-    const ext = path.extname(parsed.path);
-    return ext === '.gz';
   }
 
   /**
