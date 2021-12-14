@@ -11,6 +11,7 @@ import got from 'got';
 import zlib from 'zlib';
 import Url from 'url';
 import path from 'path';
+import pLimit from 'p-limit';
 
 /**
  * @typedef {Object} Sitemapper
@@ -23,6 +24,9 @@ export default class Sitemapper {
    * @params {string} [options.url] - the Sitemap url (e.g https://wp.seantburke.com/sitemap.xml)
    * @params {Timeout} [options.timeout] - @see {timeout}
    * @params {lastmod} [options.lastmod] - the minimum lastmod value for urls
+   * @params {boolean} [options.debug] - Enables/Disables additional logging
+   * @params {integer} [options.concurrency] - The number of concurrent sitemaps to crawl (e.g. 2 will crawl no more than 2 sitemaps at the same time)
+   * @params {integer} [options.retries] - The maximum number of retries to attempt when crawling fails (e.g. 1 for 1 retry, 2 attempts in total)
    *
    * @example let sitemap = new Sitemapper({
    *   url: 'https://wp.seantburke.com/sitemap.xml',
@@ -38,6 +42,8 @@ export default class Sitemapper {
     this.lastmod = settings.lastmod || 0;
     this.requestHeaders = settings.requestHeaders;
     this.debug = settings.debug;
+    this.concurrency = settings.concurrency || 10;
+    this.retries = settings.retries || 0;
   }
 
   /**
@@ -54,23 +60,31 @@ export default class Sitemapper {
         console.debug(`Using minimum lastmod value of ${this.lastmod}`)
     }
 
-    let sites = [];
+    // initialize empty variables
+    let results = {
+      url: '',
+      sites: [],
+      errors: [],
+    };
+
+    // attempt to set the variables with the crawl
     try {
       // crawl the URL
-      sites = await this.crawl(url);
+      results = await this.crawl(url);
     } catch (e) {
+      // show errors that may occur
       if (this.debug) {
         console.error(e);
       }
     }
 
-    // If we run into an error, don't throw, but instead return an empty array
     return {
       url,
-      sites,
+      sites: results.sites || [],
+      errors: results.errors || [],
     };
-  }
 
+  }
   /**
    * Get the timeout
    *
@@ -207,7 +221,7 @@ export default class Sitemapper {
 
       // Otherwise notify of another error
       return {
-        error: error.error,
+        error: `Error occurred: ${error.name}`,
         data: error
       };
     }
@@ -232,21 +246,41 @@ export default class Sitemapper {
    * @private
    * @recursive
    * @param {string} url - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
-   * @returns {Promise<SitesArray> | Promise<ParseData>}
+   * @param {integer} retryIndex - Number of retry attempts fro this URL (e.g. 0 for 1st attempt, 1 for second attempty etc.)
+   * @returns {Promise<SitesData>}
    */
-  async crawl(url) {
+  async crawl(url, retryIndex = 0) {
     try {
       const { error, data } = await this.parse(url);
       // The promise resolved, remove the timeout
       clearTimeout(this.timeoutTable[url]);
 
       if (error) {
+        // Handle errors during sitemap parsing / request
+        // Retry on error until you reach the retry limit set in the settings
+        if (retryIndex < this.retries) {
+          if (this.debug) {
+            console.log (`(Retry attempt: ${retryIndex + 1} / ${this.retries}) ${url} due to ${data.name} on previous request`);
+          }
+          return this.crawl(url, retryIndex + 1);
+        }
+
         if (this.debug) {
           console.error(`Error occurred during "crawl('${url}')":\n\r Error: ${error}`);
         }
-        // Fail silently
-        return [];
+
+        // Fail and log error
+        return {
+          sites: [],
+          errors: [{
+            type: data.name,
+            url,
+            retries: retryIndex,
+          }]
+        };
+
       } else if (data && data.urlset && data.urlset.url) {
+        // Handle URLs found inside the sitemap
         if (this.debug) {
           console.debug(`Urlset found during "crawl('${url}')"`);
         }
@@ -259,30 +293,60 @@ export default class Sitemapper {
 
             return modified >= this.lastmod
         }).map(site => site.loc && site.loc[0]);
-        return [].concat(sites);
+
+        return {
+          sites,
+          errors: []
+        }
+
       } else if (data && data.sitemapindex) {
+        // Handle child sitemaps found inside the active sitemap
         if (this.debug) {
           console.debug(`Additional sitemap found during "crawl('${url}')"`);
         }
         // Map each child url into a promise to create an array of promises
         const sitemap = data.sitemapindex.sitemap.map(map => map.loc && map.loc[0]);
-        const promiseArray = sitemap.map(site => this.crawl(site));
+
+        // Parse all child urls within the concurrency limit in the settings
+        const limit = pLimit(this.concurrency);
+        const promiseArray = sitemap.map(site => limit(() => this.crawl(site)));
 
         // Make sure all the promises resolve then filter and reduce the array
         const results = await Promise.all(promiseArray);
         const sites = results
-          .filter(result => !result.error)
-          .reduce((prev, curr) => prev.concat(curr), []);
+          .filter(result => (result.errors.length === 0))
+          .reduce((prev, { sites }) => [...prev, ...sites], []);
+        const errors = results
+          .filter(result => (result.errors.length !== 0))
+          .reduce((prev, { errors }) => [...prev, ...errors], []);
 
-        return sites;
+        return {
+          sites,
+          errors,
+        };
       }
 
+      // Retry on error until you reach the retry limit set in the settings
+      if (retryIndex < this.retries) {
+        if (this.debug) {
+          console.log (`(Retry attempt: ${retryIndex + 1} / ${this.retries}) ${url} due to ${data.name} on previous request`);
+        }
+        return this.crawl(url, retryIndex + 1);
+      }
       if (this.debug) {
         console.error(`Unknown state during "crawl('${url})'":`, error, data);
       }
 
-      // Fail silently
-      return [];
+      // Fail and log error
+      return {
+        sites: [],
+        errors: [{
+          url,
+          type: data.name || 'UnknownStateError',
+          retries: retryIndex
+        }]
+      };
+
     } catch (e) {
       if (this.debug) {
         this.debug && console.error(e);
@@ -377,7 +441,7 @@ export default class Sitemapper {
  * @property {Object} data.sitemapindex - index of sitemap
  * @property {string} data.sitemapindex.sitemap - Sitemap
  * @example {
- *   error: "There was an error!"
+ *   error: 'There was an error!'
  *   data: {
  *     url: 'https://linkedin.com',
  *     urlset: [{
@@ -396,11 +460,24 @@ export default class Sitemapper {
  *
  * @property {string} url - the original url used to query the data
  * @property {SitesArray} sites
+ * @property {ErrorDataArray} errors
  * @example {
  *   url: 'https://linkedin.com/sitemap.xml',
  *   sites: [
  *     'https://linkedin.com/project1',
  *     'https://linkedin.com/project2'
+ *   ],
+ *   errors: [
+ *      {
+ *        type: 'CancelError',
+ *        url: 'https://www.walmart.com/sitemap_tp1.xml',
+ *        retries: 0
+ *      },
+ *      {
+ *        type: 'HTTPError',
+ *        url: 'https://www.walmart.com/sitemap_tp2.xml',
+ *        retries: 0
+ *      },
  *   ]
  * }
  */
@@ -413,4 +490,37 @@ export default class Sitemapper {
  *   'https://www.google.com',
  *   'https://www.linkedin.com'
  * ]
+ */
+
+/**
+ * An array of Error data objects
+ *
+ * @typedef {ErrorData[]} ErrorDataArray
+ * @example [
+ *    {
+ *      type: 'CancelError',
+ *      url: 'https://www.walmart.com/sitemap_tp1.xml',
+ *      retries: 0
+ *    },
+ *    {
+ *      type: 'HTTPError',
+ *      url: 'https://www.walmart.com/sitemap_tp2.xml',
+ *      retries: 0
+ *    },
+ * ]
+ */
+
+/**
+ * An object containing details about the errors which occurred during the crawl
+ *
+ * @typedef {Object} ErrorData
+ *
+ * @property {string} type - The error type which was returned
+ * @property {string} url - The sitemap URL which returned the error
+ * @property {Number} errors - The total number of retries attempted after receiving the first error
+ * @example {
+ *    type: 'CancelError',
+ *    url: 'https://www.walmart.com/sitemap_tp1.xml',
+ *    retries: 0
+ * }
  */
