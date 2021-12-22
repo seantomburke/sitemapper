@@ -17,6 +17,7 @@ export interface SitemapperOptions {
   debug?: boolean;
   concurrency?: number;
   retries?: number;
+  rejectUnauthorized?: boolean;
 }
 
 declare class Sitemapper {
