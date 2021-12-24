@@ -68,11 +68,13 @@ You can add options on the initial Sitemapper object when instantiating it.
 + `debug`: (Boolean) - Enables/Disables debug console logging. Default: False
 + `concurrency`: (Number) - Sets the maximum number of concurrent sitemap crawling threads. Default: 10
 + `retries`: (Number) - Sets the maximum number of retries to attempt in case of an error response (e.g. 404 or Timeout). Default: 0
++ `rejectUnauthorized`: (Boolean) - If true, it will throw on invalid certificates, such as expired or self-signed ones. Default: True
 
 ```javascript
 
 const sitemapper = new Sitemapper({
   url: 'https://art-works.community/sitemap.xml',
+  rejectUnauthorized: true,
   timeout: 15000,
   requestHeaders: {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0'
