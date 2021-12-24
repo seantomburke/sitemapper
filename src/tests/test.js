@@ -204,7 +204,7 @@ describe('Sitemapper', function () {
         });
     });
 
-    it('https://foo.com/sitemap.xml should not allow insecure request', function (done) {
+    it('https://foo.com/sitemap.xml should allow insecure request', function (done) {
       this.timeout(30000);
       const url = 'https://foo.com/sitemap.xml';
       sitemapper.timeout = 10000;
