@@ -9,9 +9,8 @@
 import { parseStringPromise } from 'xml2js';
 import got from 'got';
 import zlib from 'zlib';
-import Url from 'url';
-import path from 'path';
 import pLimit from 'p-limit';
+import isGzip from 'is-gzip';
 
 /**
  * @typedef {Object} Sitemapper
@@ -27,6 +26,7 @@ export default class Sitemapper {
    * @params {boolean} [options.debug] - Enables/Disables additional logging
    * @params {integer} [options.concurrency] - The number of concurrent sitemaps to crawl (e.g. 2 will crawl no more than 2 sitemaps at the same time)
    * @params {integer} [options.retries] - The maximum number of retries to attempt when crawling fails (e.g. 1 for 1 retry, 2 attempts in total)
+   * @params {boolean} [options.rejectUnauthorized] - If true (default), it will throw on invalid certificates, such as expired or self-signed ones.
    *
    * @example let sitemap = new Sitemapper({
    *   url: 'https://wp.seantburke.com/sitemap.xml',
@@ -44,6 +44,7 @@ export default class Sitemapper {
     this.debug = settings.debug;
     this.concurrency = settings.concurrency || 10;
     this.retries = settings.retries || 0;
+    this.rejectUnauthorized = settings.rejectUnauthorized || true;
   }
 
   /**
@@ -179,11 +180,14 @@ export default class Sitemapper {
       gzip: true,
       responseType: 'buffer',
       headers: this.requestHeaders,
+      https: {
+        rejectUnauthorized: this.rejectUnauthorized,
+      }
     };
 
     try {
       // create a request Promise with the url and request options
-      const requester = got(url, requestOptions);
+      const requester = got.get(url, requestOptions);
 
       // initialize the timeout method based on the URL, and pass the request object.
       this.initializeTimeout(url, requester);
@@ -199,7 +203,7 @@ export default class Sitemapper {
 
       let responseBody;
 
-      if (this.isGzip(url)) {
+      if (isGzip(response.rawBody)) {
         responseBody = await this.decompressResponseBody(response.body);
       } else {
         responseBody = response.body;
@@ -377,18 +381,6 @@ export default class Sitemapper {
       err = error;
     }
     return callback(err, sites);
-  }
-
-  /**
-   * Check to see if the url is a gzipped url
-   *
-   * @param {string} url - url to query
-   * @returns {Boolean}
-   */
-  isGzip(url) {
-    const parsed = Url.parse(url);
-    const ext = path.extname(parsed.path);
-    return ext === '.gz';
   }
 
   /**
