@@ -62,8 +62,6 @@ sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
 
 You can add options on the initial Sitemapper object when instantiating it.
 
-+ `requestHeaders`: (Object) - Additional Request Headers
-+ `timeout`: (Number) - Maximum timeout for a single URL
 + `lastmod`: (Number) - Timestamp of the minimum lastmod value allowed for returned urls
 + `requestHeaders`: (Object) - Additional Request Headers (e.g. `User-Agent`)
 + `timeout`: (Number) - Maximum timeout in ms for a single URL. Default: 15000 (15 seconds)
