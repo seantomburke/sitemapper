@@ -41,7 +41,7 @@ export default class Sitemapper {
     this.debug = settings.debug;
     this.concurrency = settings.concurrency || 10;
     this.retries = settings.retries || 0;
-    this.rejectUnauthorized = settings.rejectUnauthorized || true;
+    this.rejectUnauthorized = settings.rejectUnauthorized === false ? false : true;
   }
 
   /**
