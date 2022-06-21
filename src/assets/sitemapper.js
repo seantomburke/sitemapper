@@ -224,6 +224,14 @@ export default class Sitemapper {
         };
       }
 
+      // If an HTTPError include error http code
+      if (error.name === 'HTTPError') {
+        return {
+          error: `HTTP Error occurred: ${error.message}`,
+          data: error
+        };
+      }
+
       // Otherwise notify of another error
       return {
         error: `Error occurred: ${error.name}`,
@@ -279,6 +287,7 @@ export default class Sitemapper {
           sites: [],
           errors: [{
             type: data.name,
+            message: error,
             url,
             retries: retryIndex,
           }]
@@ -347,6 +356,7 @@ export default class Sitemapper {
         errors: [{
           url,
           type: data.name || 'UnknownStateError',
+          message: 'An unknown error occurred.',
           retries: retryIndex
         }]
       };
