@@ -215,6 +215,7 @@ describe('Sitemapper', function () {
           data.errors.should.be.Array;
           data.errors.should.containEql({
             type: 'RequestError',
+            message: 'Error occurred: RequestError',
             url: 'https://foo.com/sitemap.xml',
             retries: 0
           });
@@ -237,6 +238,7 @@ describe('Sitemapper', function () {
           data.errors.should.be.Array;
           data.errors.should.containEql({
             type: 'HTTPError',
+            message: 'HTTP Error occurred: Response code 404 (Not Found)',
             url: 'https://foo.com/sitemap.xml',
             retries: 0
           });
