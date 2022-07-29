@@ -51,8 +51,8 @@ describe('Sitemapper', function () {
     });
 
     it('should set url', () => {
-      sitemapper.url = 1000;
-      sitemapper.url.should.equal(1000);
+      sitemapper.url = 'https://wp.seantburke.com/sitemap.xml';
+      sitemapper.url.should.equal('https://wp.seantburke.com/sitemap.xml');
     });
   });
 

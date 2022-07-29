@@ -1,6 +1,6 @@
 export interface SitemapperResponse {
   url: string;
-  sites: string[];
+  sites: Array<string>;
   errors: SitemapperErrorData[];
 }
 
@@ -13,9 +13,14 @@ export interface SitemapperErrorData {
 export interface SitemapperOptions {
   concurrency?: number;
   debug?: boolean;
+  gzip?: boolean;
+  headers?: Headers;
   lastmod?: number;
+  method?: string;
   rejectUnauthorized?: boolean;
   requestHeaders?: {[name: string]: string};
+  resolveWithFullResponse?: boolean;
+  responseType?: string;
   retries?: number;
   timeout?: number;
   url?: string;
