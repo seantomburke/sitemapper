@@ -15,61 +15,27 @@ Parse through a sitemaps xml to get all the urls for your crawler.
 
 ## Version 4
 
-Version 4.0.0 introduces breaking changes and supports ECMAScript Modules (ESM)
+> Version 4.0.0 introduces breaking changes and supports ECMAScript Modules (ESM)
 If upgrading to 4.0.0 you will not be able to use require() to import the dependency.
 You must use import() to import the dependencies.
-You will also need to upgrade to Node version >=14.16
-
-## Version 3
-
-
-
-## Version 2
+You will also need to upgrade to `Node >= 14.16`
 
 ### Installation
 ```bash
-npm install sitemapper --save
+npm install sitemapper@latest --save
 ```
 
 ### Simple Example
 ```javascript
-const Sitemapper = require('sitemapper');
+import Sitemapper from 'sitemapper';
 
 const sitemap = new Sitemapper();
 
-sitemap.fetch('https://wp.seantburke.com/sitemap.xml').then(function(sites) {
-  console.log(sites);
-});
-
-```
-### Examples in ES6
-```javascript
-import Sitemapper from 'sitemapper';
-
 (async () => {
-  const Google = new Sitemapper({
-    url: 'https://www.google.com/work/sitemap.xml',
-    timeout: 15000, // 15 seconds
-  });
-
-  try {
-    const { sites } = await Google.fetch();
+    const { sites } = await sitemap.fetch('https://wp.seantburke.com/sitemap.xml');
     console.log(sites);
-  } catch (error) {
-    console.log(error);
-  }
 })();
-
-// or
-
-const sitemapper = new Sitemapper();
-sitemapper.timeout = 5000;
-
-sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
-  .then(({ url, sites }) => console.log(`url:${url}`, 'sites:', sites))
-  .catch(error => console.log(error));
 ```
-
 # Options
 
 You can add options on the initial Sitemapper object when instantiating it.
@@ -113,7 +79,55 @@ const sitemapper = new Sitemapper({
 
 ```
 
-### Examples in ES5
+### Examples in ESM
+```javascript
+import Sitemapper from 'sitemapper';
+
+(async () => {
+  const Google = new Sitemapper({
+    url: 'https://www.google.com/work/sitemap.xml',
+    timeout: 15000, // 15 seconds
+  });
+
+  try {
+    const { sites } = await Google.fetch();
+    console.log(sites);
+  } catch (error) {
+    console.log(error);
+  }
+})();
+
+// or
+
+const sitemapper = new Sitemapper();
+sitemapper.timeout = 5000;
+
+sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
+  .then(({ url, sites }) => console.log(`url:${url}`, 'sites:', sites))
+  .catch(error => console.log(error));
+```
+
+
+## Version 3
+
+> Works for `Node 10.X` to `Node 12.X`
+
+### Installation
+```bash
+npm install sitemapper@3.2 --save
+```
+
+### Simple Example
+```javascript
+const Sitemapper = require('sitemapper');
+
+const sitemap = new Sitemapper();
+
+sitemap.fetch('https://wp.seantburke.com/sitemap.xml').then(function(sites) {
+  console.log(sites);
+});
+
+### Example in JS
 ```javascript
 var Sitemapper = require('sitemapper');
 
@@ -130,39 +144,3 @@ Google.fetch()
     console.log(error);
   });
 
-
-// or
-
-
-var sitemapper = new Sitemapper();
-
-sitemapper.timeout = 5000;
-sitemapper.fetch('https://wp.seantburke.com/sitemap.xml')
-  .then(function (data) {
-    console.log(data);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-
-```
-
-## Version 1
-
-```bash
-npm install sitemapper@1.1.1 --save
-```
-
-### Simple Example
-
-```javascript
-var Sitemapper = require('sitemapper');
-
-var sitemapper = new Sitemapper();
-
-sitemapper.getSites('https://wp.seantburke.com/sitemap.xml', function(err, sites) {
-    if (!err) {
-     console.log(sites);
-    }
-});
-```
