@@ -18,7 +18,7 @@ jobs:
       nodeVersion: ${{ steps.bump_version.outputs.version }}
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [14.16]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -38,7 +38,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [14.16]
     steps:
     - name: draft release
       id: draft_release

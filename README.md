@@ -12,6 +12,18 @@
 ![Test](https://github.com/seantomburke/sitemapper/workflows/test/badge.svg?branch=master&event=push)
 
 Parse through a sitemaps xml to get all the urls for your crawler.
+
+## Version 4
+
+Version 4.0.0 introduces breaking changes and supports ECMAScript Modules (ESM)
+If upgrading to 4.0.0 you will not be able to use require() to import the dependency.
+You must use import() to import the dependencies.
+You will also need to upgrade to Node version >=14.16
+
+## Version 3
+
+
+
 ## Version 2
 
 ### Installation
