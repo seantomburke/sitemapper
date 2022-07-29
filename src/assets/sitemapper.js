@@ -67,7 +67,10 @@ export default class Sitemapper {
 
     // attempt to set the variables with the crawl
     if (this.debug) {
-      console.debug(`Using minimum lastmod value of ${this.lastmod}`);
+      // only show if it's set
+      if (this.lastmod) {
+        console.debug(`Using minimum lastmod value of ${this.lastmod}`);
+      }
     }
 
     try {
