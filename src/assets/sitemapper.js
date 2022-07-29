@@ -6,11 +6,11 @@
  * @author Sean Burke <@seantomburke>
  */
 
-import { parseStringPromise } from 'xml2js';
-import got from 'got';
-import zlib from 'zlib';
-import pLimit from 'p-limit';
-import isGzip from 'is-gzip';
+import { parseStringPromise } from "xml2js";
+import got from "got";
+import zlib from "zlib";
+import pLimit from "p-limit";
+import isGzip from "is-gzip";
 
 /**
  * @typedef {Object} Sitemapper
@@ -35,7 +35,7 @@ export default class Sitemapper {
    *  });
    */
   constructor(options) {
-    const settings = options || { 'requestHeaders': {} };
+    const settings = options || { requestHeaders: {} };
     this.url = settings.url;
     this.timeout = settings.timeout || 15000;
     this.timeoutTable = {};
@@ -44,7 +44,8 @@ export default class Sitemapper {
     this.debug = settings.debug;
     this.concurrency = settings.concurrency || 10;
     this.retries = settings.retries || 0;
-    this.rejectUnauthorized = settings.rejectUnauthorized === false ? false : true;
+    this.rejectUnauthorized =
+      settings.rejectUnauthorized === false ? false : true;
   }
 
   /**
@@ -59,17 +60,16 @@ export default class Sitemapper {
   async fetch(url = this.url) {
     // initialize empty variables
     let results = {
-      url: '',
+      url: "",
       sites: [],
       errors: [],
     };
 
     // attempt to set the variables with the crawl
     if (this.debug) {
-        console.debug(`Using minimum lastmod value of ${this.lastmod}`)
+      console.debug(`Using minimum lastmod value of ${this.lastmod}`);
     }
 
-    let sites = [];
     try {
       // crawl the URL
       results = await this.crawl(url);
@@ -85,7 +85,6 @@ export default class Sitemapper {
       sites: results.sites || [],
       errors: results.errors || [],
     };
-
   }
   /**
    * Get the timeout
@@ -173,17 +172,16 @@ export default class Sitemapper {
    * @returns {Promise<ParseData>}
    */
   async parse(url = this.url) {
-
     // setup the response options for the got request
     const requestOptions = {
-      method: 'GET',
+      method: "GET",
       resolveWithFullResponse: true,
       gzip: true,
-      responseType: 'buffer',
+      responseType: "buffer",
       headers: this.requestHeaders,
       https: {
         rejectUnauthorized: this.rejectUnauthorized,
-      }
+      },
     };
 
     try {
@@ -217,25 +215,25 @@ export default class Sitemapper {
       return { error: null, data };
     } catch (error) {
       // If the request was canceled notify the user of the timeout
-      if (error.name === 'CancelError') {
+      if (error.name === "CancelError") {
         return {
           error: `Request timed out after ${this.timeout} milliseconds for url: '${url}'`,
-          data: error
+          data: error,
         };
       }
 
       // If an HTTPError include error http code
-      if (error.name === 'HTTPError') {
+      if (error.name === "HTTPError") {
         return {
           error: `HTTP Error occurred: ${error.message}`,
-          data: error
+          data: error,
         };
       }
 
       // Otherwise notify of another error
       return {
         error: `Error occurred: ${error.name}`,
-        data: error
+        data: error,
       };
     }
   }
@@ -273,26 +271,33 @@ export default class Sitemapper {
         // Retry on error until you reach the retry limit set in the settings
         if (retryIndex < this.retries) {
           if (this.debug) {
-            console.log (`(Retry attempt: ${retryIndex + 1} / ${this.retries}) ${url} due to ${data.name} on previous request`);
+            console.log(
+              `(Retry attempt: ${retryIndex + 1} / ${
+                this.retries
+              }) ${url} due to ${data.name} on previous request`
+            );
           }
           return this.crawl(url, retryIndex + 1);
         }
 
         if (this.debug) {
-          console.error(`Error occurred during "crawl('${url}')":\n\r Error: ${error}`);
+          console.error(
+            `Error occurred during "crawl('${url}')":\n\r Error: ${error}`
+          );
         }
 
         // Fail and log error
         return {
           sites: [],
-          errors: [{
-            type: data.name,
-            message: error,
-            url,
-            retries: retryIndex,
-          }]
+          errors: [
+            {
+              type: data.name,
+              message: error,
+              url,
+              retries: retryIndex,
+            },
+          ],
         };
-
       } else if (data && data.urlset && data.urlset.url) {
         // Handle URLs found inside the sitemap
         if (this.debug) {
@@ -318,19 +323,23 @@ export default class Sitemapper {
           console.debug(`Additional sitemap found during "crawl('${url}')"`);
         }
         // Map each child url into a promise to create an array of promises
-        const sitemap = data.sitemapindex.sitemap.map(map => map.loc && map.loc[0]);
+        const sitemap = data.sitemapindex.sitemap.map(
+          (map) => map.loc && map.loc[0]
+        );
 
         // Parse all child urls within the concurrency limit in the settings
         const limit = pLimit(this.concurrency);
-        const promiseArray = sitemap.map(site => limit(() => this.crawl(site)));
+        const promiseArray = sitemap.map((site) =>
+          limit(() => this.crawl(site))
+        );
 
         // Make sure all the promises resolve then filter and reduce the array
         const results = await Promise.all(promiseArray);
         const sites = results
-          .filter(result => (result.errors.length === 0))
+          .filter((result) => result.errors.length === 0)
           .reduce((prev, { sites }) => [...prev, ...sites], []);
         const errors = results
-          .filter(result => (result.errors.length !== 0))
+          .filter((result) => result.errors.length !== 0)
           .reduce((prev, { errors }) => [...prev, ...errors], []);
 
         return {
@@ -342,7 +351,11 @@ export default class Sitemapper {
       // Retry on error until you reach the retry limit set in the settings
       if (retryIndex < this.retries) {
         if (this.debug) {
-          console.log (`(Retry attempt: ${retryIndex + 1} / ${this.retries}) ${url} due to ${data.name} on previous request`);
+          console.log(
+            `(Retry attempt: ${retryIndex + 1} / ${
+              this.retries
+            }) ${url} due to ${data.name} on previous request`
+          );
         }
         return this.crawl(url, retryIndex + 1);
       }
@@ -353,21 +366,21 @@ export default class Sitemapper {
       // Fail and log error
       return {
         sites: [],
-        errors: [{
-          url,
-          type: data.name || 'UnknownStateError',
-          message: 'An unknown error occurred.',
-          retries: retryIndex
-        }]
+        errors: [
+          {
+            url,
+            type: data.name || "UnknownStateError",
+            message: "An unknown error occurred.",
+            retries: retryIndex,
+          },
+        ],
       };
-
     } catch (e) {
       if (this.debug) {
         this.debug && console.error(e);
       }
     }
   }
-
 
   /**
    * Gets the sites from a sitemap.xml with a given URL
@@ -376,10 +389,12 @@ export default class Sitemapper {
    * @param {string} url - url to query
    * @param {getSitesCallback} callback - callback for sites and error
    * @callback
-    */
+   */
   async getSites(url = this.url, callback) {
-    console.warn(  // eslint-disable-line no-console
-      '\r\nWarning:', 'function .getSites() is deprecated, please use the function .fetch()\r\n'
+    console.warn(
+      // eslint-disable-line no-console
+      "\r\nWarning:",
+      "function .getSites() is deprecated, please use the function .fetch()\r\n"
     );
 
     let err = {};
