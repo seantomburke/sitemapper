@@ -20,6 +20,7 @@ export default class Sitemapper {
     retries: number;
     rejectUnauthorized: boolean;
     concurrency: number;
+    lastmod: number;
     /**
      * Construct the Sitemapper class
      *
@@ -30,10 +31,12 @@ export default class Sitemapper {
      * @params {integer} [options.concurrency] - The number of concurrent sitemaps to crawl (e.g. 2 will crawl no more than 2 sitemaps at the same time)
      * @params {integer} [options.retries] - The maximum number of retries to attempt when crawling fails (e.g. 1 for 1 retry, 2 attempts in total)
      * @params {boolean} [options.rejectUnauthorized] - If true (default), it will throw on invalid certificates, such as expired or self-signed ones.
+     * @params {lastmod} [options.lastmod] - the minimum lastmod value for urls
      *
      * @example let sitemap = new Sitemapper({
      *   url: 'https://wp.seantburke.com/sitemap.xml',
-     *   timeout: 15000
+     *   timeout: 15000,
+     *   lastmod: 1630693759
      *  });
      */
     constructor(options?: SitemapperOptions);
@@ -66,6 +69,21 @@ export default class Sitemapper {
      * @example sitemapper.timeout = 15000; // 15 seconds
      */
     static set timeout(duration: Number);
+    /**
+     * Get the lastmod minimum value
+     *
+     * @example console.log(sitemapper.lastmod);
+     * @returns {Number}
+     */
+    static get lastmod(): number;
+    /**
+     * Set the lastmod minimum value
+     *
+     * @public
+     * @param {Number} timestamp
+     * @example sitemapper.lastmod = 1630694181; // Unix timestamp
+     */
+    static set lastmod(timestamp: number);
     /**
      *
      * @param {string} url - url for making requests. Should be a link to a sitemaps.xml
