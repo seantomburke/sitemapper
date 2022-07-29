@@ -1,15 +1,21 @@
 ## Sitemap-parser
+[![Code Scanning](https://github.com/seantomburke/sitemapper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/seantomburke/sitemapper/actions/workflows/codeql-analysis.yml)
+[![NPM Publish](https://github.com/seantomburke/sitemapper/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/seantomburke/sitemapper/actions/workflows/npm-publish.yml)
+[![Version Bump](https://github.com/seantomburke/sitemapper/actions/workflows/version-bump.yml/badge.svg?branch=master&event=push)](https://github.com/seantomburke/sitemapper/actions/workflows/version-bump.yml)
+[![Test](https://github.com/seantomburke/sitemapper/actions/workflows/test.yml/badge.svg?branch=master&event=push)](https://github.com/seantomburke/sitemapper/actions/workflows/test.yml)
 [![Build Status](https://travis-ci.org/seantomburke/sitemapper.svg?branch=master)](https://travis-ci.org/seantomburke/sitemapper)
-[![Monthly Downloads](https://img.shields.io/npm/dm/sitemapper.svg)](https://www.npmjs.com/package/sitemapper)
-[![npm version](https://badge.fury.io/js/sitemapper.svg)](https://badge.fury.io/js/sitemapper)
-[![GitHub license](https://img.shields.io/github/license/seantomburke/sitemapper)](https://github.com/seantomburke/sitemapper/blob/master/LICENSE)
-[![Inline docs](https://inch-ci.org/github/seantomburke/sitemapper.svg?branch=master&style=shields)](https://inch-ci.org/github/seantomburke/sitemapper)
-[![GitHub Release Date](https://img.shields.io/github/release-date/seantomburke/sitemapper)](https://github.com/seantomburke/sitemapper/releases)
 [![Codecov](https://img.shields.io/codecov/c/github/seantomburke/sitemapper?token=XhiEgaHFWL)](https://codecov.io/gh/seantomburke/sitemapper)
-[![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/sitemapper)](https://libraries.io/npm/sitemapper)
+[![CodeFactor](https://www.codefactor.io/repository/github/seantomburke/sitemapper/badge)](https://www.codefactor.io/repository/github/seantomburke/sitemapper)
+[![GitHub license](https://img.shields.io/github/license/seantomburke/sitemapper)](https://github.com/seantomburke/sitemapper/blob/master/LICENSE)
+[![GitHub release date](https://img.shields.io/github/release-date/seantomburke/sitemapper.svg)](https://github.com/seantomburke/sitemapper/releases)
+[![Inline docs](https://inch-ci.org/github/seantomburke/sitemapper.svg?branch=master&style=shields)](https://inch-ci.org/github/seantomburke/sitemapper)
 [![LGTM Alerts](https://img.shields.io/lgtm/alerts/github/seantomburke/sitemapper)](https://lgtm.com/projects/g/seantomburke/sitemapper/?mode=list)
 [![LGTM Grade](https://img.shields.io/lgtm/grade/javascript/github/seantomburke/sitemapper)](https://lgtm.com/projects/g/seantomburke/sitemapper/context:javascript)
-![Test](https://github.com/seantomburke/sitemapper/workflows/test/badge.svg?branch=master&event=push)
+[![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/sitemapper)](https://libraries.io/npm/sitemapper)
+[![license](https://img.shields.io/github/license/seantomburke/sitemapper.svg)](https://github.com/seantomburke/sitemapper/blob/main/LICENSE)
+[![Monthly Downloads](https://img.shields.io/npm/dm/sitemapper.svg)](https://www.npmjs.com/package/sitemapper)
+[![npm version](https://badge.fury.io/js/sitemapper.svg)](https://badge.fury.io/js/sitemapper)
+[![release](https://img.shields.io/github/release/seantomburke/sitemapper.svg)](https://github.com/seantomburke/sitemapper/releases/latest)
 
 Parse through a sitemaps xml to get all the urls for your crawler.
 ## Version 2
