@@ -7,16 +7,12 @@
  */
 
 import { parseStringPromise } from 'xml2js';
-// @ts-ignore
 import got from 'got';
-// @ts-ignore
 import zlib from 'zlib';
 import pLimit from 'p-limit';
 // @ts-ignore
 import isGzip from 'is-gzip';
-// @ts-ignore
 import Url from 'url';
-// @ts-ignore
 import path from 'path';
 import { SitemapperOptions, SitemapperResponse} from '../../sitemapper';
 import { Buffer } from 'buffer';

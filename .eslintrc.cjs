@@ -1,8 +1,11 @@
-export default {
-  extends: 'eslint:recommended',
+// @ts-check
+const { defineConfig } = require('eslint-define-config');
+
+module.exports = defineConfig({
+  extends: "eslint:recommended",
   parserOptions: {
     ecmaVersion: 8,
-    sourceType: 'module',
+    sourceType: "module",
     ecmaFeatures: {},
   },
   env: {
@@ -10,4 +13,4 @@ export default {
     mocha: true,
     es6: true,
   },
-};
+});

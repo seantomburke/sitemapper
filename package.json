@@ -35,11 +35,11 @@
   "scripts": {
     "compile:tsc": "tsc --project tsconfig.json",
     "compile:babel": "babel lib -d lib -s",
-    "compile": "npm run tsc",
+    "compile": "npm run compile:tsc",
     "build": "npm run clean && npm run compile",
     "start": "npm run build && node lib/examples/index.js",
     "test": "npm run build && mocha ./lib/tests/*.js && npm run lint",
-    "lint": "eslint src",
+    "lint": "eslint ./src",
     "clean": "rm -rf lib",
     "docs": "documentation build ./src/assets/sitemapper.js -f md > docs.md"
   },
@@ -73,6 +73,7 @@
     "babel-preset-minify": "^0.5.1",
     "documentation": "^13.1.0",
     "eslint": "^8.20.0",
+    "eslint-define-config": "^1.5.1",
     "is-url": "^1.2.4",
     "mocha": "^10.0.0",
     "should": "^13.2.3",

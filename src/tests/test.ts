@@ -1,6 +1,7 @@
 import 'async';
 import 'assert';
 import 'should';
+// @ts-ignore
 import isUrl from 'is-url';
 
 // @ts-ignore

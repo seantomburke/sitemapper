@@ -7,6 +7,7 @@
  */
 /// <reference types="node" />
 import { SitemapperOptions } from '../../sitemapper';
+import { Buffer } from 'buffer';
 /**
  * @typedef {Object} Sitemapper
  */
