@@ -69,6 +69,7 @@ You can add options on the initial Sitemapper object when instantiating it.
 + `concurrency`: (Number) - Sets the maximum number of concurrent sitemap crawling threads. Default: 10
 + `retries`: (Number) - Sets the maximum number of retries to attempt in case of an error response (e.g. 404 or Timeout). Default: 0
 + `rejectUnauthorized`: (Boolean) - If true, it will throw on invalid certificates, such as expired or self-signed ones. Default: True
++ `lastmod`: (Number) - Timestamp of the minimum lastmod value allowed for returned urls
 
 ```javascript
 

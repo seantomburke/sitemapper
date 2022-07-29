@@ -11,13 +11,14 @@ export interface SitemapperErrorData {
 }
 
 export interface SitemapperOptions {
-  url?: string;
-  timeout?: number;
-  requestHeaders?: {[name: string]: string};
-  debug?: boolean;
   concurrency?: number;
-  retries?: number;
+  debug?: boolean;
+  lastmod?: number;
   rejectUnauthorized?: boolean;
+  requestHeaders?: {[name: string]: string};
+  retries?: number;
+  timeout?: number;
+  url?: string;
 }
 
 declare class Sitemapper {
