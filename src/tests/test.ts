@@ -1,7 +1,7 @@
 import 'async';
 import 'assert';
 import 'should';
-const isUrl = require('is-url');
+import isUrl from 'is-url';
 
 // @ts-ignore
 import Sitemapper from '../../lib/assets/sitemapper.js';
@@ -62,14 +62,14 @@ describe('Sitemapper', function () {
       this.timeout(30000);
       const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper.fetch(url)
-        .then(data => {
+        .then((data: any) => {
           data.sites.should.be.Array;
           data.url.should.equal(url);
           data.sites.length.should.be.above(2);
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => {
+        .catch((error: any) => {
           console.error('Test failed');
           done(error);
         });
@@ -79,12 +79,12 @@ describe('Sitemapper', function () {
       this.timeout(30000);
       const url = 'http://gibberish.gibberish';
       sitemapper.fetch(url)
-        .then(data => {
+        .then((data :any) => {
           data.sites.should.be.Array;
           data.errors.should.be.Array;
           done();
         })
-        .catch(error => {
+        .catch((error: any) => {
           console.error('Test failed');
           done(error);
         });
@@ -94,14 +94,14 @@ describe('Sitemapper', function () {
       this.timeout(30000);
       const url = 'https://www.google.com/work/sitemap.xml';
       sitemapper.fetch(url)
-        .then(data => {
+        .then((data: any) => {
           data.sites.should.be.Array;
           data.url.should.equal(url);
           data.sites.length.should.be.above(2);
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => {
+        .catch((error: any) => {
           console.error('Test failed');
           done(error);
         });
@@ -112,14 +112,14 @@ describe('Sitemapper', function () {
       const url = 'https://www.golinks.io/sitemap.xml';
       sitemapper.timeout = 5000;
       sitemapper.fetch(url)
-        .then(data => {
+        .then((data: any) => {
           data.sites.should.be.Array;
           data.url.should.equal(url);
           data.sites.length.should.be.above(2);
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => {
+        .catch((error: any) => {
           console.error('Test failed');
           done(error);
         });
@@ -131,11 +131,11 @@ describe('Sitemapper', function () {
       sitemapper.timeout = 1;
 
       sitemapper.fetch(url)
-        .then(data => {
+        .then((data: any) => {
           data.sites.should.be.Array;
           done();
         })
-        .catch(error => {
+        .catch((error: any) => {
           console.error('Test failed');
           done(error);
         });
@@ -156,13 +156,13 @@ describe('Sitemapper', function () {
       const url = 'https://www.banggood.com/sitemap/category.xml.gz';
       sitemapper.timeout = 10000;
       sitemapper.fetch(url)
-        .then(data => {
+        .then((data: any) => {
           data.sites.should.be.Array;
           data.errors.should.be.Array;
           data.sites.length.should.be.greaterThan(0);
           done();
         })
-        .catch(error => {
+        .catch((error: any) => {
           console.error('Test failed');
           done(error);
         });
@@ -173,7 +173,7 @@ describe('Sitemapper', function () {
     it('getSites should be backwards compatible', function (done) {
       this.timeout(30000);
       const url = 'https://wp.seantburke.com/sitemap.xml';
-      sitemapper.getSites(url, (err, sites) => {
+      sitemapper.getSites(url, (err: any, sites: Array<string>) => {
         sites.should.be.Array;
         isUrl(sites[0]).should.be.true;
         done();

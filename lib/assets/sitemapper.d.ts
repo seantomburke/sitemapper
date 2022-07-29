@@ -16,12 +16,19 @@ export default class Sitemapper {
     timeoutTable: Object;
     requestHeaders: any;
     debug: boolean;
+    retries: number;
+    rejectUnauthorized: boolean;
+    concurrency: number;
     /**
      * Construct the Sitemapper class
      *
      * @params {Object} options to set
      * @params {string} [options.url] - the Sitemap url (e.g https://wp.seantburke.com/sitemap.xml)
      * @params {Timeout} [options.timeout] - @see {timeout}
+     * @params {boolean} [options.debug] - Enables/Disables additional logging
+     * @params {integer} [options.concurrency] - The number of concurrent sitemaps to crawl (e.g. 2 will crawl no more than 2 sitemaps at the same time)
+     * @params {integer} [options.retries] - The maximum number of retries to attempt when crawling fails (e.g. 1 for 1 retry, 2 attempts in total)
+     * @params {boolean} [options.rejectUnauthorized] - If true (default), it will throw on invalid certificates, such as expired or self-signed ones.
      *
      * @example let sitemap = new Sitemapper({
      *   url: 'https://wp.seantburke.com/sitemap.xml',
@@ -40,7 +47,8 @@ export default class Sitemapper {
      */
     fetch(url?: string): Promise<{
         url: string;
-        sites: string[];
+        sites: any;
+        errors: any;
     }>;
     /**
      * Get the timeout
@@ -109,9 +117,10 @@ export default class Sitemapper {
      * @private
      * @recursive
      * @param {string} url - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
-     * @returns {Promise<SitesArray> | Promise<ParseData>}
+     * @param {integer} retryIndex - Number of retry attempts fro this URL (e.g. 0 for 1st attempt, 1 for second attempty etc.)
+     * @returns {Promise<SitesData>}
      */
-    crawl(url: string): Promise<Array<string>>;
+    crawl(url: string, retryIndex?: number): Promise<any>;
     /**
      * Gets the sites from a sitemap.xml with a given URL
      *
@@ -120,7 +129,7 @@ export default class Sitemapper {
      * @param {getSitesCallback} callback - callback for sites and error
      * @callback
       */
-    getSites(url: string, callback: any): Promise<any>;
+    getSites(url: string | undefined, callback: Function): Promise<any>;
     /**
      * Check to see if the url is a gzipped url
      *
@@ -164,7 +173,7 @@ export default class Sitemapper {
  * @property {Object} data.sitemapindex - index of sitemap
  * @property {string} data.sitemapindex.sitemap - Sitemap
  * @example {
- *   error: "There was an error!"
+ *   error: 'There was an error!'
  *   data: {
  *     url: 'https://linkedin.com',
  *     urlset: [{
@@ -182,11 +191,24 @@ export default class Sitemapper {
  *
  * @property {string} url - the original url used to query the data
  * @property {SitesArray} sites
+ * @property {ErrorDataArray} errors
  * @example {
  *   url: 'https://linkedin.com/sitemap.xml',
  *   sites: [
  *     'https://linkedin.com/project1',
  *     'https://linkedin.com/project2'
+ *   ],
+ *   errors: [
+ *      {
+ *        type: 'CancelError',
+ *        url: 'https://www.walmart.com/sitemap_tp1.xml',
+ *        retries: 0
+ *      },
+ *      {
+ *        type: 'HTTPError',
+ *        url: 'https://www.walmart.com/sitemap_tp2.xml',
+ *        retries: 0
+ *      },
  *   ]
  * }
  */
@@ -198,4 +220,35 @@ export default class Sitemapper {
  *   'https://www.google.com',
  *   'https://www.linkedin.com'
  * ]
+ */
+/**
+ * An array of Error data objects
+ *
+ * @typedef {ErrorData[]} ErrorDataArray
+ * @example [
+ *    {
+ *      type: 'CancelError',
+ *      url: 'https://www.walmart.com/sitemap_tp1.xml',
+ *      retries: 0
+ *    },
+ *    {
+ *      type: 'HTTPError',
+ *      url: 'https://www.walmart.com/sitemap_tp2.xml',
+ *      retries: 0
+ *    },
+ * ]
+ */
+/**
+ * An object containing details about the errors which occurred during the crawl
+ *
+ * @typedef {Object} ErrorData
+ *
+ * @property {string} type - The error type which was returned
+ * @property {string} url - The sitemap URL which returned the error
+ * @property {Number} errors - The total number of retries attempted after receiving the first error
+ * @example {
+ *    type: 'CancelError',
+ *    url: 'https://www.walmart.com/sitemap_tp1.xml',
+ *    retries: 0
+ * }
  */

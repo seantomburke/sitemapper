@@ -12,6 +12,7 @@ import got from 'got';
 // @ts-ignore
 import zlib from 'zlib';
 import pLimit from 'p-limit';
+// @ts-ignore
 import isGzip from 'is-gzip';
 // @ts-ignore
 import Url from 'url';
@@ -142,7 +143,7 @@ export default class Sitemapper {
    * @param {Number} timestamp
    * @example sitemapper.lastmod = 1630694181; // Unix timestamp
    */
-  static set lastmod(timestamp) {
+  static set lastmod(timestamp: number) {
     this.lastmod = timestamp;
   }
 
@@ -189,7 +190,7 @@ export default class Sitemapper {
    * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
    * @returns {Promise<ParseData>}
    */
-  async parse(url: string = this.url): Promise<{error, data}> {
+  async parse(url: string = this.url): Promise<{error: any, data: any}> {
     // setup the response options for the got request
     const requestOptions: any = {
       method: 'GET',
@@ -214,7 +215,7 @@ export default class Sitemapper {
 
       // if the response does not have a successful status code then clear the timeout for this url.
       if (!response || response.statusCode !== 200) {
-        clearTimeout(this.timeoutTable[url]);
+        clearTimeout((this.timeoutTable as any)[url]);
         return { error: response.error, data: response };
       }
 
@@ -231,7 +232,7 @@ export default class Sitemapper {
 
       // return the results
       return { error: null, data };
-    } catch (error) {
+    } catch (error: any) {
       // If the request was canceled notify the user of the timeout
       if (error.name === "CancelError") {
         return {
@@ -266,7 +267,7 @@ export default class Sitemapper {
    */
   initializeTimeout(url: string, requester: { cancel: Function }) {
     // this will throw a CancelError which will be handled in the parent that calls this method.
-    this.timeoutTable[url] = setTimeout(() => requester.cancel(), this.timeout);
+    (this.timeoutTable as any)[url] = setTimeout(() => requester.cancel(), this.timeout);
   }
 
   /**
@@ -282,7 +283,7 @@ export default class Sitemapper {
     try {
       const { error, data } : { error: Error, data: {name: string, sitemapindex: { sitemap: Array<{loc: string[], lastmod: number }>}, urlset: { url: Array<{ loc: string[], lastmod: number }>}, } } = await this.parse(url);
       // The promise resolved, remove the timeout
-      clearTimeout(this.timeoutTable[url]);
+      clearTimeout((this.timeoutTable as any)[url]);
 
       if (error) {
         // Handle errors during sitemap parsing / request
@@ -326,7 +327,7 @@ export default class Sitemapper {
           .filter((site: ({ loc: Array<string>, lastmod: number })) => {
             if (this.lastmod === 0) return true;
             if (site.lastmod === undefined) return false;
-            const modified = new Date(site.lastmod[0]).getTime();
+            const modified = new Date((site.lastmod as any)[0]).getTime();
 
             return modified >= this.lastmod;
           })
@@ -407,12 +408,10 @@ export default class Sitemapper {
    * @param {string} url - url to query
    * @param {getSitesCallback} callback - callback for sites and error
    * @callback
-   */
-  async getSites(url = this.url, callback) {
-    console.warn(
-      // eslint-disable-line no-console
-      "\r\nWarning:",
-      "function .getSites() is deprecated, please use the function .fetch()\r\n"
+    */
+  async getSites(url = this.url, callback: Function) {
+    console.warn(  // eslint-disable-line no-console
+      '\r\nWarning:', 'function .getSites() is deprecated, please use the function .fetch()\r\n'
     );
 
     let err = {};
@@ -420,7 +419,7 @@ export default class Sitemapper {
     try {
       const response = await this.fetch(url);
       sites = response.sites;
-    } catch (error) {
+    } catch (error: any) {
       err = error;
     }
     return callback(err, sites);
