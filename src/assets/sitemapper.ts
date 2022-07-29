@@ -74,7 +74,7 @@ export default class Sitemapper {
    */
   async fetch(url: string = this.url) {
     // initialize empty variables
-    let results: any = {
+    let results: SitemapperResponse = {
       url: '',
       sites: [],
       errors: [],
@@ -351,7 +351,7 @@ export default class Sitemapper {
         // Make sure all the promises resolve then filter and reduce the array
         const results = await Promise.all(promiseArray);
         const sites = results
-          .filter((result) => result.errors.length === 0)
+          .filter((result: { errors: Array<any> }) => result.errors.length === 0)
           .reduce((prev, { sites }) => [...prev, ...sites], []);
         const errors = results
           .filter((result) => result.errors.length !== 0)
@@ -411,7 +411,7 @@ export default class Sitemapper {
     );
 
     let err = {};
-    let sites = [];
+    let sites: string[] = [];
     try {
       const response = await this.fetch(url);
       sites = response.sites;

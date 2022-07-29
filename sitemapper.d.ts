@@ -1,6 +1,6 @@
 export interface SitemapperResponse {
   url: string;
-  sites: string[];
+  sites: Array<string>;
   errors: SitemapperErrorData[];
 }
 
