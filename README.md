@@ -35,7 +35,24 @@ sitemap.fetch('https://wp.seantburke.com/sitemap.xml').then(function(sites) {
   console.log(sites);
 });
 
+// OR 
+
+sitemap.fetch("D:\\githubprojects\\ProjectSeriesBackend\\src\\data\\sites-xmls\\Sitemap.xml").then(function(sites) {
+  console.log(sites);
+}
+);
+
+// OR 
+
+sitemap.fetch('<?xml version="1.0" encoding="utf-8" standalone="yes" ?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://wp.seantburke.com/?p=234</loc></url><url><loc>https://wp.seantburke.com/?p=231</loc></url></urlset>').then(function(sites) {
+  console.log(sites);
+}
+);
+
+
+
 ```
+
 ### Examples in ES6
 ```javascript
 import Sitemapper from 'sitemapper';
