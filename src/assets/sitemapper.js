@@ -11,6 +11,7 @@ import got from "got";
 import zlib from "zlib";
 import pLimit from "p-limit";
 import isGzip from "is-gzip";
+import fs from "fs";
 
 /**
  * @typedef {Object} Sitemapper
@@ -186,33 +187,63 @@ export default class Sitemapper {
         rejectUnauthorized: this.rejectUnauthorized,
       },
     };
-
+    const isUrlRegex =
+      // eslint-disable-next-line no-useless-escape
+      /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
     try {
-      // create a request Promise with the url and request options
-      const requester = got.get(url, requestOptions);
+      let data;
 
-      // initialize the timeout method based on the URL, and pass the request object.
-      this.initializeTimeout(url, requester);
+      // if is this url
+      if (isUrlRegex.test(url)) {
+        // create a request Promise with the url and request options
+        const requester = got.get(url, requestOptions);
 
-      // get the response from the requester promise
-      const response = await requester;
+        // initialize the timeout method based on the URL, and pass the request object.
+        this.initializeTimeout(url, requester);
 
-      // if the response does not have a successful status code then clear the timeout for this url.
-      if (!response || response.statusCode !== 200) {
-        clearTimeout(this.timeoutTable[url]);
-        return { error: response.error, data: response };
+        // get the response from the requester promise
+        let response = await requester;
+        // console.log(String(response.body));
+
+        // if the response does not have a successful status code then clear the timeout for this url.
+        if (!response || response.statusCode !== 200) {
+          clearTimeout(this.timeoutTable[url]);
+          return { error: response.error, data: response };
+        }
+        let responseBody;
+
+        if (isGzip(response.rawBody)) {
+          responseBody = await this.decompressResponseBody(response.body);
+        } else {
+          responseBody = response.body;
+        }
+
+        data = await parseStringPromise(responseBody);
       }
+      // if is this raw XmlText
+      else if (url.includes("xmlns")) {
+        let responseBody;
+        if (isGzip(url)) {
+          responseBody = await this.decompressResponseBody(url);
+        } else {
+          responseBody = await url;
+        }
 
-      let responseBody;
-
-      if (isGzip(response.rawBody)) {
-        responseBody = await this.decompressResponseBody(response.body);
-      } else {
-        responseBody = response.body;
+        data = await parseStringPromise(responseBody);
       }
+      // if is this file path
+      else if (url.includes(":\\")) {
+        const rawBody = await fs.readFileSync(url, "utf-8");
+        let responseBody;
+        if (isGzip(rawBody)) {
+          responseBody = await this.decompressResponseBody(rawBody);
+        } else {
+          responseBody = await rawBody;
+        }
 
+        data = await parseStringPromise(responseBody);
+      } else throw new Error("Invalid url");
       // otherwise parse the XML that was returned.
-      const data = await parseStringPromise(responseBody);
 
       // return the results
       return { error: null, data };
