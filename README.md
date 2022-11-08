@@ -37,7 +37,7 @@ sitemap.fetch('https://wp.seantburke.com/sitemap.xml').then(function(sites) {
 
 // OR 
 
-sitemap.fetch("D:\\githubprojects\\ProjectSeriesBackend\\src\\data\\sites-xmls\\Sitemap.xml").then(function(sites) {
+sitemap.fetch("D:\\githubprojects\\src\\data\\sites-xmls\\Sitemap.xml").then(function(sites) {
   console.log(sites);
 }
 );
