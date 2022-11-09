@@ -221,7 +221,7 @@ export default class Sitemapper {
         data = await parseStringPromise(responseBody);
       }
       // if is this raw XmlText
-      else if (url.includes("xmlns")) {
+      else if (url.includes("xmlns") && url.includes("sitemaps")) {
         let responseBody;
         if (isGzip(url)) {
           responseBody = await this.decompressResponseBody(url);
