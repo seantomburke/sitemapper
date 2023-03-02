@@ -1,3 +1,5 @@
+## NPM : https://www.npmjs.com/package/@myagizmaktav/sitemapper
+
 ## Sitemap-parser
 [![Code Scanning](https://github.com/seantomburke/sitemapper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/seantomburke/sitemapper/actions/workflows/codeql-analysis.yml)
 [![NPM Publish](https://github.com/seantomburke/sitemapper/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/seantomburke/sitemapper/actions/workflows/npm-publish.yml)
