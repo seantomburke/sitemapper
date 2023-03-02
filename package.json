@@ -1,5 +1,5 @@
 {
-  "name": "sitemapper",
+  "name": "@myagizmaktav/sitemapper",
   "version": "3.2.8",
   "description": "Parser for XML Sitemaps to be used with Robots.txt and web crawlers",
   "keywords": [
@@ -11,10 +11,10 @@
     "crawlers",
     "webcrawler"
   ],
-  "homepage": "http://github.com/seantomburke/sitemapper",
+  "homepage": "https://github.com/myagizmaktav/sitemapper",
   "tonicExampleFilename": "example.js",
   "bugs": {
-    "url": "http://github.com/seantomburke/sitemapper/issues"
+    "url": "https://github.com/myagizmaktav/sitemapper/issues"
   },
   "license": "MIT",
   "files": [
@@ -25,13 +25,9 @@
   "types": "./sitemapper.d.ts",
   "repository": {
     "type": "git",
-    "url": "git://github.com/seantomburke/sitemapper.git"
+    "url": "git+https://github.com/myagizmaktav/sitemapper.git"
   },
-  "author": {
-    "name": "Sean Thomas Burke",
-    "email": "seantomburke@users.noreply.github.com",
-    "url": "http://www.seantburke.com"
-  },
+  "author": "Mehmet Yağız Maktav <myagizmaktav@users.noreply.github.com>",
   "scripts": {
     "compile": "babel src -d lib -s && tsc --project ./src/tests/",
     "build": "npm run clean && npm run compile",
@@ -42,15 +38,11 @@
     "docs": "documentation build ./src/assets/sitemapper.js -f md > docs.md"
   },
   "maintainers": [
-    {
-      "name": "Sean Thomas Burke",
-      "email": "seantomburke@users.noreply.github.com",
-      "url": "http://www.seantburke.com"
-    }
+    "Sean Thomas Burke <seantomburke@users.noreply.github.com> (http://www.seantburke.com)",
+    "Mehmet Yağız Maktav <myagizmaktav@users.noreply.github.com>"
   ],
   "directories": {
-    "lib": "./lib",
-    "test": "./test"
+    "lib": "lib"
   },
   "engines": {
     "node": ">= 10.0.0"
