@@ -16,6 +16,7 @@
 [![Monthly Downloads](https://img.shields.io/npm/dm/sitemapper.svg)](https://www.npmjs.com/package/sitemapper)
 [![npm version](https://badge.fury.io/js/sitemapper.svg)](https://badge.fury.io/js/sitemapper)
 [![release](https://img.shields.io/github/release/seantomburke/sitemapper.svg)](https://github.com/seantomburke/sitemapper/releases/latest)
+[![scrutinizer](https://img.shields.io/scrutinizer/quality/g/seantomburke/sitemapper.svg?style=flat-square)](https://scrutinizer-ci.com/g/seantomburke/sitemapper/)
 
 Parse through a sitemaps xml to get all the urls for your crawler.
 ## Version 2
