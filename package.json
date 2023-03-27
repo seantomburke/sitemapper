@@ -71,7 +71,7 @@
     "documentation": "^13.1.0",
     "eslint": "^7.14.0",
     "is-url": "^1.2.4",
-    "mocha": "^8.2.1",
+    "mocha": "^10.2.0",
     "should": "^13.2.3",
     "ts-node": "^9.0.0",
     "typescript": "^4.1.2"
