@@ -19,6 +19,7 @@ export interface SitemapperOptions {
   retries?: number;
   timeout?: number;
   url?: string;
+  fields?: {[name: string]: boolean};
 }
 
 declare class Sitemapper {
