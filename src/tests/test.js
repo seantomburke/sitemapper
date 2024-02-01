@@ -262,4 +262,29 @@ describe('Sitemapper', function () {
       });
     });
   });
+
+  describe("fetch readsRawData", function () {
+    it("fetch should be read raw data", function (done) {
+      this.timeout(30000);
+      const url =
+        '<?xml version="1.0" encoding="utf-8" standalone="yes" ?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://wp.seantburke.com/?p=234</loc></url><url><loc>https://wp.seantburke.com/?p=231</loc></url></urlset>';
+      sitemapper.getSites(url, (err, sites) => {
+        sites.should.be.Array;
+        isUrl(sites[0]).should.be.true;
+        done();
+      });
+    });
+  });
+  describe("fetch readsFilePath", function () {
+    it("fetch should be read filePath", function (done) {
+      this.timeout(30000);
+      const url =
+        "D:\\githubprojects\\ProjectSeriesBackend\\src\\data\\sites-xmls\\Sitemap.xml";
+      sitemapper.getSites(url, (err, sites) => {
+        sites.should.be.Array;
+        isUrl(sites[0]).should.be.true;
+        done();
+      });
+    });
+  });
 });
