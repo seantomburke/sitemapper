@@ -55,6 +55,18 @@ describe('Sitemapper', function () {
       sitemapper.url = 1000;
       sitemapper.url.should.equal(1000);
     });
+
+    it('should construct with specific fields', () => {
+      sitemapper = new Sitemapper({
+        fields: { "loc": true,
+          "lastmod": true,
+          "priority": true,
+          "changefreq": true
+        }
+      });
+      sitemapper.fields.should.be.Object && sitemapper.fields.should.have.keys('loc', 'lastmod', 'priority', 'changefreq');
+    });
+
   });
 
   describe('fetch Method resolves sites to array', function () {
@@ -105,6 +117,33 @@ describe('Sitemapper', function () {
           console.error('Test failed');
           done(error);
         });
+    });
+
+    it('https://www.channable.com/sitemap.xml sitemaps should contain extra fields', function (done) {
+      this.timeout(30000);
+      const url = 'https://www.channable.com/sitemap.xml';
+      sitemapper = new Sitemapper({
+        fields: { "loc": true,
+          "lastmod": true,
+          "priority": true,
+          "changefreq": true
+        }
+      });
+      sitemapper.fetch(url)
+          .then(data => {
+            data.sites.should.be.Array;
+            data.url.should.equal(url);
+            data.sites.length.should.be.above(2);
+            data.sites[0].loc.should.be.String;
+            data.sites[0].lastmod.should.be.String;
+            data.sites[0].priority.should.be.String;
+            data.sites[0].changefreq.should.be.String;
+            done();
+          })
+          .catch(error => {
+            console.error('Test failed');
+            done(error);
+          });
     });
 
     it('https://www.golinks.io/sitemap.xml sitemaps should be an array', function (done) {

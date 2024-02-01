@@ -18,6 +18,7 @@
 [![Monthly Downloads](https://img.shields.io/npm/dm/sitemapper.svg)](https://www.npmjs.com/package/sitemapper)
 [![npm version](https://badge.fury.io/js/sitemapper.svg)](https://badge.fury.io/js/sitemapper)
 [![release](https://img.shields.io/github/release/seantomburke/sitemapper.svg)](https://github.com/seantomburke/sitemapper/releases/latest)
+[![scrutinizer](https://img.shields.io/scrutinizer/quality/g/seantomburke/sitemapper.svg?style=flat-square)](https://scrutinizer-ci.com/g/seantomburke/sitemapper/)
 
 Parse through a sitemaps xml to get all the urls for your crawler.
 ## Version 2
@@ -95,6 +96,7 @@ You can add options on the initial Sitemapper object when instantiating it.
 + `retries`: (Number) - Sets the maximum number of retries to attempt in case of an error response (e.g. 404 or Timeout). Default: 0
 + `rejectUnauthorized`: (Boolean) - If true, it will throw on invalid certificates, such as expired or self-signed ones. Default: True
 + `lastmod`: (Number) - Timestamp of the minimum lastmod value allowed for returned urls
++ `field` : (Object) - An object of fields to be returned from the sitemap. For Example: `{ loc: true, lastmod: true, changefreq: true, priority: true }`. Leaving a field out has the same effect as `field: false`. If not specified sitemapper defaults to returning the 'classic' array of urls.
 
 ```javascript
 

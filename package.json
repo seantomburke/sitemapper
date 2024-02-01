@@ -1,6 +1,7 @@
 {
-  "name": "@myagizmaktav/sitemapper",
-  "version": "3.2.8",
+
+  "name": "sitemapper",
+  "version": "3.3.0",
   "description": "Parser for XML Sitemaps to be used with Robots.txt and web crawlers",
   "keywords": [
     "parse",
@@ -60,7 +61,7 @@
     "async": "^3.2.0",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-preset-minify": "^0.5.1",
-    "documentation": "^13.1.0",
+    "documentation": "^14.0.2",
     "eslint": "^7.14.0",
     "is-url": "^1.2.4",
     "mocha": "^8.2.1",
@@ -72,6 +73,6 @@
     "got": "^11.8.0",
     "is-gzip": "2.0.0",
     "p-limit": "^3.1.0",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.5.0"
   }
 }

@@ -47,6 +47,7 @@ export default class Sitemapper {
     this.retries = settings.retries || 0;
     this.rejectUnauthorized =
       settings.rejectUnauthorized === false ? false : true;
+    this.fields = settings.fields || false;
   }
 
   /**
@@ -346,7 +347,20 @@ export default class Sitemapper {
 
             return modified >= this.lastmod;
           })
-          .map((site) => site.loc && site.loc[0]);
+            .map((site) => {
+              if( !this.fields) {
+                return site.loc && site.loc[0];
+              } else {
+                  let fields = {};
+                  for (const [field, active] of Object.entries(this.fields)) {
+                    if(active){
+                      fields[field] = site[field][0]
+                    }
+                  }
+                 return fields;
+              }
+            });
+
         return {
           sites,
           errors: [],
