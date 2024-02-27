@@ -384,6 +384,7 @@ async parse(url = this.url) {
     let sites = [];
     try {
       const response = await this.fetch(url);
+      console.log("RESPONSE is:", response)
       sites = response.sites;
     } catch (error) {
       err = error;
