@@ -7,7 +7,6 @@
  */
 
 import { parseStringPromise } from "xml2js";
-import got from "got";
 import zlib from "zlib";
 import pLimit from "p-limit";
 import isGzip from "is-gzip";
