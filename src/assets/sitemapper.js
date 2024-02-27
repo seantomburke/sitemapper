@@ -7,7 +7,6 @@
  */
 
 import { parseStringPromise } from "xml2js";
-import got from "got";
 import zlib from "zlib";
 import pLimit from "p-limit";
 import isGzip from "is-gzip";
@@ -168,76 +167,43 @@ export default class Sitemapper {
     return this.debug;
   }
 
-  /**
-   * Requests the URL and uses parseStringPromise to parse through and find the data
-   *
-   * @private
-   * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
-   * @returns {Promise<ParseData>}
-   */
-  async parse(url = this.url) {
-    // setup the response options for the got request
+/**
+ * Requests the URL and uses parseStringPromise to parse through and find the data
+ *
+ * @private
+ * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
+ * @returns {Promise<ParseData>}
+ */
+async parse(url = this.url) {
+    // setup the response options for the fetch request
     const requestOptions = {
       method: "GET",
-      resolveWithFullResponse: true,
-      gzip: true,
-      responseType: "buffer",
       headers: this.requestHeaders,
-      https: {
-        rejectUnauthorized: this.rejectUnauthorized,
-      },
+      compress: true,
     };
 
     try {
-      // create a request Promise with the url and request options
-      const requester = got.get(url, requestOptions);
+      // Fetch the URL
+      const response = await fetch(url, requestOptions);
 
-      // initialize the timeout method based on the URL, and pass the request object.
-      this.initializeTimeout(url, requester);
-
-      // get the response from the requester promise
-      const response = await requester;
-
-      // if the response does not have a successful status code then clear the timeout for this url.
-      if (!response || response.statusCode !== 200) {
-        clearTimeout(this.timeoutTable[url]);
-        return { error: response.error, data: response };
+      // Check if the response was successful
+      if (!response.ok) {
+        throw new Error(`Failed to fetch: ${url}. Status: ${response.status}`);
       }
 
-      let responseBody;
+      // Extract the response body
+      const responseBody = await response.text();
 
-      if (isGzip(response.rawBody)) {
-        responseBody = await this.decompressResponseBody(response.body);
-      } else {
-        responseBody = response.body;
-      }
-
-      // otherwise parse the XML that was returned.
+      // Parse the XML that was returned
       const data = await parseStringPromise(responseBody);
 
-      // return the results
+      // Return the results
       return { error: null, data };
     } catch (error) {
-      // If the request was canceled notify the user of the timeout
-      if (error.name === "CancelError") {
-        return {
-          error: `Request timed out after ${this.timeout} milliseconds for url: '${url}'`,
-          data: error,
-        };
-      }
-
-      // If an HTTPError include error http code
-      if (error.name === "HTTPError") {
-        return {
-          error: `HTTP Error occurred: ${error.message}`,
-          data: error,
-        };
-      }
-
-      // Otherwise notify of another error
+      // Handle errors
       return {
-        error: `Error occurred: ${error.name}`,
-        data: error,
+        error: `Error occurred: ${error.message}`,
+        data: null,
       };
     }
   }
