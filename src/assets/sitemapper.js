@@ -27,6 +27,7 @@ export default class Sitemapper {
    * @params {integer} [options.retries] - The maximum number of retries to attempt when crawling fails (e.g. 1 for 1 retry, 2 attempts in total)
    * @params {boolean} [options.rejectUnauthorized] - If true (default), it will throw on invalid certificates, such as expired or self-signed ones.
    * @params {lastmod} [options.lastmod] - the minimum lastmod value for urls
+   * @params {hpagent.HttpProxyAgent|hpagent.HttpsProxyAgent} [options.proxyAgent] - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
    *
    * @example let sitemap = new Sitemapper({
    *   url: 'https://wp.seantburke.com/sitemap.xml',
@@ -46,6 +47,7 @@ export default class Sitemapper {
     this.retries = settings.retries || 0;
     this.rejectUnauthorized =
       settings.rejectUnauthorized === false ? false : true;
+    this.proxyAgent = settings.proxyAgent || {};
     this.fields = settings.fields || false;
   }
 
@@ -186,6 +188,7 @@ export default class Sitemapper {
       https: {
         rejectUnauthorized: this.rejectUnauthorized,
       },
+      agent: this.proxyAgent,
     };
 
     try {
