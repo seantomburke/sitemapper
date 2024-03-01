@@ -188,7 +188,7 @@ export default class Sitemapper {
       https: {
         rejectUnauthorized: this.rejectUnauthorized,
       },
-      aget: this.proxyAgent
+      agent: this.proxyAgent,
     };
 
     try {
