@@ -88,9 +88,9 @@ describe('Sitemapper', function () {
         });
     });
 
-    it('https://www.google.com/work/sitemap.xml sitemaps should be an array', function (done) {
+    it('https://webflow.com/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
-      const url = 'https://www.google.com/work/sitemap.xml';
+      const url = 'https://webflow.com/sitemap.xml';
       sitemapper.fetch(url)
         .then(data => {
           data.sites.should.be.Array;
