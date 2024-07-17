@@ -4,5 +4,4 @@ npm-debug.log
 .idea
 .vscode
 tmp
-lib/tests/
-lib/**/*.map
+lib
