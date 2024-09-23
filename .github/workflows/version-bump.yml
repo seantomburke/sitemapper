@@ -11,20 +11,15 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     outputs:
       nodeVersion: ${{ steps.bump_version.outputs.version }}
-    strategy:
-      matrix:
-        node-version: [10.x]
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - uses: actions/checkout@v4
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '20'
     - name: bump version
       id: bump_version
       run: |
@@ -36,9 +31,6 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: build
-    strategy:
-      matrix:
-        node-version: [10.x]
     steps:
     - name: draft release
       id: draft_release
