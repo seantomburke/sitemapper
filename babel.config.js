@@ -10,6 +10,7 @@ module.exports = (api) => {
         }
       }
     ],
+    '@babel/preset-typescript',
     'minify', // minify the Babel code
   ];
   const plugins = [
