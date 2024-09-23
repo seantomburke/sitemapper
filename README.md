@@ -78,6 +78,7 @@ You can add options on the initial Sitemapper object when instantiating it.
 + `rejectUnauthorized`: (Boolean) - If true, it will throw on invalid certificates, such as expired or self-signed ones. Default: True
 + `lastmod`: (Number) - Timestamp of the minimum lastmod value allowed for returned urls
 + `field` : (Object) - An object of fields to be returned from the sitemap. For Example: `{ loc: true, lastmod: true, changefreq: true, priority: true }`. Leaving a field out has the same effect as `field: false`. If not specified sitemapper defaults to returning the 'classic' array of urls.
++ `proxyAgent`: (HttpProxyAgent|HttpsProxyAgent) - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
 
 ```javascript
 

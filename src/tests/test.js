@@ -199,7 +199,7 @@ describe('Sitemapper', function () {
           done();
         })
         .catch(error => {
-          console.error('Test failed');
+          console.error('Test failed');status
           done(error);
         });
     });
