@@ -10,4 +10,12 @@ module.exports = {
     mocha: true,
     es6: true,
   },
+  ignores: [
+    'example.js',
+    'index.js',
+    'lib',
+    'node_modules',
+    'src/tests',
+    'tmp'
+  ],
 };
