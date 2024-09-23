@@ -204,7 +204,8 @@ describe('Sitemapper', function () {
         });
     });
 
-    it('https://foo.com/sitemap.xml should allow insecure request', function (done) {
+    // foo.com added HTTPS so this test breaks. TODO: find an insecure site to test with
+    it.skip('https://foo.com/sitemap.xml should allow insecure request', function (done) {
       this.timeout(30000);
       const url = 'https://foo.com/sitemap.xml';
       sitemapper.timeout = 10000;
