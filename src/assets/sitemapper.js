@@ -28,11 +28,13 @@ export default class Sitemapper {
    * @params {boolean} [options.rejectUnauthorized] - If true (default), it will throw on invalid certificates, such as expired or self-signed ones.
    * @params {lastmod} [options.lastmod] - the minimum lastmod value for urls
    * @params {hpagent.HttpProxyAgent|hpagent.HttpsProxyAgent} [options.proxyAgent] - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
+   * @params {Array<RegExp>} [options.exclusions] - Array of regex patterns to exclude URLs
    *
    * @example let sitemap = new Sitemapper({
    *   url: 'https://wp.seantburke.com/sitemap.xml',
    *   timeout: 15000,
-   *   lastmod: 1630693759
+   *   lastmod: 1630693759,
+   *   exclusions: [/foo.com/, /bar.xml/] // Filters out URLs matching these patterns
    *  });
    */
   constructor(options) {
@@ -49,6 +51,7 @@ export default class Sitemapper {
       settings.rejectUnauthorized === false ? false : true;
     this.fields = settings.fields || false;
     this.proxyAgent = settings.proxyAgent || {};
+    this.exclusions = settings.exclusions || [];
   }
 
   /**
@@ -267,140 +270,141 @@ export default class Sitemapper {
    * @param {integer} retryIndex - Number of retry attempts fro this URL (e.g. 0 for 1st attempt, 1 for second attempty etc.)
    * @returns {Promise<SitesData>}
    */
-  async crawl(url, retryIndex = 0) {
-    try {
-      const { error, data } = await this.parse(url);
-      // The promise resolved, remove the timeout
-      clearTimeout(this.timeoutTable[url]);
+   async crawl(url, retryIndex = 0) {
+     try {
+       const { error, data } = await this.parse(url);
+       // The promise resolved, remove the timeout
+       clearTimeout(this.timeoutTable[url]);
 
-      if (error) {
-        // Handle errors during sitemap parsing / request
-        // Retry on error until you reach the retry limit set in the settings
-        if (retryIndex < this.retries) {
-          if (this.debug) {
-            console.log(
-              `(Retry attempt: ${retryIndex + 1} / ${
-                this.retries
-              }) ${url} due to ${data.name} on previous request`
-            );
-          }
-          return this.crawl(url, retryIndex + 1);
-        }
+       if (error) {
+         // Handle errors during sitemap parsing / request
+         // Retry on error until you reach the retry limit set in the settings
+         if (retryIndex < this.retries) {
+           if (this.debug) {
+             console.log(
+               `(Retry attempt: ${retryIndex + 1} / ${
+                 this.retries
+               }) ${url} due to ${data.name} on previous request`
+             );
+           }
+           return this.crawl(url, retryIndex + 1);
+         }
 
-        if (this.debug) {
-          console.error(
-            `Error occurred during "crawl('${url}')":\n\r Error: ${error}`
-          );
-        }
+         if (this.debug) {
+           console.error(
+             `Error occurred during "crawl('${url}')":\n\r Error: ${error}`
+           );
+         }
 
-        // Fail and log error
-        return {
-          sites: [],
-          errors: [
-            {
-              type: data.name,
-              message: error,
-              url,
-              retries: retryIndex,
-            },
-          ],
-        };
-      } else if (data && data.urlset && data.urlset.url) {
-        // Handle URLs found inside the sitemap
-        if (this.debug) {
-          console.debug(`Urlset found during "crawl('${url}')"`);
-        }
-        // filter out any urls that are older than the lastmod
-        const sites = data.urlset.url
-          .filter((site) => {
-            if (this.lastmod === 0) return true;
-            if (site.lastmod === undefined) return false;
-            const modified = new Date(site.lastmod[0]).getTime();
+         // Fail and log error
+         return {
+           sites: [],
+           errors: [
+             {
+               type: data.name,
+               message: error,
+               url,
+               retries: retryIndex,
+             },
+           ],
+         };
+       } else if (data && data.urlset && data.urlset.url) {
+         // Handle URLs found inside the sitemap
+         if (this.debug) {
+           console.debug(`Urlset found during "crawl('${url}')"`);
+         }
+         // filter out any urls that are older than the lastmod
+         const sites = data.urlset.url
+           .filter((site) => {
+             if (this.lastmod === 0) return true;
+             if (site.lastmod === undefined) return false;
+             const modified = new Date(site.lastmod[0]).getTime();
 
-            return modified >= this.lastmod;
-          })
-            .map((site) => {
-              if( !this.fields) {
-                return site.loc && site.loc[0];
-              } else {
-                  let fields = {};
-                  for (const [field, active] of Object.entries(this.fields)) {
-                    if(active){
-                      fields[field] = site[field][0]
-                    }
-                  }
-                 return fields;
-              }
-            });
+             return modified >= this.lastmod;
+           })
+           .filter(this.isNotExcluded.bind(this))
+             .map((site) => {
+               if( !this.fields) {
+                 return site.loc && site.loc[0];
+               } else {
+                   let fields = {};
+                   for (const [field, active] of Object.entries(this.fields)) {
+                     if(active){
+                       fields[field] = site[field][0]
+                     }
+                   }
+                  return fields;
+               }
+             });
 
-        return {
-          sites,
-          errors: [],
-        };
-      } else if (data && data.sitemapindex) {
-        // Handle child sitemaps found inside the active sitemap
-        if (this.debug) {
-          console.debug(`Additional sitemap found during "crawl('${url}')"`);
-        }
-        // Map each child url into a promise to create an array of promises
-        const sitemap = data.sitemapindex.sitemap.map(
-          (map) => map.loc && map.loc[0]
-        );
+         return {
+           sites,
+           errors: [],
+         };
+       } else if (data && data.sitemapindex) {
+         // Handle child sitemaps found inside the active sitemap
+         if (this.debug) {
+           console.debug(`Additional sitemap found during "crawl('${url}')"`);
+         }
+         // Map each child url into a promise to create an array of promises
+         const sitemap = data.sitemapindex.sitemap.map(
+           (map) => map.loc && map.loc[0]
+         ).filter(this.isNotExcluded.bind(this));
 
-        // Parse all child urls within the concurrency limit in the settings
-        const limit = pLimit(this.concurrency);
-        const promiseArray = sitemap.map((site) =>
-          limit(() => this.crawl(site))
-        );
+         // Parse all child urls within the concurrency limit in the settings
+         const limit = pLimit(this.concurrency);
+         const promiseArray = sitemap.map((site) =>
+           limit(() => this.crawl(site))
+         );
 
-        // Make sure all the promises resolve then filter and reduce the array
-        const results = await Promise.all(promiseArray);
-        const sites = results
-          .filter((result) => result.errors.length === 0)
-          .reduce((prev, { sites }) => [...prev, ...sites], []);
-        const errors = results
-          .filter((result) => result.errors.length !== 0)
-          .reduce((prev, { errors }) => [...prev, ...errors], []);
+         // Make sure all the promises resolve then filter and reduce the array
+         const results = await Promise.all(promiseArray);
+         const sites = results
+           .filter((result) => result.errors.length === 0)
+           .reduce((prev, { sites }) => [...prev, ...sites], []);
+         const errors = results
+           .filter((result) => result.errors.length !== 0)
+           .reduce((prev, { errors }) => [...prev, ...errors], []);
 
-        return {
-          sites,
-          errors,
-        };
-      }
+         return {
+           sites,
+           errors,
+         };
+       }
 
-      // Retry on error until you reach the retry limit set in the settings
-      if (retryIndex < this.retries) {
-        if (this.debug) {
-          console.log(
-            `(Retry attempt: ${retryIndex + 1} / ${
-              this.retries
-            }) ${url} due to ${data.name} on previous request`
-          );
-        }
-        return this.crawl(url, retryIndex + 1);
-      }
-      if (this.debug) {
-        console.error(`Unknown state during "crawl('${url})'":`, error, data);
-      }
+       // Retry on error until you reach the retry limit set in the settings
+       if (retryIndex < this.retries) {
+         if (this.debug) {
+           console.log(
+             `(Retry attempt: ${retryIndex + 1} / ${
+               this.retries
+             }) ${url} due to ${data.name} on previous request`
+           );
+         }
+         return this.crawl(url, retryIndex + 1);
+       }
+       if (this.debug) {
+         console.error(`Unknown state during "crawl('${url})'":`, error, data);
+       }
 
-      // Fail and log error
-      return {
-        sites: [],
-        errors: [
-          {
-            url,
-            type: data.name || "UnknownStateError",
-            message: "An unknown error occurred.",
-            retries: retryIndex,
-          },
-        ],
-      };
-    } catch (e) {
-      if (this.debug) {
-        this.debug && console.error(e);
-      }
-    }
-  }
+       // Fail and log error
+       return {
+         sites: [],
+         errors: [
+           {
+             url,
+             type: data.name || "UnknownStateError",
+             message: "An unknown error occurred.",
+             retries: retryIndex,
+           },
+         ],
+       };
+     } catch (e) {
+       if (this.debug) {
+         this.debug && console.error(e);
+       }
+     }
+   }
 
   /**
    * Gets the sites from a sitemap.xml with a given URL
@@ -445,6 +449,17 @@ export default class Sitemapper {
         }
       });
     });
+  }
+
+  /**
+   * Checks if a site is not excluded based on the exclusion patterns.
+   *
+   * @param {string} urls - The URL to check.
+   * @returns {boolean} Returns true if the urls is not excluded, false otherwise.
+   */
+   isNotExcluded(urls) {
+    if (this.exclusions.length === 0) return true;
+    return !this.exclusions.some((pattern) => pattern.test(urls));
   }
 }
 
