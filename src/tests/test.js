@@ -263,4 +263,45 @@ describe('Sitemapper', function () {
       });
     });
   });
+
+  describe('isNotExcluded method', function () {
+    it('should return true when no exclusions are set', function () {
+      const result = sitemapper.isNotExcluded('https://foo.com/page1');
+      result.should.be.true();
+    });
+
+    it('should return true when url does not match any exclusion patterns', function () {
+      sitemapper.exclusions = [/\.pdf$/, /private/];
+      const result = sitemapper.isNotExcluded('https://foo.com/page1');
+      result.should.be.true();
+    });
+
+    it('should return false when url matches an exclusion pattern', function () {
+      sitemapper.exclusions = [/\.pdf$/, /private/];
+      const result = sitemapper.isNotExcluded('https://foo.com/document.pdf');
+      result.should.be.false();
+    });
+
+    it('should return false when url matches any of multiple exclusion patterns', function () {
+      sitemapper.exclusions = [/\.pdf$/, /private/, /temp/];
+      const result = sitemapper.isNotExcluded('https://foo.com/private/temp.html');
+      result.should.be.false();
+    });
+
+    it('should handle complex regex patterns correctly', function () {
+      sitemapper.exclusions = [/^https:\/\/foo\.com\/([a-z]{2})\/private/]
+      const result1 = sitemapper.isNotExcluded('https://foo.com/en/private/page');
+      const result2 = sitemapper.isNotExcluded('https://foo.com/en/public/page');
+      result1.should.be.false();
+      result2.should.be.true();
+    });
+
+    it('should handle case sensitivity correctly', function () {
+      sitemapper.exclusions = [/private/i];
+      const result1 = sitemapper.isNotExcluded('https://foo.com/PRIVATE/page');
+      const result2 = sitemapper.isNotExcluded('https://foo.com/Private/page');
+      result1.should.be.false();
+      result2.should.be.false();
+    });
+  });
 });
