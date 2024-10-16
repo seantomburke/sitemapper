@@ -264,6 +264,43 @@ describe('Sitemapper', function () {
     });
   });
 
+  describe('exclusions option', function () {
+      // check for the url that should be excluded in a later test
+     it('should prevent false positive', function (done) {
+        this.timeout(30000);
+        const url = 'https://wp.seantburke.com/sitemap.xml';
+        // exclude video and image sitemap index urls
+        sitemapper.exclusions = [/video/,/image/]
+        sitemapper.fetch(url)
+          .then(data => {
+            data.sites.should.be.Array;
+            data.sites.includes('https://wp.seantburke.com/?page_id=2').should.be.true
+            done();
+          })
+          .catch(error => {
+            console.error('Test failed');
+            done(error);
+          });
+      });
+
+    it('should filter out page_id urls', function (done) {
+      this.timeout(30000);
+      const url = 'https://wp.seantburke.com/sitemap.xml';
+      // exclude page_id=2
+      sitemapper.exclusions = [/page_id/]
+      sitemapper.fetch(url)
+        .then(data => {
+          data.sites.should.be.Array;
+          data.sites.includes('https://wp.seantburke.com/?page_id=2').should.be.false;
+          done();
+        })
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
+  });
+
   describe('isNotExcluded method', function () {
     it('should return true when no exclusions are set', function () {
       const result = sitemapper.isNotExcluded('https://foo.com/page1');
