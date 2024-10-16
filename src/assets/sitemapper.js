@@ -322,7 +322,9 @@ export default class Sitemapper {
 
             return modified >= this.lastmod;
           })
-            .filter(this.isNotExcluded.bind(this))
+            .filter((site) => {
+              return this.isNotExcluded(site.loc[0])
+            })
             .map((site) => {
               if( !this.fields) {
                 return site.loc && site.loc[0];
@@ -349,7 +351,9 @@ export default class Sitemapper {
         // Map each child url into a promise to create an array of promises
         const sitemap = data.sitemapindex.sitemap
           .map((map) => map.loc && map.loc[0])
-          .filter(this.isNotExcluded.bind(this));
+          .filter((url) => {
+            return this.isNotExcluded(url)
+          });
 
         // Parse all child urls within the concurrency limit in the settings
         const limit = pLimit(this.concurrency);
