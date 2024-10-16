@@ -454,12 +454,12 @@ export default class Sitemapper {
   /**
    * Checks if a site is not excluded based on the exclusion patterns.
    *
-   * @param {string} urls - The URL to check.
+   * @param {string} url - The URL to check.
    * @returns {boolean} Returns true if the urls is not excluded, false otherwise.
    */
-   isNotExcluded(urls) {
+   isNotExcluded(url) {
     if (this.exclusions.length === 0) return true;
-    return !this.exclusions.some((pattern) => pattern.test(urls));
+    return !this.exclusions.some((pattern) => pattern.test(url));
   }
 }
 
