@@ -323,7 +323,7 @@ export default class Sitemapper {
             return modified >= this.lastmod;
           })
             .filter((site) => {
-              return this.isNotExcluded(site.loc[0])
+              return !this.isExcluded(site.loc[0])
             })
             .map((site) => {
               if( !this.fields) {
@@ -352,7 +352,7 @@ export default class Sitemapper {
         const sitemap = data.sitemapindex.sitemap
           .map((map) => map.loc && map.loc[0])
           .filter((url) => {
-            return this.isNotExcluded(url)
+            return !this.isExcluded(url)
           });
 
         // Parse all child urls within the concurrency limit in the settings
@@ -456,14 +456,14 @@ export default class Sitemapper {
   }
 
   /**
-    * Checks if a site is not excluded based on the exclusion patterns.
+    * Checks if a urls is excluded based on the exclusion patterns.
     *
     * @param {string} url - The URL to check.
-    * @returns {boolean} Returns true if the urls is not excluded, false otherwise.
+    * @returns {boolean} Returns true if the urls is excluded, false otherwise.
     */
-  isNotExcluded(url) {
-    if (this.exclusions.length === 0) return true;
-    return !this.exclusions.some((pattern) => pattern.test(url));
+  isExcluded(url) {
+    if (this.exclusions.length === 0) return false;
+    return this.exclusions.some((pattern) => pattern.test(url));
   }
 }
 
