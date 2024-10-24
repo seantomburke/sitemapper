@@ -20,6 +20,7 @@ export interface SitemapperOptions {
   timeout?: number;
   url?: string;
   fields?: {[name: string]: boolean};
+  exclusions?: RegExp[];
 }
 
 declare class Sitemapper {

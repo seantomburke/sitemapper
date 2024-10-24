@@ -263,4 +263,82 @@ describe('Sitemapper', function () {
       });
     });
   });
+
+  describe('exclusions option', function () {
+      // check for the url that should be excluded in a later test
+     it('should prevent false positive', function (done) {
+        this.timeout(30000);
+        const url = 'https://wp.seantburke.com/sitemap.xml';
+        // exclude video and image sitemap index urls
+        sitemapper.exclusions = [/video/,/image/]
+        sitemapper.fetch(url)
+          .then(data => {
+            data.sites.should.be.Array;
+            data.sites.includes('https://wp.seantburke.com/?page_id=2').should.be.true
+            done();
+          })
+          .catch(error => {
+            console.error('Test failed');
+            done(error);
+          });
+      });
+
+    it('should filter out page_id urls', function (done) {
+      this.timeout(30000);
+      const url = 'https://wp.seantburke.com/sitemap.xml';
+      // exclude page_id=2
+      sitemapper.exclusions = [/page_id/]
+      sitemapper.fetch(url)
+        .then(data => {
+          data.sites.should.be.Array;
+          data.sites.includes('https://wp.seantburke.com/?page_id=2').should.be.false;
+          done();
+        })
+        .catch(error => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
+  });
+
+  describe('isExcluded method', function () {
+    it('should return false when no exclusions are set', function () {
+      const result = sitemapper.isExcluded('https://foo.com/page1');
+      result.should.be.false();
+    });
+
+    it('should return false when url does not match any exclusion patterns', function () {
+      sitemapper.exclusions = [/\.pdf$/, /private/];
+      const result = sitemapper.isExcluded('https://foo.com/page1');
+      result.should.be.false();
+    });
+
+    it('should return false when url matches an exclusion pattern', function () {
+      sitemapper.exclusions = [/\.pdf$/, /private/];
+      const result = sitemapper.isExcluded('https://foo.com/document.pdf');
+      result.should.be.true();
+    });
+
+    it('should return true when url matches any of multiple exclusion patterns', function () {
+      sitemapper.exclusions = [/\.pdf$/, /private/, /temp/];
+      const result = sitemapper.isExcluded('https://foo.com/private/temp.html');
+      result.should.be.true();
+    });
+
+    it('should handle complex regex patterns correctly', function () {
+      sitemapper.exclusions = [/^https:\/\/foo\.com\/([a-z]{2})\/private/]
+      const result1 = sitemapper.isExcluded('https://foo.com/en/private/page');
+      const result2 = sitemapper.isExcluded('https://foo.com/en/public/page');
+      result1.should.be.true();
+      result2.should.be.false();
+    });
+
+    it('should handle case sensitivity correctly', function () {
+      sitemapper.exclusions = [/private/i];
+      const result1 = sitemapper.isExcluded('https://foo.com/PRIVATE/page');
+      const result2 = sitemapper.isExcluded('https://foo.com/Private/page');
+      result1.should.be.true();
+      result2.should.be.true();
+    });
+  });
 });

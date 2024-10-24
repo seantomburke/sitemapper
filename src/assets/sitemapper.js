@@ -28,11 +28,13 @@ export default class Sitemapper {
    * @params {boolean} [options.rejectUnauthorized] - If true (default), it will throw on invalid certificates, such as expired or self-signed ones.
    * @params {lastmod} [options.lastmod] - the minimum lastmod value for urls
    * @params {hpagent.HttpProxyAgent|hpagent.HttpsProxyAgent} [options.proxyAgent] - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
+   * @params {Array<RegExp>} [options.exclusions] - Array of regex patterns to exclude URLs
    *
    * @example let sitemap = new Sitemapper({
    *   url: 'https://wp.seantburke.com/sitemap.xml',
    *   timeout: 15000,
-   *   lastmod: 1630693759
+   *   lastmod: 1630693759,
+   *   exclusions: [/foo.com/, /bar.xml/] // Filters out URLs matching these patterns
    *  });
    */
   constructor(options) {
@@ -49,6 +51,7 @@ export default class Sitemapper {
       settings.rejectUnauthorized === false ? false : true;
     this.fields = settings.fields || false;
     this.proxyAgent = settings.proxyAgent || {};
+    this.exclusions = settings.exclusions || [];
   }
 
   /**
@@ -319,6 +322,9 @@ export default class Sitemapper {
 
             return modified >= this.lastmod;
           })
+            .filter((site) => {
+              return !this.isExcluded(site.loc[0])
+            })
             .map((site) => {
               if( !this.fields) {
                 return site.loc && site.loc[0];
@@ -343,9 +349,11 @@ export default class Sitemapper {
           console.debug(`Additional sitemap found during "crawl('${url}')"`);
         }
         // Map each child url into a promise to create an array of promises
-        const sitemap = data.sitemapindex.sitemap.map(
-          (map) => map.loc && map.loc[0]
-        );
+        const sitemap = data.sitemapindex.sitemap
+          .map((map) => map.loc && map.loc[0])
+          .filter((url) => {
+            return !this.isExcluded(url)
+          });
 
         // Parse all child urls within the concurrency limit in the settings
         const limit = pLimit(this.concurrency);
@@ -445,6 +453,17 @@ export default class Sitemapper {
         }
       });
     });
+  }
+
+  /**
+    * Checks if a urls is excluded based on the exclusion patterns.
+    *
+    * @param {string} url - The URL to check.
+    * @returns {boolean} Returns true if the urls is excluded, false otherwise.
+    */
+  isExcluded(url) {
+    if (this.exclusions.length === 0) return false;
+    return this.exclusions.some((pattern) => pattern.test(url));
   }
 }
 
