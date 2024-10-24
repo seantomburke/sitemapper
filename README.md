@@ -9,8 +9,6 @@
 [![GitHub license](https://img.shields.io/github/license/seantomburke/sitemapper)](https://github.com/seantomburke/sitemapper/blob/master/LICENSE)
 [![GitHub release date](https://img.shields.io/github/release-date/seantomburke/sitemapper.svg)](https://github.com/seantomburke/sitemapper/releases)
 [![Inline docs](https://inch-ci.org/github/seantomburke/sitemapper.svg?branch=master&style=shields)](https://inch-ci.org/github/seantomburke/sitemapper)
-[![LGTM Alerts](https://img.shields.io/lgtm/alerts/github/seantomburke/sitemapper)](https://lgtm.com/projects/g/seantomburke/sitemapper/?mode=list)
-[![LGTM Grade](https://img.shields.io/lgtm/grade/javascript/github/seantomburke/sitemapper)](https://lgtm.com/projects/g/seantomburke/sitemapper/context:javascript)
 [![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/sitemapper)](https://libraries.io/npm/sitemapper)
 [![license](https://img.shields.io/github/license/seantomburke/sitemapper.svg)](https://github.com/seantomburke/sitemapper/blob/main/LICENSE)
 [![Monthly Downloads](https://img.shields.io/npm/dm/sitemapper.svg)](https://www.npmjs.com/package/sitemapper)
