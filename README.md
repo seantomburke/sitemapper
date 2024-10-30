@@ -77,16 +77,17 @@ You can add options on the initial Sitemapper object when instantiating it.
 + `lastmod`: (Number) - Timestamp of the minimum lastmod value allowed for returned urls
 + `field` : (Object) - An object of fields to be returned from the sitemap. For Example: `{ loc: true, lastmod: true, changefreq: true, priority: true }`. Leaving a field out has the same effect as `field: false`. If not specified sitemapper defaults to returning the 'classic' array of urls.
 + `proxyAgent`: (HttpProxyAgent|HttpsProxyAgent) - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
++ `exclusions`: (Array) - Array of regex patterns to exclude URLs. For Example: `[/foo.com/, /bar.xml/]`
 
 ```javascript
 
 const sitemapper = new Sitemapper({
-  url: 'https://art-works.community/sitemap.xml',
-  rejectUnauthorized: true,
-  timeout: 15000,
   requestHeaders: {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0'
-  }
+  },
+  timeout: 15000,
+  url: 'https://art-works.community/sitemap.xml',
+  rejectUnauthorized: true,
 });
 
 ```
@@ -94,16 +95,24 @@ const sitemapper = new Sitemapper({
 An example using all available options:
 
 ```javascript
+import { HttpsProxyAgent } from 'hpagent';
 
 const sitemapper = new Sitemapper({
-  url: 'https://art-works.community/sitemap.xml',
-  timeout: 15000,
   requestHeaders: {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0'
   },
+  timeout: 15000,
+  url: 'https://art-works.community/sitemap.xml',
   debug: true,
   concurrency: 2,
   retries: 1,
+  rejectUnauthorized: true,
+  lastmod: 1600000000000,
+  field: { loc: true, lastmod: true },
+  proxyAgent: new HttpsProxyAgent({
+  	proxy: 'http://localhost:8080'
+  }),
+  exclusions: [/\/v1\//, /scary/],
 });
 
 ```
