@@ -6,6 +6,7 @@ import globals from 'globals';
 
 export default [
   eslint.configs.recommended,
+  prettier,
   {
     plugins: {
       prettier: eslintPluginPrettier,
