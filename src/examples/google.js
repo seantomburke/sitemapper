@@ -7,5 +7,5 @@ const Google = new Sitemapper({
 });
 
 Google.fetch()
-  .then(data => console.log(data.sites)) // eslint-disable-line no-console
-  .catch(error => console.log(error)); // eslint-disable-line no-console
+  .then((data) => console.log(data.sites)) // eslint-disable-line no-console
+  .catch((error) => console.log(error)); // eslint-disable-line no-console

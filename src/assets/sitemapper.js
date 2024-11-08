@@ -1,16 +1,16 @@
 /**
  * Sitemap Parser
  *
- * Copyright (c) 2020 Sean Thomas Burke
+ * Copyright (c) 2024 Sean Thomas Burke
  * Licensed under the MIT license.
  * @author Sean Burke <@seantomburke>
  */
 
-import { parseStringPromise } from "xml2js";
-import got from "got";
-import zlib from "zlib";
-import pLimit from "p-limit";
-import isGzip from "is-gzip";
+import { parseStringPromise } from 'xml2js';
+import got from 'got';
+import zlib from 'zlib';
+import pLimit from 'p-limit';
+import isGzip from 'is-gzip';
 
 /**
  * @typedef {Object} Sitemapper
@@ -66,7 +66,7 @@ export default class Sitemapper {
   async fetch(url = this.url) {
     // initialize empty variables
     let results = {
-      url: "",
+      url: '',
       sites: [],
       errors: [],
     };
@@ -120,7 +120,7 @@ export default class Sitemapper {
    * Get the lastmod minimum value
    *
    * @example console.log(sitemapper.lastmod);
-   * @returns {Number}
+   * @returns {number}
    */
   static get lastmod() {
     return this.lastmod;
@@ -130,7 +130,7 @@ export default class Sitemapper {
    * Set the lastmod minimum value
    *
    * @public
-   * @param {Number} timestamp
+   * @param {number} timestamp
    * @example sitemapper.lastmod = 1630694181; // Unix timestamp
    */
   static set lastmod(timestamp) {
@@ -157,7 +157,7 @@ export default class Sitemapper {
 
   /**
    * Setter for the debug state
-   * @param {Boolean} option - set whether to show debug logs in output.
+   * @param {boolean} option - set whether to show debug logs in output.
    * @example sitemapper.debug = true;
    */
   static set debug(option) {
@@ -166,7 +166,7 @@ export default class Sitemapper {
 
   /**
    * Getter for the debug state
-   * @returns {Boolean}
+   * @returns {boolean}
    * @example console.log(sitemapper.debug)
    */
   static get debug() {
@@ -183,10 +183,10 @@ export default class Sitemapper {
   async parse(url = this.url) {
     // setup the response options for the got request
     const requestOptions = {
-      method: "GET",
+      method: 'GET',
       resolveWithFullResponse: true,
       gzip: true,
-      responseType: "buffer",
+      responseType: 'buffer',
       headers: this.requestHeaders,
       https: {
         rejectUnauthorized: this.rejectUnauthorized,
@@ -225,7 +225,7 @@ export default class Sitemapper {
       return { error: null, data };
     } catch (error) {
       // If the request was canceled notify the user of the timeout
-      if (error.name === "CancelError") {
+      if (error.name === 'CancelError') {
         return {
           error: `Request timed out after ${this.timeout} milliseconds for url: '${url}'`,
           data: error,
@@ -233,7 +233,7 @@ export default class Sitemapper {
       }
 
       // If an HTTPError include error http code
-      if (error.name === "HTTPError") {
+      if (error.name === 'HTTPError') {
         return {
           error: `HTTP Error occurred: ${error.message}`,
           data: error,
@@ -265,9 +265,8 @@ export default class Sitemapper {
    * Recursive function that will go through a sitemaps tree and get all the sites
    *
    * @private
-   * @recursive
    * @param {string} url - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
-   * @param {integer} retryIndex - Number of retry attempts fro this URL (e.g. 0 for 1st attempt, 1 for second attempty etc.)
+   * @param {integer} retryIndex - number of retry attempts fro this URL (e.g. 0 for 1st attempt, 1 for second attempty etc.)
    * @returns {Promise<SitesData>}
    */
   async crawl(url, retryIndex = 0) {
@@ -322,22 +321,22 @@ export default class Sitemapper {
 
             return modified >= this.lastmod;
           })
-            .filter((site) => {
-              return !this.isExcluded(site.loc[0])
-            })
-            .map((site) => {
-              if( !this.fields) {
-                return site.loc && site.loc[0];
-              } else {
-                  let fields = {};
-                  for (const [field, active] of Object.entries(this.fields)) {
-                    if(active){
-                      fields[field] = site[field][0]
-                    }
-                  }
-                 return fields;
+          .filter((site) => {
+            return !this.isExcluded(site.loc[0]);
+          })
+          .map((site) => {
+            if (!this.fields) {
+              return site.loc && site.loc[0];
+            } else {
+              let fields = {};
+              for (const [field, active] of Object.entries(this.fields)) {
+                if (active && site[field]) {
+                  fields[field] = site[field][0];
+                }
               }
-            });
+              return fields;
+            }
+          });
 
         return {
           sites,
@@ -352,7 +351,7 @@ export default class Sitemapper {
         const sitemap = data.sitemapindex.sitemap
           .map((map) => map.loc && map.loc[0])
           .filter((url) => {
-            return !this.isExcluded(url)
+            return !this.isExcluded(url);
           });
 
         // Parse all child urls within the concurrency limit in the settings
@@ -397,8 +396,8 @@ export default class Sitemapper {
         errors: [
           {
             url,
-            type: data.name || "UnknownStateError",
-            message: "An unknown error occurred.",
+            type: data.name || 'UnknownStateError',
+            message: 'An unknown error occurred.',
             retries: retryIndex,
           },
         ],
@@ -421,8 +420,8 @@ export default class Sitemapper {
   async getSites(url = this.url, callback) {
     console.warn(
       // eslint-disable-line no-console
-      "\r\nWarning:",
-      "function .getSites() is deprecated, please use the function .fetch()\r\n"
+      '\r\nWarning:',
+      'function .getSites() is deprecated, please use the function .fetch()\r\n'
     );
 
     let err = {};
@@ -440,7 +439,7 @@ export default class Sitemapper {
    * Decompress the gzipped response body using zlib.gunzip
    *
    * @param {Buffer} body - body of the gzipped file
-   * @returns {Boolean}
+   * @returns {boolean}
    */
   decompressResponseBody(body) {
     return new Promise((resolve, reject) => {
@@ -456,11 +455,11 @@ export default class Sitemapper {
   }
 
   /**
-    * Checks if a urls is excluded based on the exclusion patterns.
-    *
-    * @param {string} url - The URL to check.
-    * @returns {boolean} Returns true if the urls is excluded, false otherwise.
-    */
+   * Checks if a urls is excluded based on the exclusion patterns.
+   *
+   * @param {string} url - The URL to check.
+   * @returns {boolean} Returns true if the urls is excluded, false otherwise.
+   */
   isExcluded(url) {
     if (this.exclusions.length === 0) return false;
     return this.exclusions.some((pattern) => pattern.test(url));
@@ -478,7 +477,7 @@ export default class Sitemapper {
 /**
  * Timeout in milliseconds
  *
- * @typedef {Number} Timeout
+ * @typedef {number} Timeout
  * the number of milliseconds before all requests timeout. The promises will still resolve so
  * you'll still receive parts of the request, but maybe not all urls
  * default is 15000 which is 15 seconds
@@ -541,7 +540,7 @@ export default class Sitemapper {
 /**
  * An array of urls
  *
- * @typedef {String[]} SitesArray
+ * @typedef {string[]} SitesArray
  * @example [
  *   'https://www.google.com',
  *   'https://www.linkedin.com'
@@ -573,7 +572,7 @@ export default class Sitemapper {
  *
  * @property {string} type - The error type which was returned
  * @property {string} url - The sitemap URL which returned the error
- * @property {Number} errors - The total number of retries attempted after receiving the first error
+ * @property {number} errors - The total number of retries attempted after receiving the first error
  * @example {
  *    type: 'CancelError',
  *    url: 'https://www.walmart.com/sitemap_tp1.xml',

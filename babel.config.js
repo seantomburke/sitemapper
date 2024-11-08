@@ -5,19 +5,14 @@ module.exports = (api) => {
     [
       '@babel/preset-env',
       {
-        "targets": {
-          "esmodules": true
-        }
-      }
+        targets: {
+          esmodules: true,
+        },
+      },
     ],
     'minify', // minify the Babel code
   ];
-  const plugins = [
-    [
-      'add-module-exports',
-      { 'addDefaultProperty': true },
-    ]
-  ];
+  const plugins = [['add-module-exports', { addDefaultProperty: true }]];
 
   return {
     presets,
