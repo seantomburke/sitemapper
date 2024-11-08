@@ -82,7 +82,7 @@ You can add options on the initial Sitemapper object when instantiating it.
 - `lastmod`: (Number) - Timestamp of the minimum lastmod value allowed for returned urls
 - `proxyAgent`: (HttpProxyAgent|HttpsProxyAgent) - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
 - `exclusions`: (Array<RegExp>) - Array of regex patterns to exclude URLs from being processed
-- `field`: (Object) - An object of fields to be returned from the sitemap. Leaving a field out has the same effect as `<field>: false`. If not specified sitemapper defaults to returning the 'classic' array of urls. Available fields:
+- `fields`: (Object) - An object of fields to be returned from the sitemap. Leaving a field out has the same effect as `<field>: false`. If not specified sitemapper defaults to returning the 'classic' array of urls. Available fields:
   - `loc`: (Boolean) - The URL location of the page
   - `lastmod`: (Boolean) - The date of last modification of the page
   - `changefreq`: (Boolean) - How frequently the page is likely to change
@@ -97,7 +97,7 @@ You can add options on the initial Sitemapper object when instantiating it.
 For Example:
 
 ```
-field: {
+fields: {
   loc: true,
   lastmod: true,
   changefreq: true,
@@ -121,7 +121,7 @@ const sitemapper = new Sitemapper({
   concurrency: 2,
   retries: 1,
   rejectUnauthorized: false,
-  field: {
+  fields: {
     loc: true,
     lastmod: true,
     changefreq: true,
