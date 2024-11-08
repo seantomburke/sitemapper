@@ -4,7 +4,6 @@
 [![NPM Publish](https://github.com/seantomburke/sitemapper/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/seantomburke/sitemapper/actions/workflows/npm-publish.yml)
 [![Version Bump](https://github.com/seantomburke/sitemapper/actions/workflows/version-bump.yml/badge.svg?branch=master&event=push)](https://github.com/seantomburke/sitemapper/actions/workflows/version-bump.yml)
 [![Test](https://github.com/seantomburke/sitemapper/actions/workflows/test.yml/badge.svg?branch=master&event=push)](https://github.com/seantomburke/sitemapper/actions/workflows/test.yml)
-[![Build Status](https://travis-ci.org/seantomburke/sitemapper.svg?branch=master)](https://travis-ci.org/seantomburke/sitemapper)
 [![Codecov](https://img.shields.io/codecov/c/github/seantomburke/sitemapper?token=XhiEgaHFWL)](https://codecov.io/gh/seantomburke/sitemapper)
 [![CodeFactor](https://www.codefactor.io/repository/github/seantomburke/sitemapper/badge)](https://www.codefactor.io/repository/github/seantomburke/sitemapper)
 [![GitHub license](https://img.shields.io/github/license/seantomburke/sitemapper)](https://github.com/seantomburke/sitemapper/blob/master/LICENSE)
@@ -82,13 +81,24 @@ You can add options on the initial Sitemapper object when instantiating it.
 - `rejectUnauthorized`: (Boolean) - If true, it will throw on invalid certificates, such as expired or self-signed ones. Default: True
 - `lastmod`: (Number) - Timestamp of the minimum lastmod value allowed for returned urls
 - `proxyAgent`: (HttpProxyAgent|HttpsProxyAgent) - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
-- `field` : (Object) - An object of fields to be returned from the sitemap. 
+- `exclusions`: (Array<RegExp>) - Array of regex patterns to exclude URLs from being processed
+- `field`: (Object) - An object of fields to be returned from the sitemap. Leaving a field out has the same effect as `<field>: false`. If not specified sitemapper defaults to returning the 'classic' array of urls. Available fields:
+  - `loc`: (Boolean) - The URL location of the page
+  - `lastmod`: (Boolean) - The date of last modification of the page
+  - `changefreq`: (Boolean) - How frequently the page is likely to change
+  - `priority`: (Boolean) - The priority of this URL relative to other URLs on your site
+  - `image:loc`: (Boolean) - The URL location of the image (for image sitemaps)
+  - `image:title`: (Boolean) - The title of the image (for image sitemaps)
+  - `image:caption`: (Boolean) - The caption of the image (for image sitemaps)
+  - `video:title`: (Boolean) - The title of the video (for video sitemaps)
+  - `video:description`: (Boolean) - The description of the video (for video sitemaps)
+  - `video:thumbnail_loc`: (Boolean) - The thumbnail URL of the video (for video sitemaps)
 
 
 For Example: 
 
 ``` 
-{ 
+field: { 
   loc: true,
   lastmod: true,
   changefreq: true,
