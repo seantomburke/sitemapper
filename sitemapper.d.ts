@@ -15,19 +15,18 @@ export interface SitemapperOptions {
   debug?: boolean;
   lastmod?: number;
   rejectUnauthorized?: boolean;
-  requestHeaders?: {[name: string]: string};
+  requestHeaders?: { [name: string]: string };
   retries?: number;
   timeout?: number;
   url?: string;
-  fields?: {[name: string]: boolean};
+  fields?: { [name: string]: boolean };
   exclusions?: RegExp[];
 }
 
 declare class Sitemapper {
-
   timeout: number;
 
-  constructor(options: SitemapperOptions)
+  constructor(options: SitemapperOptions);
 
   /**
    * Gets the sites from a sitemap.xml with a given URL

@@ -5,10 +5,7 @@
     "declaration": false,
     "module": "commonjs",
     "moduleResolution": "node",
-    "lib": [
-      "dom",
-      "esnext"
-    ],
+    "lib": ["dom", "esnext"],
     "newLine": "lf",
     "target": "es2015",
     "baseUrl": "./",
@@ -18,7 +15,5 @@
     "strict": true,
     "noImplicitAny": false
   },
-  "include": [
-    "./*.ts"
-  ]
+  "include": ["./*.ts"]
 }

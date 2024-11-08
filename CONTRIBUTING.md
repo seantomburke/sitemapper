@@ -6,9 +6,11 @@ through babel into `lib/sitemapper.js`.
 ### Build
 
 To build the `lib` directory with the compiled assets use this command
+
 ```bash
 npm run build
 ```
+
 This uses [Babel](http://babeljs.io/) to compile the files. Make sure to run `npm run build` before submitting a pull request.
 
 ```bash
@@ -19,9 +21,11 @@ npm start
 ### Testing
 
 Make sure all tests pass using
+
 ```bash
 npm test
 ```
+
 This will run [Mocha](https://mochajs.org/) for testing and [ESLint](http://eslint.org/) for style guides
 The tests run will be `mocha` and `eslint`.
 Make sure your style follows the style guide in `.eslintrc`
@@ -29,6 +33,7 @@ Make sure your style follows the style guide in `.eslintrc`
 ### Style Guide
 
 To see if your code passes the linter use
+
 ```bash
 npm run lint
 ```
@@ -56,4 +61,4 @@ src/
     index.js
   tests/
     test.js
-````
+```

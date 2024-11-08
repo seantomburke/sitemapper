@@ -9,13 +9,11 @@ import { SitemapperResponse } from '../../sitemapper';
 let sitemapper: Sitemapper;
 
 describe('Sitemapper', function () {
-
   beforeEach(() => {
     sitemapper = new Sitemapper();
   });
 
   describe('Sitemapper Class', function () {
-
     it('should have initializeTimeout method', () => {
       sitemapper.initializeTimeout.should.be.Function;
     });
@@ -58,30 +56,32 @@ describe('Sitemapper', function () {
 
     it('should construct with specific fields', () => {
       sitemapper = new Sitemapper({
-        fields: { "loc": true,
-          "lastmod": true,
-          "priority": true,
-          "changefreq": true
-        }
+        fields: { loc: true, lastmod: true, priority: true, changefreq: true },
       });
-      sitemapper.fields.should.be.Object && sitemapper.fields.should.have.keys('loc', 'lastmod', 'priority', 'changefreq');
+      sitemapper.fields.should.be.Object &&
+        sitemapper.fields.should.have.keys(
+          'loc',
+          'lastmod',
+          'priority',
+          'changefreq'
+        );
     });
-
   });
 
   describe('fetch Method resolves sites to array', function () {
     it('https://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
       const url = 'https://wp.seantburke.com/sitemap.xml';
-      sitemapper.fetch(url)
-        .then(data => {
+      sitemapper
+        .fetch(url)
+        .then((data) => {
           data.sites.should.be.Array;
           data.url.should.equal(url);
           data.sites.length.should.be.above(2);
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Test failed');
           done(error);
         });
@@ -90,13 +90,14 @@ describe('Sitemapper', function () {
     it('gibberish.gibberish should fail silently with an empty array', function (done) {
       this.timeout(30000);
       const url = 'http://gibberish.gibberish';
-      sitemapper.fetch(url)
-        .then(data => {
+      sitemapper
+        .fetch(url)
+        .then((data) => {
           data.sites.should.be.Array;
           data.errors.should.be.Array;
           done();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Test failed');
           done(error);
         });
@@ -105,15 +106,16 @@ describe('Sitemapper', function () {
     it('https://webflow.com/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
       const url = 'https://webflow.com/sitemap.xml';
-      sitemapper.fetch(url)
-        .then(data => {
+      sitemapper
+        .fetch(url)
+        .then((data) => {
           data.sites.should.be.Array;
           data.url.should.equal(url);
           data.sites.length.should.be.above(2);
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Test failed');
           done(error);
         });
@@ -123,42 +125,40 @@ describe('Sitemapper', function () {
       this.timeout(30000);
       const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper = new Sitemapper({
-        fields: { "loc": true,
-          "lastmod": true,
-          "priority": true,
-          "changefreq": true
-        }
+        fields: { loc: true, lastmod: true, priority: true, changefreq: true },
       });
-      sitemapper.fetch(url)
-          .then(data => {
-            data.sites.should.be.Array;
-            data.url.should.equal(url);
-            data.sites.length.should.be.above(2);
-            data.sites[0].loc.should.be.String;
-            data.sites[0].lastmod.should.be.String;
-            data.sites[0].priority.should.be.String;
-            data.sites[0].changefreq.should.be.String;
-            done();
-          })
-          .catch(error => {
-            console.error('Test failed');
-            done(error);
-          });
+      sitemapper
+        .fetch(url)
+        .then((data) => {
+          data.sites.should.be.Array;
+          data.url.should.equal(url);
+          data.sites.length.should.be.above(2);
+          data.sites[0].loc.should.be.String;
+          data.sites[0].lastmod.should.be.String;
+          data.sites[0].priority.should.be.String;
+          data.sites[0].changefreq.should.be.String;
+          done();
+        })
+        .catch((error) => {
+          console.error('Test failed');
+          done(error);
+        });
     });
 
     it('https://www.golinks.io/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
       const url = 'https://www.golinks.io/sitemap.xml';
       sitemapper.timeout = 5000;
-      sitemapper.fetch(url)
-        .then(data => {
+      sitemapper
+        .fetch(url)
+        .then((data) => {
           data.sites.should.be.Array;
           data.url.should.equal(url);
           data.sites.length.should.be.above(2);
           isUrl(data.sites[0]).should.be.true;
           done();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Test failed');
           done(error);
         });
@@ -169,12 +169,13 @@ describe('Sitemapper', function () {
       const url = 'https://www.golinks.io/sitemap.xml';
       sitemapper.timeout = 1;
 
-      sitemapper.fetch(url)
-        .then(data => {
+      sitemapper
+        .fetch(url)
+        .then((data) => {
           data.sites.should.be.Array;
           done();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Test failed');
           done(error);
         });
@@ -186,7 +187,7 @@ describe('Sitemapper', function () {
       sitemapper = new Sitemapper({
         requestHeaders: {
           'Accept-Encoding': 'gzip,deflate,sdch',
-        }
+        },
       });
     });
 
@@ -194,14 +195,15 @@ describe('Sitemapper', function () {
       this.timeout(30000);
       const url = 'https://www.banggood.com/sitemap/category.xml.gz';
       sitemapper.timeout = 10000;
-      sitemapper.fetch(url)
-        .then(data => {
+      sitemapper
+        .fetch(url)
+        .then((data) => {
           data.sites.should.be.Array;
           data.errors.should.be.Array;
           data.sites.length.should.be.greaterThan(0);
           done();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Test failed');
           done(error);
         });
