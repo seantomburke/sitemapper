@@ -220,7 +220,20 @@ export default class Sitemapper {
       }
 
       // Parse XML using fast-xml-parser
-      const parser = new XMLParser();
+      const parser = new XMLParser({
+        ignoreAttributes: false,
+        attributeNamePrefix: '',
+        textNodeName: '_text',
+        parseTagValue: true,
+        trimValues: true,
+        parseAttributeValue: true,
+        allowBooleanAttributes: true,
+        cdataTagName: '__cdata',
+        htmlEntities: true,
+        ignoreNameSpace: true,
+        parseTrueNumberOnly: true,
+      });
+
       const data = parser.parse(responseBody.toString());
 
       // return the results
@@ -449,8 +462,8 @@ export default class Sitemapper {
    * @param {Buffer} body - body of the gzipped file
    * @returns {boolean}
    */
-  decompressResponseBody(body) {
-    return new Promise((resolve, reject) => {
+  async decompressResponseBody(body) {
+    return await new Promise((resolve, reject) => {
       const buffer = Buffer.from(body);
       zlib.gunzip(buffer, (err, result) => {
         if (err) {
