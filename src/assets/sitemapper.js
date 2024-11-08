@@ -6,7 +6,7 @@
  * @author Sean Burke <@seantomburke>
  */
 
-import { parseStringPromise } from 'xml2js';
+import { XMLParser } from 'fast-xml-parser';
 import got from 'got';
 import zlib from 'zlib';
 import pLimit from 'p-limit';
@@ -52,6 +52,7 @@ export default class Sitemapper {
     this.fields = settings.fields || false;
     this.proxyAgent = settings.proxyAgent || {};
     this.exclusions = settings.exclusions || [];
+    this.parser = new XMLParser();
   }
 
   /**
@@ -95,6 +96,7 @@ export default class Sitemapper {
       errors: results.errors || [],
     };
   }
+
   /**
    * Get the timeout
    *
@@ -174,7 +176,7 @@ export default class Sitemapper {
   }
 
   /**
-   * Requests the URL and uses parseStringPromise to parse through and find the data
+   * Requests the URL and uses fast-xml-parser to parse through and find the data
    *
    * @private
    * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
@@ -218,8 +220,8 @@ export default class Sitemapper {
         responseBody = response.body;
       }
 
-      // otherwise parse the XML that was returned.
-      const data = await parseStringPromise(responseBody);
+      // Parse XML using fast-xml-parser
+      const data = this.parser.parse(responseBody.toString());
 
       // return the results
       return { error: null, data };
@@ -312,26 +314,32 @@ export default class Sitemapper {
         if (this.debug) {
           console.debug(`Urlset found during "crawl('${url}')"`);
         }
-        // filter out any urls that are older than the lastmod
-        const sites = data.urlset.url
+
+        // Convert single object to array if needed
+        const urlArray = Array.isArray(data.urlset.url)
+          ? data.urlset.url
+          : [data.urlset.url];
+
+        // Begin filtering the urls
+        const sites = urlArray
           .filter((site) => {
             if (this.lastmod === 0) return true;
             if (site.lastmod === undefined) return false;
-            const modified = new Date(site.lastmod[0]).getTime();
+            const modified = new Date(site.lastmod).getTime();
 
             return modified >= this.lastmod;
           })
           .filter((site) => {
-            return !this.isExcluded(site.loc[0]);
+            return !this.isExcluded(site.loc);
           })
           .map((site) => {
             if (!this.fields) {
-              return site.loc && site.loc[0];
+              return site.loc;
             } else {
               let fields = {};
               for (const [field, active] of Object.entries(this.fields)) {
                 if (active && site[field]) {
-                  fields[field] = site[field][0];
+                  fields[field] = site[field];
                 }
               }
               return fields;
@@ -349,7 +357,7 @@ export default class Sitemapper {
         }
         // Map each child url into a promise to create an array of promises
         const sitemap = data.sitemapindex.sitemap
-          .map((map) => map.loc && map.loc[0])
+          .map((map) => map.loc)
           .filter((url) => {
             return !this.isExcluded(url);
           });
@@ -488,7 +496,7 @@ export default class Sitemapper {
  *
  * @typedef {Object} ParseData
  *
- * @property {Error} error that either comes from `parseStringPromise` or `got` or custom error
+ * @property {Error} error that either comes from fast-xml-parser or `got` or custom error
  * @property {Object} data
  * @property {string} data.url - URL of sitemap
  * @property {Array} data.urlset - Array of returned URLs
