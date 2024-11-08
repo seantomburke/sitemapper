@@ -94,15 +94,14 @@ You can add options on the initial Sitemapper object when instantiating it.
   - `video:description`: (Boolean) - The description of the video (for video sitemaps)
   - `video:thumbnail_loc`: (Boolean) - The thumbnail URL of the video (for video sitemaps)
 
+For Example:
 
-For Example: 
-
-``` 
-field: { 
+```
+field: {
   loc: true,
   lastmod: true,
   changefreq: true,
-  priority: true, 
+  priority: true,
 }
 ```
 
