@@ -220,19 +220,7 @@ export default class Sitemapper {
       }
 
       // Parse XML using fast-xml-parser
-      const parser = new XMLParser({
-        ignoreAttributes: false,
-        attributeNamePrefix: '',
-        textNodeName: '_text',
-        parseTagValue: true,
-        trimValues: true,
-        parseAttributeValue: true,
-        allowBooleanAttributes: true,
-        cdataTagName: '__cdata',
-        htmlEntities: true,
-        ignoreNameSpace: true,
-        parseTrueNumberOnly: true,
-      });
+      const parser = new XMLParser();
 
       const data = parser.parse(responseBody.toString());
 
