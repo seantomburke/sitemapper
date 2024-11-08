@@ -18,13 +18,7 @@ export default [
         ...globals.node,
         ...globals.commonjs,
         ...globals.es2021,
-        // Mocha globals
-        describe: 'readonly',
-        it: 'readonly',
-        before: 'readonly',
-        after: 'readonly',
-        beforeEach: 'readonly',
-        afterEach: 'readonly',
+        ...globals.mocha,
       },
     },
     rules: {
