@@ -90,11 +90,14 @@ describe('Sitemapper', function () {
     it('gibberish.gibberish should fail silently with an empty array', function (done) {
       this.timeout(30000);
       const url = 'http://gibberish.gibberish';
+      sitemapper.debug = true;
       sitemapper
         .fetch(url)
         .then((data) => {
           data.sites.should.be.Array;
           data.errors.should.be.Array;
+          data.errors.length.should.be.greaterThan(0);
+          console.log(data);
           done();
         })
         .catch((error) => {
@@ -168,11 +171,46 @@ describe('Sitemapper', function () {
       this.timeout(30000);
       const url = 'https://www.golinks.io/sitemap.xml';
       sitemapper.timeout = 1;
-
       sitemapper
         .fetch(url)
         .then((data) => {
           data.sites.should.be.Array;
+          data.errors.should.be.Array;
+          console.log(data);
+          done();
+        })
+        .catch((error) => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
+
+    it('https://www.golinks.com/blog/sitemap.xml sitemaps should return an empty array when timing out', function (done) {
+      this.timeout(30000);
+      const url = 'https://www.golinks.com/blog/sitemap.xml';
+      sitemapper.timeout = 10000;
+      sitemapper
+        .fetch(url)
+        .then((data) => {
+          data.sites.should.be.Array;
+          data.errors.should.be.Array;
+          done();
+        })
+        .catch((error) => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
+
+    it('https://www.banggood.com/sitemap/category.xml.gz gzip should be a non-empty array', function (done) {
+      this.timeout(30000);
+      const url = 'https://www.banggood.com/sitemap/category.xml.gz';
+      sitemapper.timeout = 10000;
+      sitemapper
+        .fetch(url)
+        .then((data) => {
+          data.sites.should.be.Array;
+          data.sites.length.should.be.greaterThan(0);
           done();
         })
         .catch((error) => {
@@ -208,6 +246,30 @@ describe('Sitemapper', function () {
           done(error);
         });
     });
+
+    it('https://foo.com/sitemap.xml should not allow insecure request', function (done) {
+      this.timeout(30000);
+      const url = 'https://foo.com/sitemap.xml';
+      sitemapper.timeout = 10000;
+      sitemapper.rejectUnauthorized = false;
+      sitemapper
+        .fetch(url)
+        .then((data) => {
+          data.sites.should.be.Array;
+          data.errors.should.be.Array;
+          data.errors.should.containEql({
+            type: 'HTTPError',
+            message: 'HTTP Error occurred: Response code 404 (Not Found)',
+            url: 'https://foo.com/sitemap.xml',
+            retries: 0,
+          });
+          done();
+        })
+        .catch((error) => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
   });
 
   describe('getSites method', function () {
@@ -219,6 +281,85 @@ describe('Sitemapper', function () {
         isUrl(sites[0]).should.be.true;
         done();
       });
+    });
+  });
+
+  describe('exclusions option', function () {
+    it('should prevent false positive', function (done) {
+      this.timeout(30000);
+      const url = 'https://wp.seantburke.com/sitemap.xml';
+      sitemapper.exclusions = [/video/, /image/];
+      sitemapper
+        .fetch(url)
+        .then((data) => {
+          data.sites.should.be.Array;
+          data.sites.includes('https://wp.seantburke.com/?page_id=2').should.be
+            .true;
+          done();
+        })
+        .catch((error) => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
+
+    it('should filter out page_id urls', function (done) {
+      this.timeout(30000);
+      const url = 'https://wp.seantburke.com/sitemap.xml';
+      sitemapper.exclusions = [/page_id/];
+      sitemapper
+        .fetch(url)
+        .then((data) => {
+          data.sites.should.be.Array;
+          data.sites.includes('https://wp.seantburke.com/?page_id=2').should.be
+            .false;
+          done();
+        })
+        .catch((error) => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
+  });
+
+  describe('isExcluded method', function () {
+    it('should return false when no exclusions are set', function () {
+      const result = sitemapper.isExcluded('https://foo.com/page1');
+      result.should.be.false();
+    });
+
+    it('should return false when url does not match any exclusion patterns', function () {
+      sitemapper.exclusions = [/\.pdf$/, /private/];
+      const result = sitemapper.isExcluded('https://foo.com/page1');
+      result.should.be.false();
+    });
+
+    it('should return false when url matches an exclusion pattern', function () {
+      sitemapper.exclusions = [/\.pdf$/, /private/];
+      const result = sitemapper.isExcluded('https://foo.com/document.pdf');
+      result.should.be.true();
+    });
+
+    it('should return true when url matches any of multiple exclusion patterns', function () {
+      sitemapper.exclusions = [/\.pdf$/, /private/, /temp/];
+      const result = sitemapper.isExcluded('https://foo.com/private/temp.html');
+      result.should.be.true();
+    });
+
+    it('should handle complex regex patterns correctly', function () {
+      sitemapper.exclusions = [/^https:\/\/foo\.com\/([a-z]{2})\/private/];
+      const result1 = sitemapper.isExcluded('https://foo.com/en/private/page');
+      const result2 = sitemapper.isExcluded('https://foo.com/en/public/page');
+      result1.should.be.true();
+      result2.should.be.false();
+    });
+
+    it('should handle case sensitivity correctly', function () {
+      sitemapper.exclusions = [/private/i];
+      const result1 = sitemapper.isExcluded('https://foo.com/PRIVATE/page');
+      const result2 = sitemapper.isExcluded('https://foo.com/Private/page');
+      result1.should.be.true();
+      result2.should.be.true();
     });
   });
 });

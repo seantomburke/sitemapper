@@ -39,7 +39,7 @@ sitemap.fetch('https://wp.seantburke.com/sitemap.xml').then(function (sites) {
 });
 ```
 
-### Examples in ES6
+### Examples
 
 ```javascript
 import Sitemapper from 'sitemapper';
@@ -81,20 +81,22 @@ You can add options on the initial Sitemapper object when instantiating it.
 - `retries`: (Number) - Sets the maximum number of retries to attempt in case of an error response (e.g. 404 or Timeout). Default: 0
 - `rejectUnauthorized`: (Boolean) - If true, it will throw on invalid certificates, such as expired or self-signed ones. Default: True
 - `lastmod`: (Number) - Timestamp of the minimum lastmod value allowed for returned urls
-- `field` : (Object) - An object of fields to be returned from the sitemap. For Example: `{ loc: true, lastmod: true, changefreq: true, priority: true }`. Leaving a field out has the same effect as `field: false`. If not specified sitemapper defaults to returning the 'classic' array of urls.
 - `proxyAgent`: (HttpProxyAgent|HttpsProxyAgent) - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
+- `field` : (Object) - An object of fields to be returned from the sitemap. 
 
-```javascript
-const sitemapper = new Sitemapper({
-  url: 'https://art-works.community/sitemap.xml',
-  rejectUnauthorized: true,
-  timeout: 15000,
-  requestHeaders: {
-    'User-Agent':
-      'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0',
-  },
-});
+
+For Example: 
+
+``` 
+{ 
+  loc: true,
+  lastmod: true,
+  changefreq: true,
+  priority: true, 
+}
 ```
+
+Leaving a field out has the same effect as `<field>: false`. If not specified sitemapper defaults to returning the 'classic' array of urls.
 
 An example using all available options:
 
@@ -109,61 +111,13 @@ const sitemapper = new Sitemapper({
   debug: true,
   concurrency: 2,
   retries: 1,
+  rejectUnauthorized: false,
+  field: {
+    loc: true,
+    lastmod: true,
+    changefreq: true,
+    priority: true,
+  },
+  proxyAgent: new HttpProxyAgent('http://localhost:8080'),
 });
-```
-
-### Examples in ES5
-
-```javascript
-var Sitemapper = require('sitemapper');
-
-var Google = new Sitemapper({
-  url: 'https://www.google.com/work/sitemap.xml',
-  timeout: 15000, // 15 seconds
-});
-
-Google.fetch()
-  .then(function (data) {
-    console.log(data);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-
-// or
-
-var sitemapper = new Sitemapper();
-
-sitemapper.timeout = 5000;
-sitemapper
-  .fetch('https://wp.seantburke.com/sitemap.xml')
-  .then(function (data) {
-    console.log(data);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-```
-
-## Version 1
-
-```bash
-npm install sitemapper@1.1.1 --save
-```
-
-### Simple Example
-
-```javascript
-var Sitemapper = require('sitemapper');
-
-var sitemapper = new Sitemapper();
-
-sitemapper.getSites(
-  'https://wp.seantburke.com/sitemap.xml',
-  function (err, sites) {
-    if (!err) {
-      console.log(sites);
-    }
-  }
-);
 ```
