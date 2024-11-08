@@ -9,7 +9,7 @@ export default [
   {
     plugins: {
       prettier: eslintPluginPrettier,
-      mocha: eslintPluginMocha
+      mocha: eslintPluginMocha,
     },
     languageOptions: {
       ecmaVersion: 'latest',
@@ -24,15 +24,15 @@ export default [
         before: 'readonly',
         after: 'readonly',
         beforeEach: 'readonly',
-        afterEach: 'readonly'
-      }
+        afterEach: 'readonly',
+      },
     },
     rules: {
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'prettier/prettier': 'error',
       ...prettier.rules,
-      ...eslintPluginMocha.configs.recommended.rules
-    }
-  }
-]; 
+      ...eslintPluginMocha.configs.recommended.rules,
+    },
+  },
+];

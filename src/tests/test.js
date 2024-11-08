@@ -210,31 +210,6 @@ describe('Sitemapper', function () {
         });
     });
 
-    // foo.com added HTTPS so this test breaks. TODO: find an insecure site to test with
-    it.skip('https://foo.com/sitemap.xml should allow insecure request', function (done) {
-      this.timeout(30000);
-      const url = 'https://foo.com/sitemap.xml';
-      sitemapper.timeout = 10000;
-      sitemapper.rejectUnauthorized = true;
-      sitemapper
-        .fetch(url)
-        .then((data) => {
-          data.sites.should.be.Array;
-          data.errors.should.be.Array;
-          data.errors.should.containEql({
-            type: 'RequestError',
-            message: 'Error occurred: RequestError',
-            url: 'https://foo.com/sitemap.xml',
-            retries: 0,
-          });
-          done();
-        })
-        .catch((error) => {
-          console.error('Test failed');
-          done(error);
-        });
-    });
-
     it('https://foo.com/sitemap.xml should not allow insecure request', function (done) {
       this.timeout(30000);
       const url = 'https://foo.com/sitemap.xml';
