@@ -52,7 +52,6 @@ export default class Sitemapper {
     this.fields = settings.fields || false;
     this.proxyAgent = settings.proxyAgent || {};
     this.exclusions = settings.exclusions || [];
-    this.parser = new XMLParser();
   }
 
   /**
@@ -221,7 +220,8 @@ export default class Sitemapper {
       }
 
       // Parse XML using fast-xml-parser
-      const data = this.parser.parse(responseBody.toString());
+      const parser = new XMLParser();
+      const data = parser.parse(responseBody.toString());
 
       // return the results
       return { error: null, data };
