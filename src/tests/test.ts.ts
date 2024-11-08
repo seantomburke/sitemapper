@@ -119,9 +119,9 @@ describe('Sitemapper', function () {
         });
     });
 
-    it('https://www.channable.com/sitemap.xml sitemaps should contain extra fields', function (done) {
+    it('https://wp.seantburke.com/sitemap.xml sitemaps should contain extra fields', function (done) {
       this.timeout(30000);
-      const url = 'https://www.channable.com/sitemap.xml';
+      const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper = new Sitemapper({
         fields: { "loc": true,
           "lastmod": true,
