@@ -34,6 +34,13 @@ declare class Sitemapper {
    * @param url URL to the sitemap.xml file
    */
   fetch(url?: string): Promise<SitemapperResponse>;
+
+  /**
+   * Requests the URL and uses parseStringPromise to parse through and find the data
+   *
+   * @param url URL to the sitemap.xml file
+   */
+  parse(url?: string): Promise<ParseData>;
 }
 
 export default Sitemapper;

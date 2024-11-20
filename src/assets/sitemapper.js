@@ -177,7 +177,7 @@ export default class Sitemapper {
   /**
    * Requests the URL and uses fast-xml-parser to parse through and find the data
    *
-   * @private
+   * @public
    * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
    * @returns {Promise<ParseData>}
    */
