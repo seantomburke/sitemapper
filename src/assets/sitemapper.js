@@ -220,7 +220,10 @@ export default class Sitemapper {
       }
 
       // Parse XML using fast-xml-parser
-      const parser = new XMLParser();
+      const parser = new XMLParser({
+        isArray: (tagName) =>
+          ['sitemap', 'url'].some((value) => value === tagName),
+      });
 
       const data = parser.parse(responseBody.toString());
 
