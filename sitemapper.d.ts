@@ -1,10 +1,10 @@
 export interface SitemapperResponse {
   url: string;
-  sites: string[] | SitemapperResponceSite[];
+  sites: string[] | SitemapperResponseSite[];
   errors: SitemapperErrorData[];
 }
 
-export type SitemapperResponceSite = { [name in SitemapperField]?: string };
+export type SitemapperResponseSite = { [name in SitemapperField]?: string };
 
 export interface SitemapperErrorData {
   type: string;
