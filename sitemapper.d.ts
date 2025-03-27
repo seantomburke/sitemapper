@@ -8,11 +8,15 @@ export interface SitemapperSiteData {
 
 export interface SitemapperResponse {
   url: string;
+<<<<<<< HEAD
   sites: string[] | SitemapperSiteData[];
+=======
+  sites: string[] | SitemapperResponseSite[];
+>>>>>>> 58f3b0a (fix: correct typo in SitemapperResponse interface and type definition)
   errors: SitemapperErrorData[];
 }
 
-export type SitemapperResponceSite = { [name in SitemapperField]?: string };
+export type SitemapperResponseSite = { [name in SitemapperField]?: string };
 
 export interface SitemapperErrorData {
   type: string;
