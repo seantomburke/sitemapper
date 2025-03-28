@@ -1,3 +1,5 @@
+import { HttpProxyAgent, HttpsProxyAgent } from 'hpagent';
+
 export interface SitemapperSiteData {
   loc: string;
   lastmod?: string;
@@ -8,11 +10,7 @@ export interface SitemapperSiteData {
 
 export interface SitemapperResponse {
   url: string;
-<<<<<<< HEAD
   sites: string[] | SitemapperSiteData[];
-=======
-  sites: string[] | SitemapperResponseSite[];
->>>>>>> 58f3b0a (fix: correct typo in SitemapperResponse interface and type definition)
   errors: SitemapperErrorData[];
 }
 
@@ -49,7 +47,7 @@ export interface SitemapperOptions {
   timeout?: number;
   url?: string;
   fields?: SitemapperFields;
-  proxyAgent?: any;
+  proxyAgent?: HttpProxyAgent | HttpsProxyAgent;
   exclusions?: RegExp[];
 }
 
