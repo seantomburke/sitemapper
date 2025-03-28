@@ -1,3 +1,5 @@
+import * as hpagent from 'hpagent';
+
 export interface SitemapperResponse {
   url: string;
   sites: string[] | SitemapperResponseSite[];
@@ -38,6 +40,7 @@ export interface SitemapperOptions {
   url?: string;
   fields?: SitemapperFields;
   exclusions?: RegExp[];
+  proxyAgent?: hpagent.HttpProxyAgent | hpagent.HttpsProxyAgent;
 }
 
 declare class Sitemapper {
