@@ -25,8 +25,11 @@ export interface SitemapperOptions {
 
 declare class Sitemapper {
   timeout: number;
+  url: string;
+  debug: boolean;
+  lastmod: number;
 
-  constructor(options: SitemapperOptions);
+  constructor(options?: SitemapperOptions);
 
   /**
    * Gets the sites from a sitemap.xml with a given URL
