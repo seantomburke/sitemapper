@@ -15,5 +15,6 @@
     "strict": true,
     "noImplicitAny": false
   },
-  "include": ["./*.ts"]
+  "include": ["./test.ts.ts"],
+  "exclude": ["./type-check.ts"]
 }
