@@ -1,5 +1,6 @@
 export interface SitemapperSiteData {
   loc: string;
+  sitemap: string;
   lastmod?: string;
   priority?: string;
   changefreq?: string;
@@ -8,7 +9,7 @@ export interface SitemapperSiteData {
 
 export interface SitemapperResponse {
   url: string;
-  sites: string[] | SitemapperSiteData[];
+  sites: SitemapperSiteData[];
   errors: SitemapperErrorData[];
 }
 
@@ -59,14 +60,11 @@ declare class Sitemapper {
    * @param url URL to the sitemap.xml file
    */
   fetch(
-    this: Sitemapper & { fields: object },
+    this: Sitemapper & { fields?: object },
     url?: string
   ): Promise<
     Omit<SitemapperResponse, 'sites'> & { sites: SitemapperSiteData[] }
   >;
-  fetch(
-    url?: string
-  ): Promise<Omit<SitemapperResponse, 'sites'> & { sites: string[] }>;
 
   /**
    * @deprecated Use fetch() instead.
