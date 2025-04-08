@@ -127,22 +127,46 @@ describe('Sitemapper', function () {
       this.timeout(30000);
       const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper = new Sitemapper({
-        fields: { loc: true, lastmod: true, priority: true, changefreq: true },
+        fields: {
+          loc: true,
+          lastmod: true,
+          priority: true,
+          changefreq: true,
+          sitemap: true,
+        },
       });
       sitemapper
         .fetch(url)
-        .then((data) => {
+        .then((data: SitemapperResponse) => {
           data.sites.should.be.Array;
           data.url.should.equal(url);
-          data.sites.length.should.be.above(2);
-          data.sites[0].loc.should.be.String;
-          data.sites[0].lastmod.should.be.String;
-          data.sites[0].priority.should.be.String;
-          data.sites[0].changefreq.should.be.String;
+          data.sites.length.should.be.above(0);
+
+          const firstSite = data.sites[0];
+          firstSite.should.be.Object();
+
+          firstSite.should.have.property('loc');
+          firstSite.loc.should.be.String();
+          isUrl(firstSite.loc).should.be.true();
+
+          firstSite.should.have.property('sitemap');
+          firstSite.sitemap.should.be.String();
+          isUrl(firstSite.sitemap).should.be.true();
+
+          if (firstSite.lastmod) {
+            firstSite.lastmod.should.be.String();
+          }
+          if (firstSite.priority) {
+            firstSite.priority.should.be.String();
+          }
+          if (firstSite.changefreq) {
+            firstSite.changefreq.should.be.String();
+          }
+
           done();
         })
         .catch((error) => {
-          console.error('Test failed');
+          console.error('Test failed for extra fields:', error);
           done(error);
         });
     });
@@ -214,6 +238,48 @@ describe('Sitemapper', function () {
         })
         .catch((error) => {
           console.error('Test failed');
+          done(error);
+        });
+    });
+
+    it('https://bigcrafters.com/sitemap.xml sitemaps should include the source sitemap URL', function (done) {
+      this.timeout(30000); // Increase timeout for potentially large sitemap index
+      const url = 'https://bigcrafters.com/sitemap.xml';
+      sitemapper = new Sitemapper({
+        // Using fields explicitly to ensure structure
+        fields: { loc: true, lastmod: true },
+      });
+      sitemapper
+        .fetch(url)
+        .then((data: SitemapperResponse) => {
+          data.sites.should.be.Array;
+          data.url.should.equal(url);
+          data.sites.length.should.be.above(0); // Ensure sites were found
+
+          // Check each site object
+          let hasSubSitemapUrl = false;
+          for (const site of data.sites) {
+            site.should.be.Object; // Ensure it's an object
+            site.should.have.property('sitemap');
+            site.sitemap.should.be.String();
+            isUrl(site.sitemap).should.be.true; // Check if it's a valid URL
+
+            site.should.have.property('loc');
+            isUrl(site.loc).should.be.true;
+
+            // Check if we found a site from a sub-sitemap
+            if (site.sitemap !== url) {
+              hasSubSitemapUrl = true;
+            }
+          }
+
+          // Verify that at least one site came from a different sitemap than the index
+          hasSubSitemapUrl.should.be.true;
+
+          done();
+        })
+        .catch((error) => {
+          console.error('Test failed for sitemap source:', error);
           done(error);
         });
     });

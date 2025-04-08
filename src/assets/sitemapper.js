@@ -319,36 +319,60 @@ export default class Sitemapper {
           console.debug(`Urlset found during "crawl('${url}')"`);
         }
 
-        // Convert single object to array if needed
-        const urlArray = Array.isArray(data.urlset.url)
-          ? data.urlset.url
-          : [data.urlset.url];
-
-        // Begin filtering the urls
-        const sites = urlArray
-          .filter((site) => {
-            if (this.lastmod === 0) return true;
-            if (site.lastmod === undefined) return false;
-            const modified = new Date(site.lastmod).getTime();
-
-            return modified >= this.lastmod;
-          })
-          .filter((site) => {
-            return !this.isExcluded(site.loc);
-          })
-          .map((site) => {
-            if (!this.fields) {
-              return site.loc;
-            } else {
-              let fields = {};
-              for (const [field, active] of Object.entries(this.fields)) {
-                if (active && site[field]) {
-                  fields[field] = site[field];
-                }
-              }
-              return fields;
+        // Map through URL set and push results to the sites array
+        const sites = [];
+        for (const site of data.urlset.url) {
+          // Apply exclusions if any are defined
+          if (this.isExcluded(site.loc[0])) {
+            if (this.debug) {
+              console.debug(
+                `Excluding URL based on exclusion pattern: ${site.loc[0]}`
+              );
             }
-          });
+            continue; // Skip this URL
+          }
+
+          // Check if the lastmod value is greater than the minimum required
+          if (
+            this.lastmod &&
+            site.lastmod &&
+            site.lastmod[0] &&
+            new Date(site.lastmod[0]).getTime() < this.lastmod
+          ) {
+            if (this.debug) {
+              console.debug(
+                `Skipping url ${site.loc[0]} due to lastmod being older than ${this.lastmod}`
+              );
+            }
+            continue;
+          }
+
+          // If the fields option is set, structure the site data accordingly
+          if (this.fields) {
+            const siteData = { sitemap: url }; // Always include the source sitemap URL
+            for (const key in site) {
+              // If the key is usable and the value exists, add it to the siteData
+              if (
+                Object.hasOwnProperty.call(site, key) &&
+                site[key] !== undefined
+              ) {
+                // Handle cases where parser might return single string vs array
+                let value = Array.isArray(site[key]) ? site[key][0] : site[key];
+
+                // Ensure priority is stored as a string if present
+                if (key === 'priority') {
+                  value = String(value);
+                }
+
+                siteData[key] = value;
+              }
+            }
+            sites.push(siteData);
+          } else {
+            // Otherwise, just push the location URL along with the source sitemap URL
+            sites.push({ loc: site.loc[0], sitemap: url });
+          }
+        }
 
         return {
           sites,
