@@ -223,6 +223,7 @@ export default class Sitemapper {
       const parser = new XMLParser({
         isArray: (tagName) =>
           ['sitemap', 'url'].some((value) => value === tagName),
+        removeNSPrefix: true,
       });
 
       const data = parser.parse(responseBody.toString());

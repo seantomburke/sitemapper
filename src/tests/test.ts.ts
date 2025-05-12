@@ -271,6 +271,26 @@ describe('Sitemapper', function () {
     });
   });
 
+  describe('sitemaps with namespace prefix', function () {
+    it('https://www.emerald.com/sitemap.xml sitemaps should be an array', function (done) {
+      this.timeout(30000);
+      const url = 'https://www.emerald.com/sitemap.xml';
+      sitemapper
+        .fetch(url)
+        .then((data) => {
+          data.sites.should.be.Array;
+          data.url.should.equal(url);
+          data.sites.length.should.be.above(2);
+          isUrl(data.sites[0]).should.be.true;
+          done();
+        })
+        .catch((error) => {
+          console.error('Test failed');
+          done(error);
+        });
+    });
+  });
+
   describe('getSites method', function () {
     it('getSites should be backwards compatible', function (done) {
       this.timeout(30000);
