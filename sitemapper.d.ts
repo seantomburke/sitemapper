@@ -1,3 +1,5 @@
+import { HttpProxyAgent, HttpsProxyAgent } from 'hpagent';
+
 export interface SitemapperSiteData {
   loc: string;
   lastmod?: string;
@@ -12,11 +14,28 @@ export interface SitemapperResponse {
   errors: SitemapperErrorData[];
 }
 
+export type SitemapperResponseSite = { [name in SitemapperField]?: string };
+
 export interface SitemapperErrorData {
   type: string;
   url: string;
   retries: number;
 }
+
+export type SitemapperField =
+  | 'loc'
+  | 'sitemap'
+  | 'lastmod'
+  | 'changefreq'
+  | 'priority'
+  | 'image:loc'
+  | 'image:title'
+  | 'image:caption'
+  | 'video:title'
+  | 'video:description'
+  | 'video:thumbnail_loc';
+
+export type SitemapperFields = { [name in SitemapperField]?: boolean };
 
 export interface SitemapperOptions {
   concurrency?: number;
@@ -27,8 +46,8 @@ export interface SitemapperOptions {
   retries?: number;
   timeout?: number;
   url?: string;
-  fields?: { [name: string]: boolean };
-  proxyAgent?: any;
+  fields?: SitemapperFields;
+  proxyAgent?: HttpProxyAgent | HttpsProxyAgent;
   exclusions?: RegExp[];
 }
 

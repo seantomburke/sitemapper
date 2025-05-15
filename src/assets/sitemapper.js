@@ -342,6 +342,9 @@ export default class Sitemapper {
               return site.loc;
             } else {
               let fields = {};
+              if (this.fields.sitemap) {
+                fields.sitemap = url;
+              }
               for (const [field, active] of Object.entries(this.fields)) {
                 if (active && site[field]) {
                   fields[field] = site[field];
