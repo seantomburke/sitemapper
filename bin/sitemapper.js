@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const Sitemapper = require('../lib/assets/sitemapper').default;
+import Sitemapper from '../lib/assets/sitemapper.js';
 
 async function main() {
   const sitemapUrl = process.argv[2];

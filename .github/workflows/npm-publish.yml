@@ -31,3 +31,10 @@ jobs:
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+  test-published-npm:
+    needs: publish-npm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test published CLI with npx
+        run: npx sitemapper https://wp.seantburke.com/sitemap.xml

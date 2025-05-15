@@ -1,7 +1,7 @@
 import 'async';
 import 'assert';
 import 'should';
-import isUrl = require('is-url');
+import isUrl from 'check-valid-url';
 
 import Sitemapper from '../../lib/assets/sitemapper.js';
 import { SitemapperResponse } from '../../sitemapper';
