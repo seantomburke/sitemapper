@@ -246,9 +246,9 @@ describe('Sitemapper', function () {
         });
     });
 
-    it('https://foo.com/sitemap.xml should not allow insecure request', function (done) {
+    it('https://example.com/sitemap.xml should not allow insecure request', function (done) {
       this.timeout(30000);
-      const url = 'https://foo.com/sitemap.xml';
+      const url = 'https://example.com/sitemap.xml';
       sitemapper.timeout = 10000;
       sitemapper.rejectUnauthorized = false;
       sitemapper
@@ -259,7 +259,7 @@ describe('Sitemapper', function () {
           data.errors.should.containEql({
             type: 'HTTPError',
             message: 'HTTP Error occurred: Response code 404 (Not Found)',
-            url: 'https://foo.com/sitemap.xml',
+            url: 'https://example.com/sitemap.xml',
             retries: 0,
           });
           done();
@@ -343,40 +343,40 @@ describe('Sitemapper', function () {
 
   describe('isExcluded method', function () {
     it('should return false when no exclusions are set', function () {
-      const result = sitemapper.isExcluded('https://foo.com/page1');
+      const result = sitemapper.isExcluded('https://example.com/page1');
       result.should.be.false();
     });
 
     it('should return false when url does not match any exclusion patterns', function () {
       sitemapper.exclusions = [/\.pdf$/, /private/];
-      const result = sitemapper.isExcluded('https://foo.com/page1');
+      const result = sitemapper.isExcluded('https://example.com/page1');
       result.should.be.false();
     });
 
     it('should return false when url matches an exclusion pattern', function () {
       sitemapper.exclusions = [/\.pdf$/, /private/];
-      const result = sitemapper.isExcluded('https://foo.com/document.pdf');
+      const result = sitemapper.isExcluded('https://example.com/document.pdf');
       result.should.be.true();
     });
 
     it('should return true when url matches any of multiple exclusion patterns', function () {
       sitemapper.exclusions = [/\.pdf$/, /private/, /temp/];
-      const result = sitemapper.isExcluded('https://foo.com/private/temp.html');
+      const result = sitemapper.isExcluded('https://example.com/private/temp.html');
       result.should.be.true();
     });
 
     it('should handle complex regex patterns correctly', function () {
-      sitemapper.exclusions = [/^https:\/\/foo\.com\/([a-z]{2})\/private/];
-      const result1 = sitemapper.isExcluded('https://foo.com/en/private/page');
-      const result2 = sitemapper.isExcluded('https://foo.com/en/public/page');
+      sitemapper.exclusions = [/^https:\/\/example\.com\/([a-z]{2})\/private/];
+      const result1 = sitemapper.isExcluded('https://example.com/en/private/page');
+      const result2 = sitemapper.isExcluded('https://example.com/en/public/page');
       result1.should.be.true();
       result2.should.be.false();
     });
 
     it('should handle case sensitivity correctly', function () {
       sitemapper.exclusions = [/private/i];
-      const result1 = sitemapper.isExcluded('https://foo.com/PRIVATE/page');
-      const result2 = sitemapper.isExcluded('https://foo.com/Private/page');
+      const result1 = sitemapper.isExcluded('https://example.com/PRIVATE/page');
+      const result2 = sitemapper.isExcluded('https://example.com/Private/page');
       result1.should.be.true();
       result2.should.be.true();
     });
