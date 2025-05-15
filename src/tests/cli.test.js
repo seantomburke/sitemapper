@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const { execFile } = require('child_process');
 const path = require('path');
 const assert = require('assert');
 
@@ -9,7 +9,7 @@ describe('CLI: sitemapper', function () {
     const cliPath = path.resolve(__dirname, '../../bin/sitemapper.js');
     const sitemapUrl = 'https://wp.seantburke.com/sitemap.xml';
 
-    exec(`node ${cliPath} ${sitemapUrl}`, (error, stdout, stderr) => {
+    execFile('node', [cliPath, sitemapUrl], (error, stdout, stderr) => {
       assert.strictEqual(error, null, `CLI errored: ${stderr}`);
       // Check that output contains at least one expected URL
       assert(
