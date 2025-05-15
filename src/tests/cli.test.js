@@ -16,7 +16,7 @@ describe('CLI: sitemapper', function () {
         try {
           const parsedUrl = new URL(line);
           return parsedUrl.hostname === 'wp.seantburke.com';
-        } catch (e) {
+        } catch {
           return false;
         }
       });
