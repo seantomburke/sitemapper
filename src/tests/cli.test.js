@@ -12,9 +12,17 @@ describe('CLI: sitemapper', function () {
     execFile('node', [cliPath, sitemapUrl], (error, stdout, stderr) => {
       assert.strictEqual(error, null, `CLI errored: ${stderr}`);
       // Check that output contains at least one expected URL
+      const urls = stdout.split(/\s+/).filter(line => {
+        try {
+          const parsedUrl = new URL(line);
+          return parsedUrl.hostname === 'wp.seantburke.com';
+        } catch (e) {
+          return false;
+        }
+      });
       assert(
-        stdout.includes('https://wp.seantburke.com/'),
-        'Output should contain at least the base URL.'
+        urls.length > 0,
+        'Output should contain at least one URL with the expected hostname.'
       );
       // Optionally, check for the "Found URLs:" header
       assert(
