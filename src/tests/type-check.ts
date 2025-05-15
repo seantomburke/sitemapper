@@ -3,6 +3,7 @@ import Sitemapper, {
   SitemapperResponse,
   SitemapperErrorData,
 } from '../../sitemapper';
+import { HttpsProxyAgent } from 'hpagent';
 
 const sitemapper = new Sitemapper({
   url: 'https://example.com/sitemap.xml',
@@ -26,7 +27,9 @@ async function testTypes() {
       retries: 0,
       debug: true,
       rejectUnauthorized: false,
-      proxyAgent: { host: 'localhost' }, // Basic check, actual agent type is complex
+      proxyAgent: new HttpsProxyAgent({
+        proxy: 'http://localhost:8080',
+      }),
       exclusions: [/test/],
     };
     const sitemapperWithOptions = new Sitemapper(options);
