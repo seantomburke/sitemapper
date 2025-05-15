@@ -137,4 +137,5 @@ const sitemapper = new Sitemapper({
     changefreq: true,
     sitemap: true,
   },
+});
 ```

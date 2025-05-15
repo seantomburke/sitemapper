@@ -44,8 +44,7 @@
     "lint:prettier": "prettier --check .",
     "lint:prettier:fix": "prettier --write .",
     "clean": "rm -rf lib",
-    "prepack": "npm run build",
-    "prepare": "npm run build"
+    "prepack": "npm run build"
   },
   "maintainers": [
     {
