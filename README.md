@@ -133,7 +133,8 @@ const sitemapper = new Sitemapper({
   fields: {
     loc: true,
     lastmod: true,
-    changefreq: true,
     priority: true,
+    changefreq: true,
+    sitemap: true,
   },
 ```
