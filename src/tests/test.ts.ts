@@ -361,14 +361,20 @@ describe('Sitemapper', function () {
 
     it('should return true when url matches any of multiple exclusion patterns', function () {
       sitemapper.exclusions = [/\.pdf$/, /private/, /temp/];
-      const result = sitemapper.isExcluded('https://example.com/private/temp.html');
+      const result = sitemapper.isExcluded(
+        'https://example.com/private/temp.html'
+      );
       result.should.be.true();
     });
 
     it('should handle complex regex patterns correctly', function () {
       sitemapper.exclusions = [/^https:\/\/example\.com\/([a-z]{2})\/private/];
-      const result1 = sitemapper.isExcluded('https://example.com/en/private/page');
-      const result2 = sitemapper.isExcluded('https://example.com/en/public/page');
+      const result1 = sitemapper.isExcluded(
+        'https://example.com/en/private/page'
+      );
+      const result2 = sitemapper.isExcluded(
+        'https://example.com/en/public/page'
+      );
       result1.should.be.true();
       result2.should.be.false();
     });
