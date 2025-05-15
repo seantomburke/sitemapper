@@ -12,7 +12,7 @@ describe('CLI: sitemapper', function () {
     execFile('node', [cliPath, sitemapUrl], (error, stdout, stderr) => {
       assert.strictEqual(error, null, `CLI errored: ${stderr}`);
       // Check that output contains at least one expected URL
-      const urls = stdout.split(/\s+/).filter(line => {
+      const urls = stdout.split(/\s+/).filter((line) => {
         try {
           const parsedUrl = new URL(line);
           return parsedUrl.hostname === 'wp.seantburke.com';
