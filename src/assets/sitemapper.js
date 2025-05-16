@@ -435,7 +435,6 @@ export default class Sitemapper {
    */
   async getSites(url = this.url, callback) {
     console.warn(
-      // eslint-disable-line no-console
       '\r\nWarning:',
       'function .getSites() is deprecated, please use the function .fetch()\r\n'
     );

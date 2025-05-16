@@ -1,5 +1,5 @@
 {
-  "version": "0.1",
+  "version": "0.2",
   "language": "en",
   "dictionaries": [
     "bash",
@@ -12,7 +12,14 @@
     "node",
     "softwareTerms"
   ],
-  "words": ["sitemapper", "esmodules", "gzipped"],
+  "words": [
+    "esmodules",
+    "gzipped",
+    "hpagent",
+    "sdch",
+    "seantburke",
+    "sitemapper"
+  ],
   "allowCompoundWords": true,
   "flagWords": [],
   "ignoreWords": [],
