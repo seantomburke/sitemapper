@@ -1,0 +1,29 @@
+build:
+  nodes:
+    coverage:
+      environment:
+        node: 'v16'
+      tests:
+        override:
+          - command: npm run coverage
+            coverage:
+              file: coverage/clover.xml
+              format: clover
+
+checks:
+  javascript: true
+
+filter:
+  excluded_paths:
+    - "lib/"
+    - "node_modules/"
+    - "coverage/"
+    - "*.min.js"
+    - "src/tests/"
+    - "src/examples/"
+
+  dependency_paths:
+    - "node_modules/"
+
+tools:
+  js_outdated: true
