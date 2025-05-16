@@ -28,5 +28,8 @@ export default [
       'prettier/prettier': 'error',
       ...eslintPluginMocha.configs.recommended.rules,
     },
+    linterOptions: {
+      reportUnusedDisableDirectives: true,
+    },
   },
 ];
