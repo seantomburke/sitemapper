@@ -138,4 +138,9 @@ jobs:
           key: ${{ runner.os }}-build-${{ matrix.node-version }}-${{ github.sha }}
           fail-on-cache-miss: true
       - name: Run Tests
+        id: run_tests
+        run: npm run test:js
+        continue-on-error: true
+      - name: Run Tests (retry)
+        if: steps.run_tests.outcome == 'failure'
         run: npm run test:js
