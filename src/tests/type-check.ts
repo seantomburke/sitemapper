@@ -3,6 +3,7 @@ import Sitemapper, {
   SitemapperResponse,
   SitemapperErrorData,
 } from '../../sitemapper';
+// @ts-ignore
 import { HttpsProxyAgent } from 'hpagent';
 
 const sitemapper = new Sitemapper({

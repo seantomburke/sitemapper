@@ -82,7 +82,7 @@ You can add options on the initial Sitemapper object when instantiating it.
 - `exclusions`: (Array<RegExp>) - Array of regex patterns to exclude URLs from being processed
 - `fields`: (Object) - An object of fields to be returned from the sitemap. Leaving a field out has the same effect as `<field>: false`. If not specified sitemapper defaults to returning the 'classic' array of urls. Available fields:
   - `loc`: (Boolean) - The URL location of the page
-  - `sitemap`: (Boolean) - The URL of the sitemap containing the URL, userful if <sitemapindex> was used in the sitemap
+  - `sitemap`: (Boolean) - The URL of the sitemap containing the URL, useful if <sitemapindex> was used in the sitemap
   - `lastmod`: (Boolean) - The date of last modification of the page
   - `changefreq`: (Boolean) - How frequently the page is likely to change
   - `priority`: (Boolean) - The priority of this URL relative to other URLs on your site
