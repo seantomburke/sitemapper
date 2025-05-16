@@ -18,15 +18,13 @@
 
 Parse through a sitemaps xml to get all the urls for your crawler.
 
-## Version 2
-
-### Installation
+## Installation
 
 ```bash
 npm install sitemapper --save
 ```
 
-### Simple Example
+## Simple Example
 
 ```javascript
 const Sitemapper = require('sitemapper');
@@ -38,7 +36,7 @@ sitemap.fetch('https://wp.seantburke.com/sitemap.xml').then(function (sites) {
 });
 ```
 
-### Examples
+## Examples
 
 ```javascript
 import Sitemapper from 'sitemapper';
@@ -68,7 +66,7 @@ sitemapper
   .catch((error) => console.log(error));
 ```
 
-# Options
+## Options
 
 You can add options on the initial Sitemapper object when instantiating it.
 
