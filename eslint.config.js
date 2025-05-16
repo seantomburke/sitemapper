@@ -5,6 +5,16 @@ import eslintPluginMocha from 'eslint-plugin-mocha';
 import globals from 'globals';
 
 export default [
+  {
+    ignores: [
+      'example.js',
+      'index.js',
+      'lib/**',
+      'node_modules/**',
+      'src/tests/**',
+      'tmp/**',
+    ],
+  },
   eslint.configs.recommended,
   prettier,
   {
