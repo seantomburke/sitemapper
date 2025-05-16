@@ -1,7 +1,16 @@
 import 'async';
 import 'assert';
 import 'should';
-import isUrl from 'check-valid-url';
+
+// Simple function to validate URLs using the URL object
+function isUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 import Sitemapper from '../../lib/assets/sitemapper.js';
 import { SitemapperResponse } from '../../sitemapper';
@@ -127,7 +136,13 @@ describe('Sitemapper', function () {
       this.timeout(30000);
       const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper = new Sitemapper({
-        fields: { loc: true, lastmod: true, priority: true, changefreq: true, sitemap: true },
+        fields: {
+          loc: true,
+          lastmod: true,
+          priority: true,
+          changefreq: true,
+          sitemap: true,
+        },
       });
       sitemapper
         .fetch(url)
