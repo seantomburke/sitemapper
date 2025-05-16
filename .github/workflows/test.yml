@@ -27,14 +27,11 @@ jobs:
         run: npm ci
       - name: Build Project
         run: npm run build --if-present
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Cache Build Output
+        uses: actions/cache/save@v4
         with:
-          name: build-output-${{ matrix.node-version }}
-          path: |
-            lib
-            node_modules
-          retention-days: 1
+          path: lib
+          key: ${{ runner.os }}-build-${{ matrix.node-version }}-${{ github.sha }}
 
   type-check:
     name: TypeScript Type Check
@@ -49,10 +46,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Restore Build Output
+        uses: actions/cache/restore@v4
         with:
-          name: build-output-${{ matrix.node-version }}
+          path: lib
+          key: ${{ runner.os }}-build-${{ matrix.node-version }}-${{ github.sha }}
+          fail-on-cache-miss: true
       - name: Run TypeScript Type Check
         run: npm run test:ts
 
@@ -69,10 +71,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output-${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
       - name: Run ESLint
         run: npm run lint:eslint
 
@@ -89,10 +90,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output-${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
       - name: Run Prettier
         run: npm run lint:prettier
 
@@ -109,10 +109,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output-${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
       - name: Run Spellcheck
         run: npm run lint:spell
 
@@ -129,9 +128,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Restore Build Output
+        uses: actions/cache/restore@v4
         with:
-          name: build-output-${{ matrix.node-version }}
+          path: lib
+          key: ${{ runner.os }}-build-${{ matrix.node-version }}-${{ github.sha }}
+          fail-on-cache-miss: true
       - name: Run Tests
-        run: mocha ./lib/tests/*.js
+        run: npm run test:js
