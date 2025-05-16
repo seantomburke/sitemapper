@@ -37,4 +37,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Test published CLI with npx
-        run: npx sitemapper https://wp.seantburke.com/sitemap.xml
+        run: |
+          # Retry mechanism with timeout
+          MAX_RETRIES=5
+          RETRY_DELAY=10 # seconds
+
+          for ((i=1; i<=MAX_RETRIES; i++)); do
+            echo "Attempt $i of $MAX_RETRIES to run npx sitemapper..."
+
+            if npx sitemapper https://wp.seantburke.com/sitemap.xml; then
+              echo "Successfully executed npx sitemapper!"
+              exit 0
+            else
+              echo "Attempt $i failed. Package might not be available yet."
+              if [ $i -lt $MAX_RETRIES ]; then
+                echo "Waiting $RETRY_DELAY seconds before next attempt..."
+                sleep $RETRY_DELAY
+              else
+                echo "All attempts failed after $(($MAX_RETRIES * $RETRY_DELAY)) seconds."
+                exit 1
+              fi
+            fi
+          done
