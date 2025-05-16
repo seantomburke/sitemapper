@@ -1,4 +1,4 @@
-module.exports = (api) => {
+export default (api) => {
   api.cache(true);
 
   const presets = [
@@ -8,11 +8,14 @@ module.exports = (api) => {
         targets: {
           esmodules: true,
         },
+        modules: false, // Output ES modules
       },
     ],
     'minify', // minify the Babel code
   ];
-  const plugins = [['add-module-exports', { addDefaultProperty: true }]];
+
+  // Remove the add-module-exports plugin for ESM output
+  const plugins = [];
 
   return {
     presets,

@@ -1,18 +1,20 @@
-const { execFile } = require('child_process');
-const path = require('path');
-const assert = require('assert');
+import { execFile } from 'child_process';
+import * as path from 'path';
+import * as assert from 'assert';
+import { describe, it } from 'mocha';
 
-describe('CLI: sitemapper', function () {
+describe('CLI: sitemapper', function (this: Mocha.Suite) {
   this.timeout(10000); // Allow up to 10 seconds for network
 
-  it('should print URLs from the sitemap', function (done) {
-    const cliPath = path.resolve(__dirname, '../../bin/sitemapper.js');
-    const sitemapUrl = 'https://wp.seantburke.com/sitemap.xml';
+  it('should print URLs from the sitemap', function (done: Mocha.Done) {
+    const cliPath: string = path.resolve(__dirname, '../../bin/sitemapper.js');
+    const sitemapUrl: string = 'https://wp.seantburke.com/sitemap.xml';
 
+    // @ts-ignore - TypeScript has trouble with Node.js execFile overloads
     execFile('node', [cliPath, sitemapUrl], (error, stdout, stderr) => {
       assert.strictEqual(error, null, `CLI errored: ${stderr}`);
       // Check that output contains at least one expected URL
-      const urls = stdout.split(/\s+/).filter((line) => {
+      const urls: string[] = stdout.split(/\s+/).filter((line: string) => {
         try {
           const parsedUrl = new URL(line);
           return parsedUrl.hostname === 'wp.seantburke.com';

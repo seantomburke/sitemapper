@@ -111,7 +111,6 @@ Leaving a field out has the same effect as `<field>: false`. If not specified si
 An example using all available options:
 
 ```javascript
-
 import { HttpsProxyAgent } from 'hpagent';
 
 const sitemapper = new Sitemapper({
@@ -126,7 +125,7 @@ const sitemapper = new Sitemapper({
   retries: 1,
   lastmod: 1600000000000,
   proxyAgent: new HttpsProxyAgent({
-  	proxy: 'http://localhost:8080'
+    proxy: 'http://localhost:8080',
   }),
   exclusions: [/\/v1\//, /scary/],
   rejectUnauthorized: false,

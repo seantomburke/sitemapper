@@ -1,7 +1,16 @@
 import 'async';
 import 'assert';
 import 'should';
-import isUrl = require('is-url');
+
+// Simple function to validate URLs using the URL object
+function isUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 import Sitemapper from '../../lib/assets/sitemapper.js';
 import { SitemapperResponse } from '../../sitemapper';
@@ -127,7 +136,13 @@ describe('Sitemapper', function () {
       this.timeout(30000);
       const url = 'https://wp.seantburke.com/sitemap.xml';
       sitemapper = new Sitemapper({
-        fields: { loc: true, lastmod: true, priority: true, changefreq: true },
+        fields: {
+          loc: true,
+          lastmod: true,
+          priority: true,
+          changefreq: true,
+          sitemap: true,
+        },
       });
       sitemapper
         .fetch(url)
@@ -139,6 +154,8 @@ describe('Sitemapper', function () {
           data.sites[0].lastmod.should.be.String;
           data.sites[0].priority.should.be.String;
           data.sites[0].changefreq.should.be.String;
+          data.sites[0].should.have.property('sitemap').which.is.a.String();
+          isUrl(data.sites[0].sitemap).should.be.true;
           done();
         })
         .catch((error) => {

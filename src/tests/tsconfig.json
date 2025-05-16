@@ -3,7 +3,7 @@
     "allowJs": false,
     "alwaysStrict": true,
     "declaration": false,
-    "module": "commonjs",
+    "module": "ESNext",
     "moduleResolution": "node",
     "lib": ["dom", "esnext"],
     "newLine": "lf",
