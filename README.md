@@ -69,9 +69,6 @@ You can also use Sitemapper directly from the command line:
 ```bash
 # Using npx
 npx sitemapper https://gosla.sh/sitemap.xml
-
-# With options
-npx sitemapper https://gosla.sh/sitemap.xml --timeout=30000 --concurrency=5
 ```
 
 ## 💻 Examples
@@ -357,17 +354,30 @@ npx sitemapper https://gosla.sh/sitemap.xml --timeout=5000
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions from experienced engineers are highly valued. When contributing, please consider:
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Add tests for your changes
-4. Commit your changes (`git commit -m 'Add some amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Ensure all tests pass locally by running `npm test`
-7. Open a Pull Request
+### Guidelines
+- Maintain backward compatibility where possible
+- Consider performance implications, particularly for large sitemaps
+- Add TypeScript types
+- Add tests for your change
+- Update documentation and examples
+- Check for typos
+- Code should pass ESLint, Prettier, Spell Check and TypeScript checks
+- Try not to bloat the main dependencies with new packages, dev dependencies are fine
+- If adding packages, make sure to run `npm install` with the latest NPM version to update package-lock.json
 
-> **Note**: All tests must pass successfully before a Pull Request can be merged. The test suite includes TypeScript type checking, ESLint, Prettier formatting, spellcheck, and unit tests.
+### Pull Request Process
+- PRs should be focused on a single concern/feature
+- Include sufficient context in the PR description
+- Reference any relevant issues
+- Run `npm test` locally to verify your changes pass the test
+  - Sometimes the tests will fail since they reference real world sitemaps. Try running it again.
+- PRs will not run github actions by default, they need to be run manually by @seantomburke
+
+For substantial changes, consider opening an issue for discussion before implementation.
+
+> **Note**: The CI pipeline enforces TypeScript type checking, linting rules, formatting standards, and test coverage thresholds.
 
 ## 📄 License
 
