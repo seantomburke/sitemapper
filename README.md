@@ -1,138 +1,384 @@
-## Sitemap-parser
+<!-- Header image with dark/light theme support -->
+<picture>
+  <source
+    media="(prefers-color-scheme: dark)"
+    srcset="https://capsule-render.vercel.app/api?type=venom&height=300&color=gradient&text=Sitemapper&section=header&reversal=false&textBg=false&fontColor=DDDDDD&desc=A%20powerful%20XML%20sitemap%20parser%20for%20Node.js&descAlignY=66&fontAlignY=45&animation=fadeIn&descSize=24"
+  />
+  <source
+    media="(prefers-color-scheme: light)"
+    srcset="https://capsule-render.vercel.app/api?type=venom&height=300&color=gradient&text=Sitemapper&section=header&reversal=false&textBg=false&fontColor=22222&desc=A%20powerful%20XML%20sitemap%20parser%20for%20Node.js&descAlignY=66&fontAlignY=45&animation=fadeIn&descSize=24"
+  />
+  <img
+    alt="Sitemapper - A powerful XML sitemap parser for Node.js"
+    src="https://capsule-render.vercel.app/api?type=venom&height=300&color=gradient&text=Sitemapper&section=header&reversal=false&textBg=false&fontColor=22222&desc=A%20powerful%20XML%20sitemap%20parser%20for%20Node.js&descAlignY=66&fontAlignY=45&animation=fadeIn&descSize=24"
+    width="100%"
+  />
+</picture>
 
-[![Code Scanning](https://github.com/seantomburke/sitemapper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/seantomburke/sitemapper/actions/workflows/codeql-analysis.yml)
-[![NPM Publish](https://github.com/seantomburke/sitemapper/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/seantomburke/sitemapper/actions/workflows/npm-publish.yml)
-[![Version Bump](https://github.com/seantomburke/sitemapper/actions/workflows/version-bump.yml/badge.svg?branch=master&event=push)](https://github.com/seantomburke/sitemapper/actions/workflows/version-bump.yml)
+<div align="center">
+
+
 [![Test](https://github.com/seantomburke/sitemapper/actions/workflows/test.yml/badge.svg?branch=master&event=push)](https://github.com/seantomburke/sitemapper/actions/workflows/test.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/seantomburke/sitemapper?token=XhiEgaHFWL)](https://codecov.io/gh/seantomburke/sitemapper)
-[![CodeFactor](https://www.codefactor.io/repository/github/seantomburke/sitemapper/badge)](https://www.codefactor.io/repository/github/seantomburke/sitemapper)
-[![GitHub license](https://img.shields.io/github/license/seantomburke/sitemapper)](https://github.com/seantomburke/sitemapper/blob/master/LICENSE)
-[![GitHub release date](https://img.shields.io/github/release-date/seantomburke/sitemapper.svg)](https://github.com/seantomburke/sitemapper/releases)
-[![Inline docs](https://inch-ci.org/github/seantomburke/sitemapper.svg?branch=master&style=shields)](https://inch-ci.org/github/seantomburke/sitemapper)
-[![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/sitemapper)](https://libraries.io/npm/sitemapper)
-[![license](https://img.shields.io/github/license/seantomburke/sitemapper.svg)](https://github.com/seantomburke/sitemapper/blob/main/LICENSE)
-[![Monthly Downloads](https://img.shields.io/npm/dm/sitemapper.svg)](https://www.npmjs.com/package/sitemapper)
 [![npm version](https://badge.fury.io/js/sitemapper.svg)](https://badge.fury.io/js/sitemapper)
-[![release](https://img.shields.io/github/release/seantomburke/sitemapper.svg)](https://github.com/seantomburke/sitemapper/releases/latest)
-[![scrutinizer](https://img.shields.io/scrutinizer/quality/g/seantomburke/sitemapper.svg?style=flat-square)](https://scrutinizer-ci.com/g/seantomburke/sitemapper/)
+[![Monthly Downloads](https://img.shields.io/npm/dm/sitemapper.svg)](https://www.npmjs.com/package/sitemapper)
+[![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/sitemapper)](https://libraries.io/npm/sitemapper)
+[![License MIT](https://img.shields.io/github/license/seantomburke/sitemapper)](https://github.com/seantomburke/sitemapper/blob/master/LICENSE)
 
-Parse through a sitemaps xml to get all the urls for your crawler.
+</div>
 
-## Installation
+## 📋 Overview
+
+Sitemapper is a Node.js module that makes it easy to parse XML sitemaps. It supports single sitemaps, sitemap indexes with multiple sitemaps, and various sitemap formats including image and video sitemaps.
+
+## 🚀 Installation
 
 ```bash
+# Using npm
 npm install sitemapper --save
+
+# Using yarn
+yarn add sitemapper
+
+# Using pnpm
+pnpm add sitemapper
 ```
 
-## Simple Example
+## 🏃‍♂️ Quick Start
 
-```javascript
-const Sitemapper = require('sitemapper');
-
-const sitemap = new Sitemapper();
-
-sitemap.fetch('https://wp.seantburke.com/sitemap.xml').then(function (sites) {
-  console.log(sites);
-});
-```
-
-## Examples
+### Module Usage
 
 ```javascript
 import Sitemapper from 'sitemapper';
 
-(async () => {
+const sitemap = new Sitemapper({
+  timeout: 10000, // 10 second timeout
+});
+
+sitemap.fetch('https://gosla.sh/sitemap.xml')
+  .then(({ url, sites }) => {
+    console.log('Sites: ', sites);
+  })
+  .catch(error => console.error(error));
+```
+
+### CLI Usage
+
+You can also use Sitemapper directly from the command line:
+
+```bash
+# Using npx
+npx sitemapper https://gosla.sh/sitemap.xml
+```
+
+## 💻 Examples
+
+### Promise Example
+
+```javascript
+import Sitemapper from 'sitemapper';
+
+const sitemap = new Sitemapper();
+
+sitemap.fetch('https://wp.seantburke.com/sitemap.xml')
+  .then(({ url, sites }) => {
+    console.log(`Sitemap URL: ${url}`);
+    console.log(`Found ${sites.length} URLs`);
+    console.log(sites);
+  })
+  .catch(error => console.error(error));
+```
+
+### Async/Await Example
+
+```javascript
+import Sitemapper from 'sitemapper';
+
+async function parseSitemap() {
   const Google = new Sitemapper({
     url: 'https://www.google.com/work/sitemap.xml',
     timeout: 15000, // 15 seconds
+    concurrency: 10,
   });
 
   try {
     const { sites } = await Google.fetch();
+    console.log(`Found ${sites.length} URLs in the sitemap`);
     console.log(sites);
   } catch (error) {
-    console.log(error);
+    console.error('Error fetching sitemap:', error);
   }
-})();
-
-// or
-
-const sitemapper = new Sitemapper();
-sitemapper.timeout = 5000;
-
-sitemapper
-  .fetch('https://wp.seantburke.com/sitemap.xml')
-  .then(({ url, sites }) => console.log(`url:${url}`, 'sites:', sites))
-  .catch((error) => console.log(error));
-```
-
-## Options
-
-You can add options on the initial Sitemapper object when instantiating it.
-
-- `requestHeaders`: (Object) - Additional Request Headers (e.g. `User-Agent`)
-- `timeout`: (Number) - Maximum timeout in ms for a single URL. Default: 15000 (15 seconds)
-- `url`: (String) - Sitemap URL to crawl
-- `debug`: (Boolean) - Enables/Disables debug console logging. Default: False
-- `concurrency`: (Number) - Sets the maximum number of concurrent sitemap crawling threads. Default: 10
-- `retries`: (Number) - Sets the maximum number of retries to attempt in case of an error response (e.g. 404 or Timeout). Default: 0
-- `rejectUnauthorized`: (Boolean) - If true, it will throw on invalid certificates, such as expired or self-signed ones. Default: True
-- `lastmod`: (Number) - Timestamp of the minimum lastmod value allowed for returned urls
-- `proxyAgent`: (HttpProxyAgent|HttpsProxyAgent) - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
-- `exclusions`: (Array<RegExp>) - Array of regex patterns to exclude URLs from being processed
-- `fields`: (Object) - An object of fields to be returned from the sitemap. Leaving a field out has the same effect as `<field>: false`. If not specified sitemapper defaults to returning the 'classic' array of urls. Available fields:
-  - `loc`: (Boolean) - The URL location of the page
-  - `sitemap`: (Boolean) - The URL of the sitemap containing the URL, useful if <sitemapindex> was used in the sitemap
-  - `lastmod`: (Boolean) - The date of last modification of the page
-  - `changefreq`: (Boolean) - How frequently the page is likely to change
-  - `priority`: (Boolean) - The priority of this URL relative to other URLs on your site
-  - `image:loc`: (Boolean) - The URL location of the image (for image sitemaps)
-  - `image:title`: (Boolean) - The title of the image (for image sitemaps)
-  - `image:caption`: (Boolean) - The caption of the image (for image sitemaps)
-  - `video:title`: (Boolean) - The title of the video (for video sitemaps)
-  - `video:description`: (Boolean) - The description of the video (for video sitemaps)
-  - `video:thumbnail_loc`: (Boolean) - The thumbnail URL of the video (for video sitemaps)
-
-For Example:
-
-```
-fields: {
-  loc: true,
-  lastmod: true,
-  changefreq: true,
-  priority: true,
 }
+
+parseSitemap();
 ```
 
-Leaving a field out has the same effect as `<field>: false`. If not specified sitemapper defaults to returning the 'classic' array of urls.
-
-An example using all available options:
+### Advanced Example with Proxy
 
 ```javascript
+import Sitemapper from 'sitemapper';
 import { HttpsProxyAgent } from 'hpagent';
 
 const sitemapper = new Sitemapper({
-  requestHeaders: {
-    'User-Agent':
-      'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0',
-  },
-  timeout: 15000,
-  url: 'https://art-works.community/sitemap.xml',
+  url: 'https://gosla.sh/sitemap.xml',
+  timeout: 30000,
+  concurrency: 5,
+  retries: 2,
   debug: true,
-  concurrency: 2,
-  retries: 1,
-  lastmod: 1600000000000,
   proxyAgent: new HttpsProxyAgent({
     proxy: 'http://localhost:8080',
   }),
-  exclusions: [/\/v1\//, /scary/],
-  rejectUnauthorized: false,
+  requestHeaders: {
+    'User-Agent': 'Mozilla/5.0 (compatible; SitemapperBot/1.0)',
+  },
   fields: {
     loc: true,
     lastmod: true,
-    priority: true,
-    changefreq: true,
     sitemap: true,
   },
 });
+
+sitemapper.fetch()
+  .then(({ sites }) => console.log(sites))
+  .catch(error => console.error(error));
 ```
+
+## ⚙️ Configuration Options
+
+Sitemapper can be customized with the following options:
+
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>url</code></td>
+      <td>String</td>
+      <td><code>undefined</code></td>
+      <td>The URL of the sitemap to parse</td>
+    </tr>
+    <tr>
+      <td><code>timeout</code></td>
+      <td>Number</td>
+      <td><code>15000</code></td>
+      <td>Maximum timeout in milliseconds for each request</td>
+    </tr>
+    <tr>
+      <td><code>concurrency</code></td>
+      <td>Number</td>
+      <td><code>10</code></td>
+      <td>Maximum number of concurrent requests when crawling multiple sitemaps</td>
+    </tr>
+    <tr>
+      <td><code>retries</code></td>
+      <td>Number</td>
+      <td><code>0</code></td>
+      <td>Number of retry attempts for failed requests</td>
+    </tr>
+    <tr>
+      <td><code>debug</code></td>
+      <td>Boolean</td>
+      <td><code>false</code></td>
+      <td>Enable debug logging</td>
+    </tr>
+    <tr>
+      <td><code>rejectUnauthorized</code></td>
+      <td>Boolean</td>
+      <td><code>true</code></td>
+      <td>Reject invalid SSL certificates (like self-signed or expired)</td>
+    </tr>
+    <tr>
+      <td><code>requestHeaders</code></td>
+      <td>Object</td>
+      <td><code>{}</code></td>
+      <td>Additional HTTP headers to include with requests</td>
+    </tr>
+    <tr>
+      <td><code>lastmod</code></td>
+      <td>Number</td>
+      <td><code>undefined</code></td>
+      <td>Only return URLs with lastmod timestamp newer than this value</td>
+    </tr>
+    <tr>
+      <td><code>proxyAgent</code></td>
+      <td>HttpProxyAgent | HttpsProxyAgent</td>
+      <td><code>undefined</code></td>
+      <td>Instance of <code>hpagent</code> for proxy support</td>
+    </tr>
+    <tr>
+      <td><code>exclusions</code></td>
+      <td>Array&lt;RegExp&gt;</td>
+      <td><code>[]</code></td>
+      <td>Array of regex patterns to exclude URLs from results</td>
+    </tr>
+    <tr>
+      <td><code>fields</code></td>
+      <td>Object</td>
+      <td><code>undefined</code></td>
+      <td>Specify which fields to include in the results (see below)</td>
+    </tr>
+  </tbody>
+</table>
+
+### Available Fields
+
+**Important**: When using the `fields` option, the return format changes from an array of URL strings to an array of objects containing your selected fields.
+
+For the `fields` option, specify which fields to include by setting them to `true`:
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>loc</code></td>
+      <td>URL location of the page</td>
+    </tr>
+    <tr>
+      <td><code>sitemap</code></td>
+      <td>URL of the sitemap containing this URL (useful for sitemap indexes)</td>
+    </tr>
+    <tr>
+      <td><code>lastmod</code></td>
+      <td>Date of last modification</td>
+    </tr>
+    <tr>
+      <td><code>changefreq</code></td>
+      <td>How frequently the page is likely to change</td>
+    </tr>
+    <tr>
+      <td><code>priority</code></td>
+      <td>Priority of this URL relative to other URLs</td>
+    </tr>
+    <tr>
+      <td><code>image:loc</code></td>
+      <td>URL location of the image (for image sitemaps)</td>
+    </tr>
+    <tr>
+      <td><code>image:title</code></td>
+      <td>Title of the image (for image sitemaps)</td>
+    </tr>
+    <tr>
+      <td><code>image:caption</code></td>
+      <td>Caption of the image (for image sitemaps)</td>
+    </tr>
+    <tr>
+      <td><code>video:title</code></td>
+      <td>Title of the video (for video sitemaps)</td>
+    </tr>
+    <tr>
+      <td><code>video:description</code></td>
+      <td>Description of the video (for video sitemaps)</td>
+    </tr>
+    <tr>
+      <td><code>video:thumbnail_loc</code></td>
+      <td>Thumbnail URL of the video (for video sitemaps)</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Example Default Output (without fields)
+```javascript
+// Returns an array of URL strings
+[
+  "https://wp.seantburke.com/?p=234",
+  "https://wp.seantburke.com/?p=231",
+  "https://wp.seantburke.com/?p=185"
+]
+```
+
+#### Example Output with Fields
+```javascript
+// Returns an array of objects
+[
+  {
+    "loc": "https://wp.seantburke.com/?p=234",
+    "lastmod": "2015-07-03T02:05:55+00:00",
+    "priority": 0.8
+  },
+  {
+    "loc": "https://wp.seantburke.com/?p=231",
+    "lastmod": "2015-07-03T01:47:29+00:00",
+    "priority": 0.8
+  }
+]
+```
+
+## 🧩 CLI Usage
+
+Sitemapper includes a simple CLI tool for basic sitemap parsing directly from the command line:
+
+```bash
+npx sitemapper <sitemap-url>
+```
+
+### Example
+
+```bash
+npx sitemapper https://gosla.sh/sitemap.xml
+```
+
+#### Output
+
+The CLI will display the sitemap URL and list all URLs found in the sitemap:
+
+```
+Sitemap URL: https://gosla.sh/sitemap.xml
+
+Found URLs:
+1. https://gosla.sh/page1
+2. https://gosla.sh/page2
+3. https://gosla.sh/page3
+...
+```
+
+### CLI Options
+
+Currently, the CLI supports the `--timeout` parameter to set the request timeout in milliseconds:
+
+```bash
+npx sitemapper https://gosla.sh/sitemap.xml --timeout=5000
+```
+
+> **Note**: The CLI implementation is basic and does not yet support all options available in the JavaScript API. More advanced features like fields filtering, concurrency control, and different output formats require using the JavaScript API directly.
+
+## 🤝 Contributing
+
+Contributions from experienced engineers are highly valued. When contributing, please consider:
+
+### Guidelines
+- Maintain backward compatibility where possible
+- Consider performance implications, particularly for large sitemaps
+- Add TypeScript types
+- Add tests for your change
+- Update documentation and examples
+- Check for typos
+- Code should pass ESLint, Prettier, Spell Check and TypeScript checks
+- Try not to bloat the main dependencies with new packages, dev dependencies are fine
+- If adding packages, make sure to run `npm install` with the latest NPM version to update package-lock.json
+
+### Pull Request Process
+- PRs should be focused on a single concern/feature
+- Include sufficient context in the PR description
+- Reference any relevant issues
+- Run `npm test` locally to verify your changes pass the test
+  - Sometimes the tests will fail since they reference real world sitemaps. Try running it again.
+- PRs will not run github actions by default, they need to be run manually by @seantomburke
+
+For substantial changes, consider opening an issue for discussion before implementation.
+
+> **Note**: The CI pipeline enforces TypeScript type checking, linting rules, formatting standards, and test coverage thresholds.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
