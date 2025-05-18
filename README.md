@@ -17,7 +17,6 @@
 
 <div align="center">
 
-
 [![Test](https://github.com/seantomburke/sitemapper/actions/workflows/test.yml/badge.svg?branch=master&event=push)](https://github.com/seantomburke/sitemapper/actions/workflows/test.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/seantomburke/sitemapper?token=XhiEgaHFWL)](https://codecov.io/gh/seantomburke/sitemapper)
 [![npm version](https://badge.fury.io/js/sitemapper.svg)](https://badge.fury.io/js/sitemapper)
@@ -55,11 +54,12 @@ const sitemap = new Sitemapper({
   timeout: 10000, // 10 second timeout
 });
 
-sitemap.fetch('https://gosla.sh/sitemap.xml')
+sitemap
+  .fetch('https://gosla.sh/sitemap.xml')
   .then(({ url, sites }) => {
     console.log('Sites: ', sites);
   })
-  .catch(error => console.error(error));
+  .catch((error) => console.error(error));
 ```
 
 ### CLI Usage
@@ -80,13 +80,14 @@ import Sitemapper from 'sitemapper';
 
 const sitemap = new Sitemapper();
 
-sitemap.fetch('https://wp.seantburke.com/sitemap.xml')
+sitemap
+  .fetch('https://wp.seantburke.com/sitemap.xml')
   .then(({ url, sites }) => {
     console.log(`Sitemap URL: ${url}`);
     console.log(`Found ${sites.length} URLs`);
     console.log(sites);
   })
-  .catch(error => console.error(error));
+  .catch((error) => console.error(error));
 ```
 
 ### Async/Await Example
@@ -138,9 +139,10 @@ const sitemapper = new Sitemapper({
   },
 });
 
-sitemapper.fetch()
+sitemapper
+  .fetch()
   .then(({ sites }) => console.log(sites))
-  .catch(error => console.error(error));
+  .catch((error) => console.error(error));
 ```
 
 ## ⚙️ Configuration Options
@@ -288,30 +290,32 @@ For the `fields` option, specify which fields to include by setting them to `tru
 </table>
 
 #### Example Default Output (without fields)
+
 ```javascript
 // Returns an array of URL strings
 [
-  "https://wp.seantburke.com/?p=234",
-  "https://wp.seantburke.com/?p=231",
-  "https://wp.seantburke.com/?p=185"
-]
+  'https://wp.seantburke.com/?p=234',
+  'https://wp.seantburke.com/?p=231',
+  'https://wp.seantburke.com/?p=185',
+];
 ```
 
 #### Example Output with Fields
+
 ```javascript
 // Returns an array of objects
 [
   {
-    "loc": "https://wp.seantburke.com/?p=234",
-    "lastmod": "2015-07-03T02:05:55+00:00",
-    "priority": 0.8
+    loc: 'https://wp.seantburke.com/?p=234',
+    lastmod: '2015-07-03T02:05:55+00:00',
+    priority: 0.8,
   },
   {
-    "loc": "https://wp.seantburke.com/?p=231",
-    "lastmod": "2015-07-03T01:47:29+00:00",
-    "priority": 0.8
-  }
-]
+    loc: 'https://wp.seantburke.com/?p=231',
+    lastmod: '2015-07-03T01:47:29+00:00',
+    priority: 0.8,
+  },
+];
 ```
 
 ## 🧩 CLI Usage
@@ -357,6 +361,7 @@ npx sitemapper https://gosla.sh/sitemap.xml --timeout=5000
 Contributions from experienced engineers are highly valued. When contributing, please consider:
 
 ### Guidelines
+
 - Maintain backward compatibility where possible
 - Consider performance implications, particularly for large sitemaps
 - Add TypeScript types
@@ -368,6 +373,7 @@ Contributions from experienced engineers are highly valued. When contributing, p
 - If adding packages, make sure to run `npm install` with the latest NPM version to update package-lock.json
 
 ### Pull Request Process
+
 - PRs should be focused on a single concern/feature
 - Include sufficient context in the PR description
 - Reference any relevant issues
