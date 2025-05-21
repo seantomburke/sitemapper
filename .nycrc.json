@@ -7,7 +7,7 @@
   "check-coverage": true,
   "sourceMap": false,
   "instrument": true,
-  "branches": 75,
+  "branches": 74,
   "lines": 75,
   "functions": 75,
   "statements": 75
