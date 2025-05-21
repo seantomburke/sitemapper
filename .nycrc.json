@@ -6,5 +6,9 @@
   "reporter": ["lcov", "text-summary"],
   "check-coverage": true,
   "sourceMap": false,
-  "instrument": true
+  "instrument": true,
+  "branches": 75,
+  "lines": 75,
+  "functions": 75,
+  "statements": 75
 }
