@@ -14,8 +14,11 @@ export default (api) => {
     'minify', // minify the Babel code
   ];
 
-  // Remove the add-module-exports plugin for ESM output
+  // Add the istanbul plugin for coverage instrumentation in test environment
   const plugins = [];
+  if (process.env.NODE_ENV === 'test') {
+    plugins.push('babel-plugin-istanbul');
+  }
 
   return {
     presets,

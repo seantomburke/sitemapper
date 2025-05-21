@@ -23,5 +23,5 @@
   "allowCompoundWords": true,
   "flagWords": [],
   "ignoreWords": [],
-  "ignorePaths": ["node_modules/"]
+  "ignorePaths": ["node_modules/", "coverage/", "lib/"]
 }
