@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run coverage:*)",
+      "Bash(npm run test:js:*)",
+      "Bash(npm run *)",
+      "Bash(npm run build:*)",
+      "Bash(npx nyc report:*)"
+    ],
+    "deny": []
+  }
+}
