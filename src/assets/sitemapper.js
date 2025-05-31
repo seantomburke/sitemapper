@@ -11,6 +11,8 @@ import got from 'got';
 import zlib from 'zlib';
 import pLimit from 'p-limit';
 import isGzip from 'is-gzip';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * @typedef {Object} Sitemapper
@@ -175,13 +177,76 @@ export default class Sitemapper {
   }
 
   /**
+   * Checks if the provided path is a local file path rather than a URL
+   *
+   * @private
+   * @param {string} input - the input to check
+   * @returns {boolean}
+   */
+  isLocalFile(input) {
+    if (!input) return false;
+    
+    // Check if it's a URL
+    if (input.startsWith('http://') || input.startsWith('https://')) {
+      return false;
+    }
+    
+    // Check if it's a file path that exists
+    try {
+      return fs.existsSync(input) && fs.statSync(input).isFile();
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Reads and parses a local sitemap file
+   *
+   * @private
+   * @param {string} filePath - the path to the local sitemap file
+   * @returns {Promise<ParseData>}
+   */
+  async parseLocalFile(filePath) {
+    try {
+      let fileContent = fs.readFileSync(filePath);
+      
+      // Handle gzipped files
+      if (isGzip(fileContent)) {
+        fileContent = await this.decompressResponseBody(fileContent);
+      }
+
+      // Parse XML using fast-xml-parser
+      const parser = new XMLParser({
+        isArray: (tagName) =>
+          ['sitemap', 'url'].some((value) => value === tagName),
+        removeNSPrefix: true,
+      });
+
+      const data = parser.parse(fileContent.toString());
+
+      // return the results
+      return { error: null, data };
+    } catch (error) {
+      return {
+        error: `Error reading local file: ${error.message}`,
+        data: error,
+      };
+    }
+  }
+
+  /**
    * Requests the URL and uses fast-xml-parser to parse through and find the data
    *
    * @private
-   * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
+   * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml) or local file path
    * @returns {Promise<ParseData>}
    */
   async parse(url = this.url) {
+    // Check if this is a local file
+    if (this.isLocalFile(url)) {
+      return await this.parseLocalFile(url);
+    }
+
     // setup the response options for the got request
     const requestOptions = {
       method: 'GET',
