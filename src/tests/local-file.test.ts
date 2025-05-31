@@ -20,7 +20,7 @@ function isUrl(url: string): boolean {
 }
 
 import Sitemapper from '../../lib/assets/sitemapper.js';
-import { SitemapperResponse } from '../../sitemapper';
+import { SitemapperResponse } from '../../sitemapper.js';
 let sitemapper: Sitemapper;
 
 describe('Local File Parsing', function () {
