@@ -4,6 +4,10 @@ import 'should';
 import fs from 'fs';
 import path from 'path';
 import zlib from 'zlib';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Simple function to validate URLs using the URL object
 function isUrl(url: string): boolean {

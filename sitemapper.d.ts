@@ -70,7 +70,7 @@ declare class Sitemapper {
   private initializeTimeout(url: string, requester: any): void;
   private crawl(url: string, retryIndex?: number): Promise<any>;
   private parse(url: string): Promise<any>;
-  private isLocalFile(input: string): boolean;
+  isLocalFile(input: string): boolean;
   private parseLocalFile(filePath: string): Promise<any>;
   isExcluded(url: string): boolean;
 

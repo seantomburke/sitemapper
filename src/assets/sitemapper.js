@@ -179,7 +179,7 @@ export default class Sitemapper {
   /**
    * Checks if the provided path is a local file path rather than a URL
    *
-   * @private
+   * @public
    * @param {string} input - the input to check
    * @returns {boolean}
    */
