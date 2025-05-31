@@ -53,9 +53,7 @@ describe('Sitemapper Increased Coverage Tests', function () {
             error: null,
             data: {
               sitemapindex: {
-                sitemap: [
-                  { loc: 'https://example.com/sitemap1.xml' }
-                ],
+                sitemap: [{ loc: 'https://example.com/sitemap1.xml' }],
               },
             },
           };
@@ -119,13 +117,15 @@ describe('Sitemapper Increased Coverage Tests', function () {
       };
 
       try {
-        const result = await retrySitemapper.crawl('https://example.com/empty-sitemap.xml');
-        
+        const result = await retrySitemapper.crawl(
+          'https://example.com/empty-sitemap.xml'
+        );
+
         // Should have retried once
         parseCallCount.should.equal(2);
         retryLogCalled.should.be.true();
         unknownStateErrorCalled.should.be.true();
-        
+
         result.should.have.property('sites').which.is.an.Array();
         result.sites.should.be.empty();
         result.should.have.property('errors').which.is.an.Array();
@@ -158,7 +158,7 @@ describe('Sitemapper Increased Coverage Tests', function () {
       try {
         // Call crawl directly (not through fetch) to test the catch block
         await debugSitemapper.crawl('https://example.com/error-sitemap.xml');
-        
+
         // The error should have been logged
         errorLogged.should.be.true();
       } finally {
@@ -177,7 +177,7 @@ describe('Sitemapper Increased Coverage Tests', function () {
       let parsedUrls: string[] = [];
       excludeMapper.parse = async (url) => {
         parsedUrls.push(url);
-        
+
         if (url.includes('sitemapindex')) {
           return {
             error: null,
@@ -203,13 +203,17 @@ describe('Sitemapper Increased Coverage Tests', function () {
         }
       };
 
-      const result = await excludeMapper.crawl('https://example.com/sitemapindex.xml');
-      
+      const result = await excludeMapper.crawl(
+        'https://example.com/sitemapindex.xml'
+      );
+
       // Should not have parsed the excluded sitemap
-      parsedUrls.should.not.containEql('https://example.com/excluded-sitemap.xml');
+      parsedUrls.should.not.containEql(
+        'https://example.com/excluded-sitemap.xml'
+      );
       parsedUrls.should.containEql('https://example.com/included-sitemap.xml');
       parsedUrls.should.containEql('https://example.com/another-included.xml');
-      
+
       // Results should only contain pages from non-excluded sitemaps
       result.sites.length.should.equal(2);
 
@@ -233,12 +237,12 @@ describe('Sitemapper Increased Coverage Tests', function () {
         sitemapper.getSites('https://example.com/sitemap.xml', (err, sites) => {
           console.warn = originalWarn;
           sitemapper.fetch = originalFetch;
-          
+
           err.should.be.an.Error();
           err.message.should.equal('Fetch error');
           sites.should.be.an.Array();
           sites.should.be.empty();
-          
+
           resolve(undefined);
         });
       });
@@ -249,16 +253,16 @@ describe('Sitemapper Increased Coverage Tests', function () {
     it('should handle response with statusCode !== 200', async function () {
       // Create a test by mocking the internal parse flow
       const testMapper = new Sitemapper();
-      
+
       // Mock parse to simulate the full flow including timeout handling
       const originalParse = testMapper.parse;
-      testMapper.parse = async function(url: string) {
+      testMapper.parse = async function (url: string) {
         const got = (await import('got')).default;
-        
+
         // Set up the timeout table entry that parse would create
         this.timeoutTable = this.timeoutTable || {};
         this.timeoutTable[url] = setTimeout(() => {}, this.timeout);
-        
+
         try {
           // Simulate the parse method's internal flow
           const requestOptions = {
@@ -272,15 +276,15 @@ describe('Sitemapper Increased Coverage Tests', function () {
             },
             agent: this.proxyAgent || {},
           };
-          
+
           // Create a mock requester that immediately resolves with non-200 response
           const mockRequester = {
             cancel: () => {},
           };
-          
+
           // Call initializeTimeout as the real parse would
           this.initializeTimeout(url, mockRequester);
-          
+
           // Simulate response with non-200 status
           const response = {
             statusCode: 503,
@@ -288,25 +292,25 @@ describe('Sitemapper Increased Coverage Tests', function () {
             body: Buffer.from(''),
             rawBody: Buffer.from(''),
           };
-          
+
           // This is the code path we want to test - non-200 response
           if (!response || response.statusCode !== 200) {
             clearTimeout(this.timeoutTable[url]);
             return { error: response.error, data: response };
           }
-          
+
           // This shouldn't be reached
           return { error: null, data: {} };
         } catch (error) {
           return { error: 'Error occurred', data: error };
         }
       };
-      
+
       const result = await testMapper.parse('https://example.com/503.xml');
       result.should.have.property('error').which.equals('Service Unavailable');
       result.should.have.property('data');
       result.data.should.have.property('statusCode').which.equals(503);
-      
+
       testMapper.parse = originalParse;
     });
   });
@@ -342,19 +346,31 @@ describe('Sitemapper Increased Coverage Tests', function () {
         };
       };
 
-      const result = await fieldsMapper.crawl('https://example.com/source-sitemap.xml');
-      
+      const result = await fieldsMapper.crawl(
+        'https://example.com/source-sitemap.xml'
+      );
+
       result.sites.length.should.equal(2);
-      
+
       // Each site should have the sitemap field set to the source URL
-      result.sites[0].should.have.property('sitemap').which.equals('https://example.com/source-sitemap.xml');
-      result.sites[0].should.have.property('loc').which.equals('https://example.com/page1');
-      result.sites[0].should.have.property('lastmod').which.equals('2023-01-01');
-      
-      result.sites[1].should.have.property('sitemap').which.equals('https://example.com/source-sitemap.xml');
-      result.sites[1].should.have.property('loc').which.equals('https://example.com/page2');
+      result.sites[0].should.have
+        .property('sitemap')
+        .which.equals('https://example.com/source-sitemap.xml');
+      result.sites[0].should.have
+        .property('loc')
+        .which.equals('https://example.com/page1');
+      result.sites[0].should.have
+        .property('lastmod')
+        .which.equals('2023-01-01');
+
+      result.sites[1].should.have
+        .property('sitemap')
+        .which.equals('https://example.com/source-sitemap.xml');
+      result.sites[1].should.have
+        .property('loc')
+        .which.equals('https://example.com/page2');
       result.sites[1].should.not.have.property('lastmod'); // This URL didn't have lastmod
-      
+
       fieldsMapper.parse = originalParse;
     });
   });

@@ -1,11 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run coverage:*)",
-      "Bash(npm run test:js:*)",
-      "Bash(npm run *)",
-      "Bash(npm run build:*)",
-      "Bash(npx nyc report:*)"
+      "Bash(npm run:*)",
+      "Bash(npm test:*)",
+      "Bash(npx nyc report:*)",
+      "Bash(npx mocha:*)",
+      "Bash(grep:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run test:*)"
     ],
     "deny": []
   }
