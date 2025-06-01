@@ -208,11 +208,12 @@ export default class Sitemapper {
    */
   async parseLocalFile(filePath) {
     try {
-      let fileContent = fs.readFileSync(filePath);
+      const fileContent = await fs.promises.readFile(filePath);
       
+      let content = fileContent;
       // Handle gzipped files
       if (isGzip(fileContent)) {
-        fileContent = await this.decompressResponseBody(fileContent);
+        content = await this.decompressResponseBody(fileContent);
       }
 
       // Parse XML using fast-xml-parser
@@ -222,7 +223,7 @@ export default class Sitemapper {
         removeNSPrefix: true,
       });
 
-      const data = parser.parse(fileContent.toString());
+      const data = parser.parse(content.toString());
 
       // return the results
       return { error: null, data };
