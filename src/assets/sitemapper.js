@@ -52,6 +52,7 @@ export default class Sitemapper {
     this.fields = settings.fields || false;
     this.proxyAgent = settings.proxyAgent || {};
     this.exclusions = settings.exclusions || [];
+    this.visitedUrls = new Set();
   }
 
   /**
@@ -277,6 +278,19 @@ export default class Sitemapper {
    * @returns {Promise<SitesData>}
    */
   async crawl(url, retryIndex = 0) {
+    // Only check for circular references on the first attempt (retryIndex === 0)
+    if (retryIndex === 0 && this.visitedUrls.has(url)) {
+      if (this.debug) {
+        console.warn(`Circular reference detected, skipping: ${url}`);
+      }
+      return { sites: [], errors: [] };
+    }
+
+    // Only add to visited URLs on the first attempt
+    if (retryIndex === 0) {
+      this.visitedUrls.add(url);
+    }
+
     try {
       const { error, data } = await this.parse(url);
       // The promise resolved, remove the timeout
@@ -421,6 +435,11 @@ export default class Sitemapper {
     } catch (e) {
       if (this.debug) {
         this.debug && console.error(e);
+      }
+    } finally {
+      // Only remove from visited URLs on the first attempt
+      if (retryIndex === 0) {
+        this.visitedUrls.delete(url);
       }
     }
   }
