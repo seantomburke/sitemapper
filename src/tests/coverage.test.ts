@@ -44,6 +44,20 @@ describe('Sitemapper Coverage Tests', function () {
       // Reset to initial value
       sitemapper.debug = initialValue;
     });
+
+    it('should properly get and set globalTimeout', () => {
+      const initialValue = sitemapper.globalTimeout;
+      sitemapper.globalTimeout = 60000;
+      sitemapper.globalTimeout.should.equal(60000);
+      sitemapper.globalTimeout = initialValue;
+    });
+
+    it('should properly get and set isGlobalTimeoutToBeUsed', () => {
+      const initialValue = sitemapper.isGlobalTimeoutToBeUsed;
+      sitemapper.isGlobalTimeoutToBeUsed = true;
+      sitemapper.isGlobalTimeoutToBeUsed.should.equal(true);
+      sitemapper.isGlobalTimeoutToBeUsed = initialValue;
+    });
   });
 
   describe('Advanced crawling scenarios', function () {

@@ -29,6 +29,7 @@ export default class Sitemapper {
    * @params {lastmod} [options.lastmod] - the minimum lastmod value for urls
    * @params {hpagent.HttpProxyAgent|hpagent.HttpsProxyAgent} [options.proxyAgent] - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
    * @params {Array<RegExp>} [options.exclusions] - Array of regex patterns to exclude URLs
+   * @params {integer} [options.globalTimeout] - The number of milliseconds for the entire crawling process. The promises will still resolve so you'll still receive parts of the request, but maybe not all urls
    *
    * @example let sitemap = new Sitemapper({
    *   url: 'https://wp.seantburke.com/sitemap.xml',
@@ -52,6 +53,9 @@ export default class Sitemapper {
     this.fields = settings.fields || false;
     this.proxyAgent = settings.proxyAgent || {};
     this.exclusions = settings.exclusions || [];
+    this.globalTimeout = settings.globalTimeout || null;
+    this.isGlobalTimeoutToBeUsed =
+      typeof this.globalTimeout === 'number' && this.globalTimeout > 0;
   }
 
   /**
@@ -71,6 +75,10 @@ export default class Sitemapper {
       errors: [],
     };
 
+    const signal = this.isGlobalTimeoutToBeUsed
+      ? AbortSignal.timeout(this.globalTimeout)
+      : undefined;
+
     // attempt to set the variables with the crawl
     if (this.debug) {
       // only show if it's set
@@ -81,7 +89,7 @@ export default class Sitemapper {
 
     try {
       // crawl the URL
-      results = await this.crawl(url);
+      results = await this.crawl(url, 0, signal);
     } catch (e) {
       // show errors that may occur
       if (this.debug) {
@@ -115,6 +123,16 @@ export default class Sitemapper {
    */
   static set timeout(duration) {
     this.timeout = duration;
+  }
+
+  /**
+   * Get the global timeout
+   *
+   * @example console.log(sitemapper.globalTimeout);
+   * @returns {number}
+   */
+  static get globalTimeout() {
+    return this.globalTimeout;
   }
 
   /**
@@ -181,7 +199,7 @@ export default class Sitemapper {
    * @param {string} [url] - the Sitemaps url (e.g https://wp.seantburke.com/sitemap.xml)
    * @returns {Promise<ParseData>}
    */
-  async parse(url = this.url) {
+  async parse(url = this.url, signal) {
     // setup the response options for the got request
     const requestOptions = {
       method: 'GET',
@@ -193,6 +211,7 @@ export default class Sitemapper {
         rejectUnauthorized: this.rejectUnauthorized,
       },
       agent: this.proxyAgent,
+      signal,
     };
 
     try {
@@ -237,6 +256,11 @@ export default class Sitemapper {
           error: `Request timed out after ${this.timeout} milliseconds for url: '${url}'`,
           data: error,
         };
+      } else if (error.name === 'AbortError') {
+        return {
+          error: `Aborted: request cancelled for url: '${url}'`,
+          data: error,
+        };
       }
 
       // If an HTTPError include error http code
@@ -276,9 +300,24 @@ export default class Sitemapper {
    * @param {integer} retryIndex - number of retry attempts fro this URL (e.g. 0 for 1st attempt, 1 for second attempty etc.)
    * @returns {Promise<SitesData>}
    */
-  async crawl(url, retryIndex = 0) {
+  async crawl(url, retryIndex = 0, signal) {
     try {
-      const { error, data } = await this.parse(url);
+      // Check if the global timeout has been reached
+      if (signal?.aborted) {
+        return {
+          sites: [],
+          errors: [
+            {
+              type: 'AbortError',
+              message: 'Global timeout reached',
+              url,
+              retries: retryIndex,
+            },
+          ],
+        };
+      }
+
+      const { error, data } = await this.parse(url, signal);
       // The promise resolved, remove the timeout
       clearTimeout(this.timeoutTable[url]);
 
@@ -293,7 +332,7 @@ export default class Sitemapper {
               }) ${url} due to ${data.name} on previous request`
             );
           }
-          return this.crawl(url, retryIndex + 1);
+          return this.crawl(url, retryIndex + 1, signal);
         }
 
         if (this.debug) {
@@ -373,7 +412,7 @@ export default class Sitemapper {
         // Parse all child urls within the concurrency limit in the settings
         const limit = pLimit(this.concurrency);
         const promiseArray = sitemap.map((site) =>
-          limit(() => this.crawl(site))
+          limit(() => this.crawl(site, 0, signal))
         );
 
         // Make sure all the promises resolve then filter and reduce the array
@@ -400,7 +439,7 @@ export default class Sitemapper {
             }) ${url} due to ${data.name} on previous request`
           );
         }
-        return this.crawl(url, retryIndex + 1);
+        return this.crawl(url, retryIndex + 1, signal);
       }
       if (this.debug) {
         console.error(`Unknown state during "crawl('${url})'":`, error, data);
