@@ -2,10 +2,9 @@ import 'async';
 import 'assert';
 import 'should';
 import { fileURLToPath } from 'url';
-
-const path = require('path');
-const fs = require('fs');
-const zlib = require('zlib');
+import * as path from 'path';
+import * as fs from 'fs';
+import * as zlib from 'zlib';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
