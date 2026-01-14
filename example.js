@@ -47,7 +47,9 @@ import Sitemapper from 'sitemapper';
 
   // Example with local file
   try {
-    const { url, sites } = await sitemapper.fetch('./src/tests/test-sitemap.xml');
+    const { url, sites } = await sitemapper.fetch(
+      './src/tests/test-sitemap.xml'
+    );
     console.log(`Local file: ${url}`, 'sites:', sites);
   } catch (error) {
     console.log('Local file error:', error);

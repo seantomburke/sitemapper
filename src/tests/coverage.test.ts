@@ -246,7 +246,7 @@ describe('Sitemapper Coverage Tests', function () {
                 {
                   loc: 'https://example.com/page1',
                   lastmod: '2024-01-01',
-                  priority: '0.8',
+                  priority: 0.8,
                   changefreq: 'daily',
                 },
               ],
@@ -260,7 +260,7 @@ describe('Sitemapper Coverage Tests', function () {
       result.sites.length.should.equal(1);
       result.sites[0].should.have.property('loc').which.is.a.String();
       result.sites[0].should.have.property('lastmod').which.is.a.String();
-      result.sites[0].should.have.property('priority').which.is.a.String();
+      result.sites[0].should.have.property('priority').which.is.a.Number();
       result.sites[0].should.have.property('changefreq').which.is.a.String();
 
       // Restore original method

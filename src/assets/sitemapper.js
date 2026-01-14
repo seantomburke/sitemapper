@@ -8,11 +8,10 @@
 
 import { XMLParser } from 'fast-xml-parser';
 import got from 'got';
-import zlib from 'zlib';
 import pLimit from 'p-limit';
 import isGzip from 'is-gzip';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as zlib from 'zlib';
 
 /**
  * @typedef {Object} Sitemapper
@@ -185,12 +184,10 @@ export default class Sitemapper {
    */
   isLocalFile(input) {
     if (!input) return false;
-    
     // Check if it's a URL
     if (input.startsWith('http://') || input.startsWith('https://')) {
       return false;
     }
-    
     // Check if it's a file path that exists
     try {
       return fs.existsSync(input) && fs.statSync(input).isFile();
@@ -209,7 +206,6 @@ export default class Sitemapper {
   async parseLocalFile(filePath) {
     try {
       const fileContent = await fs.promises.readFile(filePath);
-      
       let content = fileContent;
       // Handle gzipped files
       if (isGzip(fileContent)) {
