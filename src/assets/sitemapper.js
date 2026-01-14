@@ -10,6 +10,8 @@ import { XMLParser } from 'fast-xml-parser';
 import got from 'got';
 import pLimit from 'p-limit';
 import isGzip from 'is-gzip';
+import * as fs from 'fs';
+import * as zlib from 'zlib';
 
 /**
  * @typedef {Object} Sitemapper
