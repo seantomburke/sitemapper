@@ -184,12 +184,10 @@ export default class Sitemapper {
    */
   isLocalFile(input) {
     if (!input) return false;
-    
     // Check if it's a URL
     if (input.startsWith('http://') || input.startsWith('https://')) {
       return false;
     }
-    
     // Check if it's a file path that exists
     try {
       return fs.existsSync(input) && fs.statSync(input).isFile();
@@ -208,7 +206,6 @@ export default class Sitemapper {
   async parseLocalFile(filePath) {
     try {
       const fileContent = await fs.promises.readFile(filePath);
-      
       let content = fileContent;
       // Handle gzipped files
       if (isGzip(fileContent)) {
