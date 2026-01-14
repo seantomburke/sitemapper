@@ -1,9 +1,6 @@
 import 'async';
 import 'assert';
 import 'should';
-import fs from 'fs';
-import path from 'path';
-import zlib from 'zlib';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
