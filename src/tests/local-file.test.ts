@@ -112,12 +112,22 @@ describe('Local File Parsing', function () {
           const firstSite = data.sites[0] as any;
           firstSite.should.have.property('loc').which.is.a.String();
           firstSite.should.have.property('lastmod').which.is.a.String();
-          firstSite.should.have.property('priority').which.is.a.String();
+          firstSite.should.have.property('priority').which.is.a.Number();
           firstSite.should.have.property('changefreq').which.is.a.String();
           
           firstSite.loc.should.equal('https://example.com/');
-          firstSite.priority.should.equal('1.0');
+          firstSite.priority.should.equal(1);
           firstSite.changefreq.should.equal('monthly');
+          
+          const secondSite = data.sites[1] as any;
+          secondSite.should.have.property('loc').which.is.a.String();
+          secondSite.should.have.property('lastmod').which.is.a.String();
+          secondSite.should.have.property('priority').which.is.a.Number();
+          secondSite.should.have.property('changefreq').which.is.a.String();
+          
+          secondSite.loc.should.equal('https://example.com/page1');
+          secondSite.priority.should.equal(0.8);
+          secondSite.changefreq.should.equal('weekly');
           
           done();
         })

@@ -33,7 +33,7 @@
     "url": "http://www.seantburke.com"
   },
   "scripts": {
-    "compile": "babel src -d lib -s && tsc --project ./src/tests/",
+    "compile": "babel src -d lib -s && tsc --project ./src/tests/ && cp src/tests/*.xml lib/tests/",
     "build": "npm run clean && npm run compile",
     "start": "npm run build && node lib/examples/index.js",
     "test": "npm run build && npm run test:js && npm run test:ts && npm run lint",
