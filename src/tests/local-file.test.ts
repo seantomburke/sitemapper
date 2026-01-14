@@ -4,6 +4,8 @@ import 'should';
 import { fileURLToPath } from 'url';
 
 const path = require('path');
+const fs = require('fs');
+const zlib = require('zlib');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
