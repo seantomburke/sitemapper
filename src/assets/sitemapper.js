@@ -8,11 +8,10 @@
 
 import { XMLParser } from 'fast-xml-parser';
 import got from 'got';
-import zlib from 'zlib';
 import pLimit from 'p-limit';
 import isGzip from 'is-gzip';
-import fs from 'fs';
-import path from 'path';
+const fs = require('fs');
+const zlib = require('zlib');
 
 /**
  * @typedef {Object} Sitemapper
