@@ -102,33 +102,33 @@ describe('Local File Parsing', function () {
           changefreq: true,
         },
       });
-      
+
       sitemapperWithFields
         .fetch(testFile)
         .then((data) => {
           data.sites.should.be.Array;
           data.sites.length.should.equal(3);
-          
+
           const firstSite = data.sites[0] as any;
           firstSite.should.have.property('loc').which.is.a.String();
           firstSite.should.have.property('lastmod').which.is.a.String();
           firstSite.should.have.property('priority').which.is.a.Number();
           firstSite.should.have.property('changefreq').which.is.a.String();
-          
+
           firstSite.loc.should.equal('https://example.com/');
           firstSite.priority.should.equal(1);
           firstSite.changefreq.should.equal('monthly');
-          
+
           const secondSite = data.sites[1] as any;
           secondSite.should.have.property('loc').which.is.a.String();
           secondSite.should.have.property('lastmod').which.is.a.String();
           secondSite.should.have.property('priority').which.is.a.Number();
           secondSite.should.have.property('changefreq').which.is.a.String();
-          
+
           secondSite.loc.should.equal('https://example.com/page1');
           secondSite.priority.should.equal(0.8);
           secondSite.changefreq.should.equal('weekly');
-          
+
           done();
         })
         .catch((error) => {
@@ -143,7 +143,7 @@ describe('Local File Parsing', function () {
       const sitemapperWithLastmod = new Sitemapper({
         lastmod: new Date('2023-01-02T12:00:00+00:00').getTime(),
       });
-      
+
       sitemapperWithLastmod
         .fetch(testFile)
         .then((data) => {
@@ -164,7 +164,7 @@ describe('Local File Parsing', function () {
       const sitemapperWithExclusions = new Sitemapper({
         exclusions: [/page1/],
       });
-      
+
       sitemapperWithExclusions
         .fetch(testFile)
         .then((data) => {
@@ -202,11 +202,11 @@ describe('Local File Parsing', function () {
       // Create a gzipped version of the test sitemap
       const testFile = path.join(__dirname, 'test-sitemap.xml');
       const gzippedFile = path.join(__dirname, 'test-sitemap.xml.gz');
-      
+
       const content = fs.readFileSync(testFile);
       const gzippedContent = zlib.gzipSync(content);
       fs.writeFileSync(gzippedFile, gzippedContent);
-      
+
       sitemapper
         .fetch(gzippedFile)
         .then((data) => {
@@ -215,7 +215,7 @@ describe('Local File Parsing', function () {
           data.sites.should.containEql('https://example.com/');
           data.sites.should.containEql('https://example.com/page1');
           data.sites.should.containEql('https://example.com/page2');
-          
+
           // Clean up
           fs.unlinkSync(gzippedFile);
           done();
