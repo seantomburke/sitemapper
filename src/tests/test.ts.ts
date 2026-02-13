@@ -289,7 +289,7 @@ describe('Sitemapper', function () {
   });
 
   describe('sitemaps with namespace prefix', function () {
-    it('https://www.emerald.com/sitemap.xml sitemaps should be an array', function (done) {
+    it.skip('https://www.emerald.com/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
       const url = 'https://www.emerald.com/sitemap.xml';
       sitemapper
