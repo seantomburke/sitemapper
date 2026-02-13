@@ -80,18 +80,33 @@ describe('Sitemapper Advanced Tests', function () {
   });
 
   describe('parse error handling', function () {
-    it('should handle network errors during parse', async function () {
-      // Use an unreachable URL to trigger a network error in got
-      const result = await (sitemapper as any).parse(
-        'https://localhost:1/error-test'
-      );
+    it('should handle network errors during parse', function (done) {
+      // Store original fetch implementation
+      const originalFetch = global.fetch;
 
-      // Check the result - got throws a RequestError for network failures
-      result.should.have.property('error').which.is.a.String();
-      result.should.have.property('data').which.is.an.Object();
-      (result.data as any).should.have
-        .property('name')
-        .which.is.equal('RequestError');
+      // Mock fetch to throw a network error
+      (global as any).fetch = () => {
+        const error = new Error('HTTP Error occurred');
+        error.name = 'HTTPError';
+        throw error;
+      };
+
+      (sitemapper as any)
+        .parse('https://example.com/error-test')
+        .then((result) => {
+          // Check the result
+          result.should.have.property('error').which.is.a.String();
+          result.should.have.property('data').which.is.an.Object();
+          (result.data as any).should.have
+            .property('name')
+            .which.is.equal('HTTPError');
+          done();
+        })
+        .catch(done)
+        .finally(() => {
+          // Restore the original fetch
+          (global as any).fetch = originalFetch;
+        });
     });
   });
 
