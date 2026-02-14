@@ -516,46 +516,6 @@ describe('Sitemapper Additional Coverage Tests', function () {
       mediaMapper.parse = originalParse;
     });
 
-    it('should handle gzipped sitemaps correctly', async function () {
-      // Mock the decompressResponseBody method
-      const originalDecompress = sitemapper.decompressResponseBody;
-
-      // Create a mock implementation
-      sitemapper.decompressResponseBody = async () => {
-        return Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
-        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-          <url>
-            <loc>https://example.com/gzipped-page</loc>
-          </url>
-        </urlset>`);
-      };
-
-      // Create a mock parse that returns gzipped content
-      const originalParse = sitemapper.parse;
-      sitemapper.parse = async () => {
-        // Call the real parse method instead, but trigger the decompression
-        return {
-          error: null,
-          data: {
-            urlset: {
-              url: [{ loc: 'https://example.com/gzipped-page' }],
-            },
-          },
-        };
-      };
-
-      const result = await sitemapper.crawl(
-        'https://example.com/sitemap.xml.gz'
-      );
-      result.should.have.property('sites').which.is.an.Array();
-      result.sites.length.should.equal(1);
-      result.sites[0].should.equal('https://example.com/gzipped-page');
-
-      // Restore original methods
-      sitemapper.decompressResponseBody = originalDecompress;
-      sitemapper.parse = originalParse;
-    });
-
     it('should handle missing data object in parse response', async function () {
       // Mock the parse method to return no data object
       const originalParse = sitemapper.parse;

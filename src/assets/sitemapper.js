@@ -10,7 +10,6 @@ import { XMLParser } from 'fast-xml-parser';
 import got from 'got';
 import zlib from 'zlib';
 import pLimit from 'p-limit';
-import isGzip from 'is-gzip';
 
 /**
  * @typedef {Object} Sitemapper
@@ -185,8 +184,7 @@ export default class Sitemapper {
     // setup the response options for the got request
     const requestOptions = {
       method: 'GET',
-      resolveWithFullResponse: true,
-      gzip: true,
+      decompress: true,
       responseType: 'buffer',
       headers: this.requestHeaders,
       https: {
@@ -208,15 +206,23 @@ export default class Sitemapper {
       // if the response does not have a successful status code then clear the timeout for this url.
       if (!response || response.statusCode !== 200) {
         clearTimeout(this.timeoutTable[url]);
-        return { error: response.error, data: response };
+        const statusCode = response ? response.statusCode : 0;
+        const statusMessage = response ? response.statusMessage : 'No response';
+        return {
+          error: `HTTP Error: ${statusCode} ${statusMessage}`,
+          data: response,
+        };
       }
 
-      let responseBody;
-
-      if (isGzip(response.rawBody)) {
-        responseBody = await this.decompressResponseBody(response.body);
-      } else {
-        responseBody = response.body;
+      // got's decompress option handles HTTP Content-Encoding (e.g. gzip),
+      // but raw .gz files served without Content-Encoding need manual decompression.
+      let responseBody = response.body;
+      if (
+        response.body.length > 2 &&
+        response.body[0] === 0x1f &&
+        response.body[1] === 0x8b
+      ) {
+        responseBody = zlib.gunzipSync(response.body);
       }
 
       // Parse XML using fast-xml-parser
@@ -448,25 +454,6 @@ export default class Sitemapper {
       err = error;
     }
     return callback(err, sites);
-  }
-
-  /**
-   * Decompress the gzipped response body using zlib.gunzip
-   *
-   * @param {Buffer} body - body of the gzipped file
-   * @returns {boolean}
-   */
-  async decompressResponseBody(body) {
-    return await new Promise((resolve, reject) => {
-      const buffer = Buffer.from(body);
-      zlib.gunzip(buffer, (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
   }
 
   /**
