@@ -185,8 +185,7 @@ export default class Sitemapper {
     // setup the response options for the got request
     const requestOptions = {
       method: 'GET',
-      resolveWithFullResponse: true,
-      gzip: true,
+      decompress: true,
       responseType: 'buffer',
       headers: this.requestHeaders,
       https: {
