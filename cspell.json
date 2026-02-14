@@ -13,12 +13,13 @@
     "softwareTerms"
   ],
   "words": [
+    "clippy",
     "esmodules",
     "gzipped",
     "hpagent",
     "sdch",
     "seantburke",
-    "sitemapper"
+    "sitemapper",
   ],
   "allowCompoundWords": true,
   "flagWords": [],
