@@ -14,12 +14,13 @@
   ],
   "words": [
     "effectful",
+    "clippy",
     "esmodules",
     "gzipped",
     "hpagent",
     "sdch",
     "seantburke",
-    "sitemapper"
+    "sitemapper",
   ],
   "allowCompoundWords": true,
   "flagWords": [],
