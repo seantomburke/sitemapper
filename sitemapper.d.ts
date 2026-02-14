@@ -70,12 +70,14 @@ declare class Sitemapper {
   private initializeTimeout(url: string, requester: any): void;
   private crawl(url: string, retryIndex?: number): Promise<any>;
   private parse(url: string): Promise<any>;
+  isLocalFile(input: string): boolean;
+  private parseLocalFile(filePath: string): Promise<any>;
   isExcluded(url: string): boolean;
 
   /**
-   * Gets the sites from a sitemap.xml with a given URL
+   * Gets the sites from a sitemap.xml with a given URL or local file path
    *
-   * @param url URL to the sitemap.xml file
+   * @param url URL to the sitemap.xml file or path to a local sitemap file
    */
   fetch(
     this: Sitemapper & { fields: object },
