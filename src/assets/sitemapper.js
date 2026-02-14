@@ -207,8 +207,10 @@ export default class Sitemapper {
       // if the response does not have a successful status code then clear the timeout for this url.
       if (!response || response.statusCode !== 200) {
         clearTimeout(this.timeoutTable[url]);
+        const statusCode = response ? response.statusCode : 0;
+        const statusMessage = response ? response.statusMessage : 'No response';
         return {
-          error: `HTTP Error: ${response.statusCode} ${response.statusMessage}`,
+          error: `HTTP Error: ${statusCode} ${statusMessage}`,
           data: response,
         };
       }
