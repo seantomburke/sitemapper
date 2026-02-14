@@ -96,7 +96,6 @@
   "dependencies": {
     "fast-xml-parser": "^5.3.5",
     "got": "^13.0.0",
-    "is-gzip": "2.0.0",
     "p-limit": "^6.2.0"
   },
   "bin": {
