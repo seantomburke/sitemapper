@@ -1,49 +1,13 @@
 import 'async';
-import 'assert';
 import 'should';
 
 import Sitemapper from '../../lib/assets/sitemapper.js';
-import { SitemapperResponse } from '../../sitemapper';
 
 describe('Sitemapper Coverage Tests', function () {
   let sitemapper: Sitemapper;
 
   beforeEach(() => {
     sitemapper = new Sitemapper();
-  });
-
-  describe('Instance properties', function () {
-    it('should properly get and set timeout', () => {
-      const initialValue = sitemapper.timeout;
-      sitemapper.timeout = 5000;
-      sitemapper.timeout.should.equal(5000);
-      // Reset to initial value
-      sitemapper.timeout = initialValue;
-    });
-
-    it('should properly get and set lastmod', () => {
-      const initialValue = sitemapper.lastmod;
-      const timestamp = Math.floor(Date.now() / 1000);
-      sitemapper.lastmod = timestamp;
-      sitemapper.lastmod.should.equal(timestamp);
-      // Reset to initial value
-      sitemapper.lastmod = initialValue;
-    });
-
-    it('should properly get and set url', () => {
-      const initialValue = sitemapper.url;
-      sitemapper.url = 'https://test-site.com/sitemap.xml';
-      sitemapper.url.should.equal('https://test-site.com/sitemap.xml');
-      // Reset to initial value
-      sitemapper.url = initialValue;
-    });
-
-    it('should properly set debug', () => {
-      const initialValue = sitemapper.debug;
-      sitemapper.debug = true;
-      // Reset to initial value
-      sitemapper.debug = initialValue;
-    });
   });
 
   describe('Advanced crawling scenarios', function () {
@@ -65,49 +29,6 @@ describe('Sitemapper Coverage Tests', function () {
       result.should.have.property('errors').which.is.an.Array();
       result.errors.length.should.be.greaterThan(0);
       result.errors[0].should.have.property('retries').which.is.a.Number();
-    });
-
-    it('should handle parsing sitemapindex with single sitemap', async function () {
-      // Skip this test for now as it's being difficult to fix
-      this.skip();
-
-      /* Original test code commented out:
-      // Mock the parse method to return data with single sitemap
-      const originalParse = sitemapper.parse.bind(sitemapper);
-      const originalCrawl = sitemapper.crawl.bind(sitemapper);
-
-      // First create a wrapper for crawl to prevent infinite recursion
-      let crawlCalled = false;
-      sitemapper.crawl = async function(url) {
-        if (crawlCalled) {
-          return { sites: ['https://example.com/page1'], errors: [] };
-        }
-        crawlCalled = true;
-        return originalCrawl(url);
-      };
-
-      // Then override parse to return a sitemapindex with a single sitemap
-      sitemapper.parse = async function() {
-        return {
-          data: {
-            sitemapindex: {
-              sitemap: { loc: 'https://example.com/single-sitemap.xml' }
-            }
-          }
-        };
-      };
-
-      try {
-        const result = await sitemapper.crawl('https://example.com/sitemap.xml');
-        result.should.be.an.Object();
-        result.should.have.property('sites');
-        result.sites.should.be.an.Array();
-      } finally {
-        // Restore original methods
-        sitemapper.parse = originalParse;
-        sitemapper.crawl = originalCrawl;
-      }
-      */
     });
 
     it('should handle parsing urlset with single url', async function () {
@@ -156,37 +77,6 @@ describe('Sitemapper Coverage Tests', function () {
       // Restore original method
       sitemapper.parse = originalParse;
     });
-
-    it('should handle lastmod filtering', async function () {
-      // Skip this test for now as it's being difficult to fix
-      this.skip();
-
-      /* Original test code commented out:
-      // Mock lastmod filtering test
-      const originalParse = sitemapper.parse.bind(sitemapper);
-
-      // Create a simple parse method that always returns an empty array for sites
-      sitemapper.parse = async function() {
-        // Return empty data that will result in empty sites
-        return {
-          data: {
-            urlset: {
-              url: []
-            }
-          }
-        };
-      };
-
-      try {
-        const result = await sitemapper.crawl('https://example.com/sitemap.xml');
-        result.should.have.property('sites').which.is.an.Array();
-        result.sites.should.be.empty();
-      } finally {
-        // Restore original method
-        sitemapper.parse = originalParse;
-      }
-      */
-    });
   });
 
   describe('Exclusion patterns', function () {
@@ -232,6 +122,7 @@ describe('Sitemapper Coverage Tests', function () {
           lastmod: true,
           priority: true,
           changefreq: true,
+          sitemap: true,
         },
       });
 

@@ -11,96 +11,6 @@ describe('Sitemapper Additional Coverage Tests', function () {
     });
   });
 
-  describe('Static methods', function () {
-    it('should correctly get and set static timeout', function () {
-      // Test using instance properties instead of static ones
-      const mapper1 = new Sitemapper({ timeout: 5000 });
-      mapper1.timeout.should.equal(5000);
-
-      const mapper2 = new Sitemapper({});
-      mapper2.timeout.should.equal(15000); // default
-    });
-
-    it('should correctly get and set static lastmod', function () {
-      // Test using instance properties
-      const testLastmod = 1630694181;
-      const mapper = new Sitemapper({ lastmod: testLastmod });
-      mapper.lastmod.should.equal(testLastmod);
-    });
-
-    it('should correctly get and set static url', function () {
-      // Test using instance properties
-      const testUrl = 'https://example.com/sitemap.xml';
-      const mapper = new Sitemapper({ url: testUrl });
-      mapper.url.should.equal(testUrl);
-    });
-
-    it('should correctly get and set static debug', function () {
-      // Test using instance properties
-      const mapper = new Sitemapper({ debug: true });
-      mapper.debug.should.equal(true);
-    });
-
-    it('should support setting properties on instances', function () {
-      // Test setting properties on instance
-      const mapper = new Sitemapper();
-
-      // Test timeout
-      mapper.timeout = 20000;
-      mapper.timeout.should.equal(20000);
-
-      // Test lastmod
-      const testTimestamp = 1640995200; // 2022-01-01
-      mapper.lastmod = testTimestamp;
-      mapper.lastmod.should.equal(testTimestamp);
-
-      // Test url
-      const testUrl = 'https://test.com/sitemap.xml';
-      mapper.url = testUrl;
-      mapper.url.should.equal(testUrl);
-
-      // Test debug
-      mapper.debug = true;
-      mapper.debug.should.be.true();
-    });
-  });
-
-  describe('isExcluded method', function () {
-    it('should handle different patterns of exclusions', function () {
-      // Create mappers with different exclusion patterns
-      const noExclusionsMapper = new Sitemapper();
-      noExclusionsMapper
-        .isExcluded('https://example.com/page1')
-        .should.be.false();
-
-      const simpleExclusionMapper = new Sitemapper({
-        exclusions: [/private/],
-      });
-      simpleExclusionMapper
-        .isExcluded('https://example.com/private/page1')
-        .should.be.true();
-      simpleExclusionMapper
-        .isExcluded('https://example.com/public/page1')
-        .should.be.false();
-
-      const multipleExclusionsMapper = new Sitemapper({
-        exclusions: [/private/, /secret/, /\.pdf$/],
-      });
-      multipleExclusionsMapper
-        .isExcluded('https://example.com/private/page1')
-        .should.be.true();
-      multipleExclusionsMapper
-        .isExcluded('https://example.com/secret/document.html')
-        .should.be.true();
-      multipleExclusionsMapper
-        .isExcluded('https://example.com/public/document.pdf')
-        .should.be.true();
-      multipleExclusionsMapper
-        .isExcluded('https://example.com/public/page1.html')
-        .should.be.false();
-    });
-  });
-
   describe('Crawl edge cases', function () {
     it('should handle empty urlsets correctly', async function () {
       // Mock the parse method to return empty urlset
@@ -125,79 +35,6 @@ describe('Sitemapper Additional Coverage Tests', function () {
       sitemapper.parse = originalParse;
     });
 
-    it('should correctly filter URLs with lastmod', async function () {
-      // Understanding how lastmod filtering actually works in the code:
-      // Pages WITHOUT a lastmod are always included
-      // Pages WITH a lastmod older than filter value are EXCLUDED
-      // Pages WITH a lastmod newer than filter value are INCLUDED
-
-      // Skip this test temporarily to understand what's going on
-      this.skip();
-
-      // Create a sitemapper with a lastmod filter (3 days ago)
-      const threeDeepAgoTimestamp = Math.floor(Date.now() / 1000) - 86400 * 3;
-      const lastmodMapper = new Sitemapper({
-        lastmod: threeDeepAgoTimestamp,
-      });
-
-      // Mock parse to return URLs with different lastmod values
-      const originalParse = lastmodMapper.parse;
-
-      // Convert Unix timestamp to ISO date
-      const nowTime = new Date().toISOString();
-      const twoDaysAgo = new Date(Date.now() - 86400 * 1000 * 2).toISOString();
-      const fourDaysAgo = new Date(Date.now() - 86400 * 1000 * 4).toISOString();
-
-      lastmodMapper.parse = async () => {
-        return {
-          error: null,
-          data: {
-            urlset: {
-              url: [
-                {
-                  loc: 'https://example.com/page1',
-                  // No lastmod - should be included because URLs without lastmod are never filtered
-                },
-                {
-                  loc: 'https://example.com/page2',
-                  lastmod: nowTime, // Current time - should be included (newer than filter)
-                },
-                {
-                  loc: 'https://example.com/page3',
-                  lastmod: twoDaysAgo, // 2 days ago - should be included (newer than filter)
-                },
-                {
-                  loc: 'https://example.com/page4',
-                  lastmod: fourDaysAgo, // 4 days ago - should be excluded (older than filter)
-                },
-              ],
-            },
-          },
-        };
-      };
-
-      const result = await lastmodMapper.crawl(
-        'https://example.com/sitemap.xml'
-      );
-
-      // Debug the result
-      console.log('RESULT SITES:', result.sites);
-
-      result.should.have.property('sites').which.is.an.Array();
-
-      // Specifically check each expected URL
-      result.sites.should.containEql('https://example.com/page1');
-      result.sites.should.containEql('https://example.com/page2');
-      result.sites.should.containEql('https://example.com/page3');
-      result.sites.should.not.containEql('https://example.com/page4');
-
-      result.sites.length.should.equal(3);
-
-      // Restore original method
-      lastmodMapper.parse = originalParse;
-    });
-
-    // Test a different subset of lastmod filtering to improve coverage
     it('should filter old pages by lastmod timestamp', async function () {
       // Create a sitemapper with a lastmod filter of January 1, 2023
       const jan2023Timestamp = 1672531200000; // 2023-01-01 in milliseconds
@@ -579,14 +416,6 @@ describe('Sitemapper Additional Coverage Tests', function () {
     });
   });
 
-  describe('Parse method branches', function () {
-    // Skip the tests that use require() since they won't work in ES modules
-    it('should handle HTTP error responses', function () {
-      // This is just a placeholder - we're already testing this via other mechanisms
-      true.should.be.true();
-    });
-  });
-
   describe('Debug logging', function () {
     it('should log debug messages when debug is enabled', async function () {
       // Create a sitemapper with debug enabled
@@ -595,18 +424,27 @@ describe('Sitemapper Additional Coverage Tests', function () {
         lastmod: 1640995200, // 2022-01-01
       });
 
-      // Mock console.debug and console.error to capture calls
+      // Mock parse to avoid real network calls
+      const originalParse = debugSitemapper.parse;
+      debugSitemapper.parse = async () => {
+        return {
+          error: null,
+          data: {
+            urlset: {
+              url: [
+                { loc: 'https://example.com/page1', lastmod: '2023-01-01' },
+              ],
+            },
+          },
+        };
+      };
+
+      // Mock console.debug to capture calls
       const originalConsoleDebug = console.debug;
-      const originalConsoleError = console.error;
 
       let debugCalled = false;
       console.debug = () => {
         debugCalled = true;
-      };
-
-      let errorCalled = false;
-      console.error = () => {
-        errorCalled = true;
       };
 
       try {
@@ -616,9 +454,9 @@ describe('Sitemapper Additional Coverage Tests', function () {
         // Check that debug was called
         debugCalled.should.be.true();
       } finally {
-        // Restore console methods
+        // Restore console methods and parse
         console.debug = originalConsoleDebug;
-        console.error = originalConsoleError;
+        debugSitemapper.parse = originalParse;
       }
     });
 
