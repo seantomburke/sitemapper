@@ -58,18 +58,21 @@ npx sitemapper https://example.com/sitemap.xml --timeout=5000
 The `Sitemapper` class handles XML sitemap parsing with these key responsibilities:
 
 1. **HTTP Request Management**
+
    - Uses `got` for HTTP requests with configurable timeout
    - Supports proxy via `hpagent`
    - Handles gzipped responses automatically
    - Implements retry logic for failed requests
 
 2. **XML Parsing Flow**
+
    - `fetch()` → Public API entry point
    - `parse()` → Handles HTTP request and XML parsing
    - `crawl()` → Recursive method that handles both single sitemaps and sitemap indexes
    - Uses `fast-xml-parser` with specific array handling for `sitemap` and `url` elements
 
 3. **Concurrency Control**
+
    - Uses `p-limit` to control concurrent requests when parsing sitemap indexes
    - Default concurrency: 10 simultaneous requests
 
