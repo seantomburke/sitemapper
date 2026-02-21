@@ -43,5 +43,7 @@ jobs:
           git commit -m "chore: bump version to $NEW_VERSION"
           # Push branch commits + the annotated release tag
           git push --follow-tags
-          # Create a GitHub Release for the tagged version
-          gh release create "$CURRENT_VERSION" --title "Release $CURRENT_VERSION" --notes "Releasing version $CURRENT_VERSION to NPM"
+          # Create a GitHub Release for the tagged version (guarded for idempotency on reruns)
+          if ! gh release view "$CURRENT_VERSION" > /dev/null 2>&1; then
+            gh release create "$CURRENT_VERSION" --title "Release $CURRENT_VERSION" --notes "Releasing version $CURRENT_VERSION to NPM"
+          fi
