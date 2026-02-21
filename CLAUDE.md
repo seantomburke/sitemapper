@@ -131,6 +131,19 @@ All workflows must be safe to rerun at any point. Guard every side-effectful ste
 - **GitHub Releases**: check `gh release view $VERSION` before creating
 - **Checkout**: use `fetch-tags: true` so tag existence checks see remote tags
 
+## Documentation Updates
+
+When making significant changes to the codebase, update the README.md to reflect:
+
+- New features or functionality
+- API changes or additions
+- Breaking changes
+- Updated usage examples
+- New configuration options
+- Dependency updates that affect user-facing behavior
+
+Keep documentation in sync with code changes to ensure users have accurate information.
+
 ## Important Notes
 
 - This is an ES module project (`"type": "module"` in package.json)
