@@ -103,7 +103,7 @@
     "sitemapper": "./bin/sitemapper.js"
   },
   "overrides": {
-    "glob": "^11.0.0",
+    "glob": "^11.1.0",
     "minimatch": "^10.2.2",
     "diff": "^8.0.3"
   },
