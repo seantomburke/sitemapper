@@ -1,49 +1,60 @@
-name: Bump and release NPM Version
+name: Bump, Release, and Publish
 
 on:
   push:
     branches:
       - master
-    # file paths to consider in the event. Optional; defaults to all.
-    paths-ignore:
-      - 'package.json'
-      - 'package-lock.json'
 
 permissions:
   contents: write
+  id-token: write # Required for OIDC/NPM trusted publisher
 
 jobs:
-  build:
+  bump-release-publish:
     runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 24
-        uses: actions/setup-node@v4
+        with:
+          fetch-tags: true
+      - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - name: bump version
-        id: bump_version
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm install -g npm@^11.5.1
+      - run: npm ci
+      - run: npm test
+      - name: Tag, publish, and bump version
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          # Capture current version — this is what we're releasing
+
           CURRENT_VERSION=$(node -p "require('./package.json').version.trim()")
-          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-          # Tag the current commit with the release version (before bumping),
-          # guarded so reruns don't fail if the tag already exists
+
+          # Create tag locally (not yet pushed)
           if ! git rev-parse --verify "refs/tags/$CURRENT_VERSION" > /dev/null 2>&1; then
             git tag -a "$CURRENT_VERSION" -m "Release $CURRENT_VERSION"
           fi
-          # Bump package.json for the next development cycle (no auto-tagging by npm)
+
+          # Publish to NPM BEFORE bumping (so package.json version is correct)
+          if ! npm view "sitemapper@$CURRENT_VERSION" version > /dev/null 2>&1; then
+            npm publish
+          fi
+
+          # Bump for next development cycle
           npm version patch --no-git-tag-version
           NEW_VERSION=$(node -p "require('./package.json').version.trim()")
           git add package.json package-lock.json
           git commit -m "chore: bump version to $NEW_VERSION"
-          # Push branch commits + the annotated release tag
+
+          # Push commits + annotated release tag together
           git push --follow-tags
-          # Create a GitHub Release for the tagged version (guarded for idempotency on reruns)
+
+          # Create GitHub Release (idempotent)
           if ! gh release view "$CURRENT_VERSION" > /dev/null 2>&1; then
-            gh release create "$CURRENT_VERSION" --title "Release $CURRENT_VERSION" --notes "Releasing version $CURRENT_VERSION to NPM"
+            gh release create "$CURRENT_VERSION" \
+              --title "Release $CURRENT_VERSION" \
+              --notes "Releasing version $CURRENT_VERSION to NPM"
           fi

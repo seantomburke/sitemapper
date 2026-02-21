@@ -7,3 +7,4 @@ tmp
 lib
 .nyc_output
 coverage
+.claude/settings.local.json
