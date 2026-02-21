@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: write
-  id-token: write  # Required for OIDC/NPM trusted publisher
+  id-token: write # Required for OIDC/NPM trusted publisher
 
 jobs:
   bump-release-publish:
