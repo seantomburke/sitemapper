@@ -25,9 +25,15 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          echo "version=$(node -p "require('./package.json').version.trim()")" >> $GITHUB_OUTPUT
+          # Capture current version — this is what we're releasing
+          CURRENT_VERSION=$(node -p "require('./package.json').version.trim()")
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          # Tag the current commit with the release version (before bumping)
+          git tag -a "$CURRENT_VERSION" -m "Release $CURRENT_VERSION"
+          # Bump package.json for the next development cycle
           npm version patch
-          git push
+          # Push branch commits + the annotated release tag
+          git push --follow-tags
   release:
     runs-on: ubuntu-latest
     needs: build
