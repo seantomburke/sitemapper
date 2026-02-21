@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "grep -q 'git commit' && npm run lint:spell && npm test"
+            "command": "grep -q 'git commit' || exit 0; npm run lint:spell && npm test"
           }
         ]
       }
