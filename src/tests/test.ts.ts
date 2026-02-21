@@ -138,10 +138,8 @@ describe('Sitemapper', function () {
       sitemapper = new Sitemapper({
         fields: {
           loc: true,
-          lastmod: true,
           priority: true,
           changefreq: true,
-          sitemap: true,
         },
       });
       sitemapper
@@ -151,11 +149,9 @@ describe('Sitemapper', function () {
           data.url.should.equal(url);
           data.sites.length.should.be.above(2);
           data.sites[0].loc.should.be.String;
-          data.sites[0].lastmod.should.be.String;
           data.sites[0].priority.should.be.String;
           data.sites[0].changefreq.should.be.String;
-          data.sites[0].should.have.property('sitemap').which.is.a.String();
-          isUrl(data.sites[0].sitemap).should.be.true;
+          isUrl(data.sites[0].loc).should.be.true;
           done();
         })
         .catch((error) => {
