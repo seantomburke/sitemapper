@@ -96,6 +96,15 @@ GitHub Actions workflows enforce:
 
 When tests fail due to external sitemaps being unavailable, retry the workflow.
 
+### GitHub Actions Idempotency
+
+All workflows must be safe to rerun at any point. Guard every side-effectful step:
+
+- **Git tags**: check `git rev-parse --verify refs/tags/$VERSION` before creating
+- **NPM publish**: check `npm view <pkg>@$VERSION` before publishing
+- **GitHub Releases**: check `gh release view $VERSION` before creating
+- **Checkout**: use `fetch-tags: true` so tag existence checks see remote tags
+
 ## Important Notes
 
 - This is an ES module project (`"type": "module"` in package.json)
