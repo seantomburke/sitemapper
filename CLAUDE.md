@@ -2,40 +2,48 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Prerequisites
+
+Commands below use `rtk` (Rust Token Killer) — a CLI proxy that reduces AI token usage by 60-90%. If not installed, drop the `rtk` prefix and commands work normally. Install via:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+```
+
 ## Common Commands
 
 ### Development
 
 ```bash
 # Install dependencies
-npm install
+rtk npm install
 
 # Build the project (compiles ES6 to lib/ and TypeScript tests)
-npm run build
+rtk npm run build
 
-# Run tests
-npm test                    # Full test suite (build + tests + linting)
-npm run test:js            # Run JavaScript tests only
-npm run test:ts            # Run TypeScript type checking only
-npm run test:coverage      # Run tests with code coverage report
+# Run tests (build first — tests run from compiled lib/)
+rtk npm test                    # Full test suite (build + tests + linting)
+rtk npm run test:js            # Run JavaScript tests only (requires prior build)
+rtk npm run test:ts            # Run TypeScript type checking only
+rtk npm run test:coverage      # Run tests with code coverage report
 
-# Run a single test file
-npx mocha ./lib/tests/specific-test.js
+# Run a single test file (must build first)
+rtk npx mocha ./lib/tests/specific-test.js
 
 # Linting and formatting
-npm run lint               # Run all linting checks (ESLint + Prettier + Spell check)
-npm run lint:eslint        # ESLint only
-npm run lint:prettier      # Prettier check only
-npm run lint:prettier -- --write  # Fix Prettier formatting issues
-npm run lint:spell         # CSpell spell check only
+rtk npm run lint               # Run all linting checks (ESLint + Prettier + Spell check)
+rtk npm run lint:eslint        # ESLint only
+rtk npm run lint:prettier      # Prettier check only
+rtk npm run lint:prettier -- --write  # Fix Prettier formatting issues
+rtk npm run lint:spell         # CSpell spell check only
 ```
 
 ### CLI Testing
 
 ```bash
 # Test the CLI tool
-node bin/sitemapper.js https://example.com/sitemap.xml
-npx sitemapper https://example.com/sitemap.xml --timeout=5000
+rtk node bin/sitemapper.js https://example.com/sitemap.xml
+rtk npx sitemapper https://example.com/sitemap.xml --timeout=5000
 ```
 
 ## Architecture Overview
@@ -58,9 +66,9 @@ npx sitemapper https://example.com/sitemap.xml --timeout=5000
 The `Sitemapper` class handles XML sitemap parsing with these key responsibilities:
 
 1. **HTTP Request Management**
-   - Uses `got` for HTTP requests with configurable timeout
+   - Uses `got` (v13) for HTTP requests with configurable timeout
    - Supports proxy via `hpagent`
-   - Handles gzipped responses automatically
+   - `got`'s `decompress: true` handles HTTP Content-Encoding gzip; raw `.gz` files are detected via magic bytes and decompressed with `zlib.gunzipSync`
    - Implements retry logic for failed requests
 
 2. **XML Parsing Flow**
@@ -122,6 +130,19 @@ All workflows must be safe to rerun at any point. Guard every side-effectful ste
 - **NPM publish**: check `npm view <pkg>@$VERSION` before publishing
 - **GitHub Releases**: check `gh release view $VERSION` before creating
 - **Checkout**: use `fetch-tags: true` so tag existence checks see remote tags
+
+## Documentation Updates
+
+When making significant changes to the codebase, update the README.md to reflect:
+
+- New features or functionality
+- API changes or additions
+- Breaking changes
+- Updated usage examples
+- New configuration options
+- Dependency updates that affect user-facing behavior
+
+Keep documentation in sync with code changes to ensure users have accurate information.
 
 ## Important Notes
 
