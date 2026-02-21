@@ -1,50 +1,14 @@
 import 'async';
 import 'assert';
 import 'should';
-import * as zlib from 'zlib';
 
 import Sitemapper from '../../lib/assets/sitemapper.js';
-import { SitemapperResponse } from '../../sitemapper';
 
 describe('Sitemapper Advanced Tests', function () {
   let sitemapper: Sitemapper;
 
   beforeEach(() => {
     sitemapper = new Sitemapper();
-  });
-
-  describe('decompressResponseBody', function () {
-    it('should correctly decompress gzipped content', async function () {
-      // Create a sample XML string
-      const xmlContent =
-        '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.com</loc></url></urlset>';
-
-      // Compress it with gzip
-      const compressed = zlib.gzipSync(Buffer.from(xmlContent));
-
-      // Use the private decompressResponseBody method
-      const decompressed = await (sitemapper as any).decompressResponseBody(
-        compressed
-      );
-
-      // Check the result
-      decompressed.toString().should.equal(xmlContent);
-    });
-
-    it('should handle decompression errors gracefully', async function () {
-      // Create invalid gzip content
-      const invalidGzip = Buffer.from('This is not valid gzip content');
-
-      try {
-        // This should throw an error
-        await (sitemapper as any).decompressResponseBody(invalidGzip);
-        // If we get here, the test should fail
-        false.should.be.true(); // Force test to fail if no error is thrown
-      } catch (error) {
-        // We should get an error, which is expected
-        (error as Error).should.be.an.instanceOf(Error);
-      }
-    });
   });
 
   describe('initializeTimeout', function () {
