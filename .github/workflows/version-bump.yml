@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
+      - run: npm install -g npm@^11.5.1
       - run: npm ci
       - run: npm test
       - name: Tag, publish, and bump version
@@ -39,7 +40,7 @@ jobs:
 
           # Publish to NPM BEFORE bumping (so package.json version is correct)
           if ! npm view "sitemapper@$CURRENT_VERSION" version > /dev/null 2>&1; then
-            npm publish --provenance
+            npm publish
           fi
 
           # Bump for next development cycle
