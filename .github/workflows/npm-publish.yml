@@ -5,8 +5,9 @@
 name: Publish NPM Package
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - '*.*.*'
 
 permissions:
   id-token: write # Required for OIDC
