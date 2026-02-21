@@ -26,9 +26,14 @@ jobs:
           # Capture current version — this is what we're releasing
           CURRENT_VERSION=$(node -p "require('./package.json').version.trim()")
           echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-          # Tag the current commit with the release version (before bumping)
-          git tag -a "$CURRENT_VERSION" -m "Release $CURRENT_VERSION"
-          # Bump package.json for the next development cycle
-          npm version patch
+          # Tag the current commit with the release version (before bumping),
+          # guarded so reruns don't fail if the tag already exists
+          if ! git rev-parse --verify "refs/tags/$CURRENT_VERSION" > /dev/null 2>&1; then
+            git tag -a "$CURRENT_VERSION" -m "Release $CURRENT_VERSION"
+          fi
+          # Bump package.json for the next development cycle (no auto-tagging by npm)
+          npm version patch --no-git-tag-version
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to $(node -p \"require('./package.json').version.trim()\")"
           # Push branch commits + the annotated release tag
           git push --follow-tags
