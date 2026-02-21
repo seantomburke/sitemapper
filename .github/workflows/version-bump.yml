@@ -13,6 +13,8 @@ jobs:
   bump-release-publish:
     runs-on: ubuntu-latest
     if: github.actor != 'github-actions[bot]'
+    outputs:
+      version: ${{ steps.release.outputs.version }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -27,11 +29,13 @@ jobs:
       - run: npm ci
       - run: npm test
       - name: Tag, publish, and bump version
+        id: release
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
           CURRENT_VERSION=$(node -p "require('./package.json').version.trim()")
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
           # Create tag locally (not yet pushed)
           if ! git rev-parse --verify "refs/tags/$CURRENT_VERSION" > /dev/null 2>&1; then
@@ -58,3 +62,32 @@ jobs:
               --title "Release $CURRENT_VERSION" \
               --notes "Releasing version $CURRENT_VERSION to NPM"
           fi
+
+  test-published-npm:
+    needs: bump-release-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test published CLI with npx
+        env:
+          VERSION: ${{ needs.bump-release-publish.outputs.version }}
+        run: |
+          MAX_RETRIES=5
+          RETRY_DELAY=10
+
+          for ((i=1; i<=MAX_RETRIES; i++)); do
+            echo "Attempt $i of $MAX_RETRIES to run npx sitemapper@$VERSION..."
+
+            if npx sitemapper@$VERSION https://wp.seantburke.com/sitemap.xml; then
+              echo "Successfully executed npx sitemapper!"
+              exit 0
+            else
+              echo "Attempt $i failed. Package might not be available yet."
+              if [ $i -lt $MAX_RETRIES ]; then
+                echo "Waiting $RETRY_DELAY seconds before next attempt..."
+                sleep $RETRY_DELAY
+              else
+                echo "All attempts failed after $(($MAX_RETRIES * $RETRY_DELAY)) seconds."
+                exit 1
+              fi
+            fi
+          done
