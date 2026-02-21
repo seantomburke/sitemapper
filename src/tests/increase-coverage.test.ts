@@ -257,8 +257,6 @@ describe('Sitemapper Increased Coverage Tests', function () {
       // Mock parse to simulate the full flow including timeout handling
       const originalParse = testMapper.parse;
       testMapper.parse = async function (url: string) {
-        const got = (await import('got')).default;
-
         // Set up the timeout table entry that parse would create
         this.timeoutTable = this.timeoutTable || {};
         this.timeoutTable[url] = setTimeout(() => {}, this.timeout);
