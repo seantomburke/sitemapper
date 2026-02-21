@@ -17,6 +17,8 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -36,7 +38,9 @@ jobs:
           fi
 
           # Publish to NPM BEFORE bumping (so package.json version is correct)
-          npm publish --provenance
+          if ! npm view "sitemapper@$CURRENT_VERSION" version > /dev/null 2>&1; then
+            npm publish --provenance
+          fi
 
           # Bump for next development cycle
           npm version patch --no-git-tag-version
