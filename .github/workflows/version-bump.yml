@@ -9,15 +9,20 @@ on:
       - 'package.json'
       - 'package-lock.json'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 20
+      - name: Use Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
       - name: bump version
         id: bump_version
         run: |
@@ -33,7 +38,12 @@ jobs:
           fi
           # Bump package.json for the next development cycle (no auto-tagging by npm)
           npm version patch --no-git-tag-version
+          NEW_VERSION=$(node -p "require('./package.json').version.trim()")
           git add package.json package-lock.json
-          git commit -m "chore: bump version to $(node -p \"require('./package.json').version.trim()\")"
+          git commit -m "chore: bump version to $NEW_VERSION"
           # Push branch commits + the annotated release tag
           git push --follow-tags
+          # Create a GitHub Release for the tagged version (guarded for idempotency on reruns)
+          if ! gh release view "$CURRENT_VERSION" > /dev/null 2>&1; then
+            gh release create "$CURRENT_VERSION" --title "Release $CURRENT_VERSION" --notes "Releasing version $CURRENT_VERSION to NPM"
+          fi
