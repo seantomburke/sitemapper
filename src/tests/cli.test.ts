@@ -8,7 +8,7 @@ describe('CLI: sitemapper', function (this: Mocha.Suite) {
   it('should print URLs from the sitemap', function (done: Mocha.Done) {
     // Use a relative path from current working directory instead of __dirname
     const cliPath: string = path.resolve(process.cwd(), 'bin/sitemapper.js');
-    const sitemapUrl: string = 'https://wp.seantburke.com/sitemap.xml';
+    const sitemapUrl: string = 'https://www.gosearch.ai/sitemap.xml';
 
     // @ts-ignore - TypeScript has trouble with Node.js execFile overloads
     execFile('node', [cliPath, sitemapUrl], (error, stdout, stderr) => {

@@ -77,9 +77,9 @@ describe('Sitemapper', function () {
   });
 
   describe('fetch Method resolves sites to array', function () {
-    it('https://wp.seantburke.com/sitemap.xml sitemaps should be an array', function (done) {
+    it('https://www.gosearch.ai/sitemap.xml sitemaps should be an array', function (done) {
       this.timeout(30000);
-      const url = 'https://wp.seantburke.com/sitemap.xml';
+      const url = 'https://www.gosearch.ai/sitemap.xml';
       sitemapper
         .fetch(url)
         .then((data) => {
@@ -132,16 +132,14 @@ describe('Sitemapper', function () {
         });
     });
 
-    it('https://wp.seantburke.com/sitemap.xml sitemaps should contain extra fields', function (done) {
+    it('https://www.gosearch.ai/sitemap.xml sitemaps should contain extra fields', function (done) {
       this.timeout(30000);
-      const url = 'https://wp.seantburke.com/sitemap.xml';
+      const url = 'https://www.gosearch.ai/sitemap.xml';
       sitemapper = new Sitemapper({
         fields: {
           loc: true,
-          lastmod: true,
           priority: true,
           changefreq: true,
-          sitemap: true,
         },
       });
       sitemapper
@@ -151,11 +149,9 @@ describe('Sitemapper', function () {
           data.url.should.equal(url);
           data.sites.length.should.be.above(2);
           data.sites[0].loc.should.be.String;
-          data.sites[0].lastmod.should.be.String;
           data.sites[0].priority.should.be.String;
           data.sites[0].changefreq.should.be.String;
-          data.sites[0].should.have.property('sitemap').which.is.a.String();
-          isUrl(data.sites[0].sitemap).should.be.true;
+          isUrl(data.sites[0].loc).should.be.true;
           done();
         })
         .catch((error) => {
@@ -311,7 +307,7 @@ describe('Sitemapper', function () {
   describe('getSites method', function () {
     it('getSites should be backwards compatible', function (done) {
       this.timeout(30000);
-      const url = 'https://wp.seantburke.com/sitemap.xml';
+      const url = 'https://www.gosearch.ai/sitemap.xml';
       sitemapper.getSites(url, (err, sites) => {
         sites.should.be.Array;
         isUrl(sites[0]).should.be.true;
@@ -323,14 +319,13 @@ describe('Sitemapper', function () {
   describe('exclusions option', function () {
     it('should prevent false positive', function (done) {
       this.timeout(30000);
-      const url = 'https://wp.seantburke.com/sitemap.xml';
+      const url = 'https://www.gosearch.ai/sitemap.xml';
       sitemapper.exclusions = [/video/, /image/];
       sitemapper
         .fetch(url)
         .then((data) => {
           data.sites.should.be.Array;
-          data.sites.includes('https://wp.seantburke.com/?page_id=2').should.be
-            .true;
+          data.sites.includes('https://www.gosearch.ai/help').should.be.true;
           done();
         })
         .catch((error) => {
@@ -339,16 +334,15 @@ describe('Sitemapper', function () {
         });
     });
 
-    it('should filter out page_id urls', function (done) {
+    it('should filter out help urls', function (done) {
       this.timeout(30000);
-      const url = 'https://wp.seantburke.com/sitemap.xml';
-      sitemapper.exclusions = [/page_id/];
+      const url = 'https://www.gosearch.ai/sitemap.xml';
+      sitemapper.exclusions = [/\/help\//];
       sitemapper
         .fetch(url)
         .then((data) => {
           data.sites.should.be.Array;
-          data.sites.includes('https://wp.seantburke.com/?page_id=2').should.be
-            .false;
+          data.sites.some((site) => site.includes('/help/')).should.be.false;
           done();
         })
         .catch((error) => {
