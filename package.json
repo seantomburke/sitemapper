@@ -39,9 +39,9 @@
     "test": "npm run build && npm run test:js && npm run test:ts && npm run lint",
     "test:js": "mocha ./lib/tests/*.js",
     "test:ts": "tsc --project src/tests/tsconfig.typecheck.json",
-    "test:coverage": "NODE_ENV=test nyc npm test",
-    "coverage": "NODE_ENV=test nyc --reporter=lcov --reporter=text-summary npm test",
-    "coverage:report": "NODE_ENV=test nyc report --reporter=clover",
+    "test:coverage": "npm run build && c8 mocha ./lib/tests/*.js",
+    "coverage": "npm run build && c8 --reporter=lcov --reporter=text-summary mocha ./lib/tests/*.js",
+    "coverage:report": "c8 report --reporter=clover",
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:spell",
     "lint:eslint": "eslint src --config eslint.config.js",
     "lint:eslint:fix": "eslint src --config eslint.config.js --fix",
@@ -71,7 +71,6 @@
     "@babel/preset-env": "^7.12.7",
     "@babel/runtime": "^7.12.5",
     "@eslint/js": "^9.26.0",
-    "@istanbuljs/nyc-config-babel": "^3.0.0",
     "@types/async": "^3.2.4",
     "@types/got": "^9.6.11",
     "@types/mocha": "^10.0.10",
@@ -79,7 +78,7 @@
     "@types/xml2js": "^0.4.7",
     "async": "^3.2.0",
     "babel-plugin-add-module-exports": "^1.0.4",
-    "babel-plugin-istanbul": "^6.1.1",
+    "c8": "^10.0.0",
     "babel-preset-minify": "^0.5.1",
     "cspell": "^8.19.4",
     "eslint": "^9.26.0",
@@ -89,7 +88,6 @@
     "globals": "^16.1.0",
     "hpagent": "^1.2.0",
     "mocha": "^11.2.2",
-    "nyc": "^15.1.0",
     "prettier": "^3.8.1",
     "should": "^13.2.3",
     "ts-node": "^10.9.2",
@@ -103,6 +101,11 @@
   },
   "bin": {
     "sitemapper": "./bin/sitemapper.js"
+  },
+  "overrides": {
+    "glob": "^11.1.0",
+    "minimatch": "^10.2.2",
+    "diff": "^8.0.3"
   },
   "type": "module"
 }
