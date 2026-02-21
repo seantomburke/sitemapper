@@ -96,6 +96,24 @@ GitHub Actions workflows enforce:
 
 When tests fail due to external sitemaps being unavailable, retry the workflow.
 
+### Before Pushing
+
+Always run the full test suite before pushing:
+
+```bash
+npm test
+```
+
+This runs build, unit tests, TypeScript type checking, ESLint, Prettier, and spell check.
+
+### Formatting and Spell Check
+
+After making any code or documentation changes:
+
+1. Run `npm run lint:prettier -- --write` to fix formatting (automated via Claude Code hook)
+2. Run `npm run lint:spell` to check for unknown words
+3. Add legitimate technical terms to `cspell.json` under `words` rather than rewording
+
 ### GitHub Actions Idempotency
 
 All workflows must be safe to rerun at any point. Guard every side-effectful step:
