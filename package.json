@@ -103,7 +103,7 @@
   },
   "overrides": {
     "glob": "^11.1.0",
-    "minimatch": "^10.2.2",
+    "minimatch": "^10.2.5",
     "diff": "^8.0.3"
   },
   "type": "module"
