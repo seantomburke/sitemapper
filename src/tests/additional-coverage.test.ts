@@ -617,6 +617,92 @@ describe('Sitemapper Additional Coverage Tests', function () {
       // Restore original method
       sitemapper.parse = originalParse;
     });
+
+    it('should handle circular references', async function () {
+      // Create a sitemapper with debug enabled
+      const debugSitemapper = new Sitemapper({
+        debug: true,
+      });
+
+      // Mock console.warn to capture circular reference warnings
+      const originalConsoleWarn = console.warn;
+      let circularWarningLogged = false;
+      console.warn = (message) => {
+        if (message && message.includes('Circular reference detected')) {
+          circularWarningLogged = true;
+        }
+      };
+
+      // Mock the parse method to simulate a sitemapindex that references itself
+      const originalParse = debugSitemapper.parse;
+      let parseCallCount = 0;
+      debugSitemapper.parse = async (url) => {
+        parseCallCount++;
+
+        if (parseCallCount === 1) {
+          // First call - return a sitemapindex that references the same URL
+          return {
+            error: null,
+            data: {
+              sitemapindex: {
+                sitemap: [
+                  { loc: 'https://example.com/sitemap.xml' }, // Same URL as the original
+                  { loc: 'https://example.com/sitemap2.xml' }, // Different URL
+                ],
+              },
+            },
+          };
+        } else if (parseCallCount === 2) {
+          // Second call - return a urlset for the different sitemap
+          return {
+            error: null,
+            data: {
+              urlset: {
+                url: [
+                  { loc: 'https://example.com/page1' },
+                  { loc: 'https://example.com/page2' },
+                ],
+              },
+            },
+          };
+        } else {
+          // Any subsequent calls should not happen due to circular reference detection
+          return {
+            error: null,
+            data: {
+              urlset: {
+                url: [{ loc: 'https://example.com/should-not-appear' }],
+              },
+            },
+          };
+        }
+      };
+
+      try {
+        const result = await debugSitemapper.crawl('https://example.com/sitemap.xml');
+
+        // Verify that circular reference warning was logged
+        circularWarningLogged.should.be.true();
+
+        // Verify that the result contains sites from the non-circular sitemap
+        result.should.have.property('sites').which.is.an.Array();
+        result.sites.length.should.equal(2);
+        result.sites.should.containEql('https://example.com/page1');
+        result.sites.should.containEql('https://example.com/page2');
+
+        // Verify that the circular reference URL was not processed again
+        result.sites.should.not.containEql('https://example.com/should-not-appear');
+
+        // Verify that no errors occurred
+        result.should.have.property('errors').which.is.an.Array();
+        result.errors.length.should.equal(0);
+
+      } finally {
+        // Restore original methods
+        console.warn = originalConsoleWarn;
+        debugSitemapper.parse = originalParse;
+      }
+    });
   });
 
   describe('Parse method branches', function () {
