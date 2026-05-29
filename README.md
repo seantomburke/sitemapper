@@ -145,6 +145,31 @@ sitemapper
   .catch((error) => console.error(error));
 ```
 
+### Example with globalTimeout
+
+```javascript
+import Sitemapper from 'sitemapper';
+
+const sitemap = new Sitemapper({
+  url: 'https://example.com/sitemap.xml',
+  globalTimeout: 10 * 60 * 1000, // Stop entire crawl after 10 minutes
+  timeout: 5000, // Per-request timeout
+  concurrency: 10,
+});
+
+sitemap
+  .fetch()
+  .then(({ sites, errors }) => {
+    console.log('Sites:', sites);
+    console.log('Errors:', errors);
+  })
+  .catch((err) => {
+    console.error('Crawl aborted:', err);
+  });
+```
+
+The globalTimeout feature ensures that the entire sitemap crawling process will automatically stop after the specified time. This prevents the crawler from running indefinitely in case of irregular or deeply nested sitemap structures, helping you get partial results without risking hangs or infinite loops.
+
 ## ⚙️ Configuration Options
 
 Sitemapper can be customized with the following options:
@@ -170,6 +195,12 @@ Sitemapper can be customized with the following options:
       <td>Number</td>
       <td><code>15000</code></td>
       <td>Maximum timeout in milliseconds for each request</td>
+    </tr>
+    <tr>
+      <td><code>globalTimeout</code></td>
+      <td>Number</td>
+      <td><code>undefined</code></td>
+      <td>Optional timout parameter in milliseconds which denotes the timeout of the entire process. By default it will be undefined , if no value is specified.</td>
     </tr>
     <tr>
       <td><code>concurrency</code></td>
