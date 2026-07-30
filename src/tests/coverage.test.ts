@@ -1,6 +1,7 @@
 import 'async';
 import 'assert';
 import 'should';
+import { HttpProxyAgent, HttpsProxyAgent } from 'hpagent';
 
 import Sitemapper from '../../lib/assets/sitemapper.js';
 import { SitemapperResponse } from '../../sitemapper';
@@ -10,6 +11,38 @@ describe('Sitemapper Coverage Tests', function () {
 
   beforeEach(() => {
     sitemapper = new Sitemapper();
+  });
+
+  describe('proxyAgent normalization', function () {
+    it('should default to an empty object when omitted', () => {
+      new Sitemapper({}).proxyAgent.should.deepEqual({});
+    });
+
+    it("should wrap a bare HttpsProxyAgent under the 'https' key", () => {
+      const agent = new HttpsProxyAgent({ proxy: 'http://localhost:8080' });
+      const { proxyAgent } = new Sitemapper({ proxyAgent: agent });
+
+      proxyAgent.should.have.property('https', agent);
+      proxyAgent.should.not.have.property('http');
+    });
+
+    it("should wrap a bare HttpProxyAgent under the 'http' key", () => {
+      const agent = new HttpProxyAgent({ proxy: 'http://localhost:8080' });
+      const { proxyAgent } = new Sitemapper({ proxyAgent: agent });
+
+      proxyAgent.should.have.property('http', agent);
+      proxyAgent.should.not.have.property('https');
+    });
+
+    it("should pass through got's { http, https } form untouched", () => {
+      const agents = {
+        http: new HttpProxyAgent({ proxy: 'http://localhost:8080' }),
+        https: new HttpsProxyAgent({ proxy: 'http://localhost:8080' }),
+      };
+      const { proxyAgent } = new Sitemapper({ proxyAgent: agents });
+
+      proxyAgent.should.equal(agents);
+    });
   });
 
   describe('Instance properties', function () {

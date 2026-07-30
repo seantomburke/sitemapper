@@ -47,7 +47,14 @@ export interface SitemapperOptions {
   timeout?: number;
   url?: string;
   fields?: SitemapperFields;
-  proxyAgent?: HttpProxyAgent | HttpsProxyAgent;
+  proxyAgent?:
+    | HttpProxyAgent
+    | HttpsProxyAgent
+    | {
+        http?: HttpProxyAgent;
+        https?: HttpsProxyAgent;
+        http2?: unknown;
+      };
   exclusions?: RegExp[];
 }
 
