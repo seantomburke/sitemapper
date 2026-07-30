@@ -126,9 +126,11 @@ const sitemapper = new Sitemapper({
   concurrency: 5,
   retries: 2,
   debug: true,
-  proxyAgent: new HttpsProxyAgent({
-    proxy: 'http://localhost:8080',
-  }),
+  proxyAgent: {
+    https: new HttpsProxyAgent({
+      proxy: 'http://localhost:8080',
+    }),
+  },
   requestHeaders: {
     'User-Agent': 'Mozilla/5.0 (compatible; SitemapperBot/1.0)',
   },
@@ -209,9 +211,9 @@ Sitemapper can be customized with the following options:
     </tr>
     <tr>
       <td><code>proxyAgent</code></td>
-      <td>HttpProxyAgent | HttpsProxyAgent</td>
+      <td>{ http?, https? } | HttpProxyAgent | HttpsProxyAgent</td>
       <td><code>undefined</code></td>
-      <td>Instance of <code>hpagent</code> for proxy support</td>
+      <td>Proxy support via <code>hpagent</code>. Prefer <code>got</code>'s <code>{ http, https }</code> form; a bare agent instance is wrapped by protocol for you</td>
     </tr>
     <tr>
       <td><code>exclusions</code></td>

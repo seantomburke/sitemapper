@@ -28,14 +28,25 @@ async function testTypes() {
       retries: 0,
       debug: true,
       rejectUnauthorized: false,
-      proxyAgent: new HttpsProxyAgent({
-        proxy: 'http://localhost:8080',
-      }),
+      proxyAgent: {
+        https: new HttpsProxyAgent({
+          proxy: 'http://localhost:8080',
+        }),
+      },
       exclusions: [/test/],
     };
     const sitemapperWithOptions = new Sitemapper(options);
     console.log(
       `Created sitemapper with options for ${sitemapperWithOptions.url}`
+    );
+
+    // A bare agent instance is still accepted and normalized at runtime
+    const sitemapperWithBareAgent = new Sitemapper({
+      url: 'https://test.com/sitemap.xml',
+      proxyAgent: new HttpsProxyAgent({ proxy: 'http://localhost:8080' }),
+    });
+    console.log(
+      `Created sitemapper with bare agent for ${sitemapperWithBareAgent.url}`
     );
 
     // Check fetch method and return type

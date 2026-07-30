@@ -26,7 +26,7 @@ export default class Sitemapper {
    * @params {integer} [options.retries] - The maximum number of retries to attempt when crawling fails (e.g. 1 for 1 retry, 2 attempts in total)
    * @params {boolean} [options.rejectUnauthorized] - If true (default), it will throw on invalid certificates, such as expired or self-signed ones.
    * @params {lastmod} [options.lastmod] - the minimum lastmod value for urls
-   * @params {hpagent.HttpProxyAgent|hpagent.HttpsProxyAgent} [options.proxyAgent] - instance of npm "hpagent" HttpProxyAgent or HttpsProxyAgent to be passed to npm "got"
+   * @params {hpagent.HttpProxyAgent|hpagent.HttpsProxyAgent|Object} [options.proxyAgent] - a bare npm "hpagent" HttpProxyAgent/HttpsProxyAgent, or an object of the form `{ http, https }` as expected by npm "got". A bare agent is wrapped under the key matching its protocol.
    * @params {Array<RegExp>} [options.exclusions] - Array of regex patterns to exclude URLs
    *
    * @example let sitemap = new Sitemapper({
@@ -49,8 +49,44 @@ export default class Sitemapper {
     this.rejectUnauthorized =
       settings.rejectUnauthorized === false ? false : true;
     this.fields = settings.fields || false;
-    this.proxyAgent = settings.proxyAgent || {};
+    this.proxyAgent = this.normalizeProxyAgent(settings.proxyAgent);
     this.exclusions = settings.exclusions || [];
+  }
+
+  /**
+   * Normalizes the proxyAgent option into the `{ http, https }` shape that
+   * "got" expects for its `agent` option.
+   *
+   * "got" requires an object keyed by protocol and throws
+   * `Unexpected agent option: <key>` if it is handed a bare agent instance, so
+   * a lone hpagent agent is wrapped under the key matching its protocol.
+   *
+   * @private
+   * @param {Object} [proxyAgent] - a bare hpagent agent or an `{ http, https }` object
+   * @returns {Object} an object safe to pass to got's `agent` option
+   */
+  normalizeProxyAgent(proxyAgent) {
+    if (!proxyAgent) {
+      return {};
+    }
+
+    // Already in got's `{ http, https, http2 }` form.
+    if (proxyAgent.http || proxyAgent.https || proxyAgent.http2) {
+      return proxyAgent;
+    }
+
+    // A bare agent instance: pick the key from the protocol it connects with.
+    // hpagent is only a devDependency, so detect the protocol by inspecting the
+    // agent rather than with `instanceof`, which would require importing it.
+    if (typeof proxyAgent.createConnection === 'function') {
+      const isHttps =
+        proxyAgent.defaultPort === 443 ||
+        proxyAgent.protocol === 'https:' ||
+        proxyAgent.constructor?.name === 'HttpsProxyAgent';
+      return isHttps ? { https: proxyAgent } : { http: proxyAgent };
+    }
+
+    return proxyAgent;
   }
 
   /**
