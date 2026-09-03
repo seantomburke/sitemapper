@@ -43,6 +43,41 @@ describe('Sitemapper Coverage Tests', function () {
 
       proxyAgent.should.equal(agents);
     });
+
+    it("should pass through got's http2-only form untouched", () => {
+      const agents = { http2: {} };
+      const { proxyAgent } = new Sitemapper({ proxyAgent: agents });
+
+      proxyAgent.should.equal(agents);
+    });
+
+    it('should identify an HTTPS agent by its protocol', () => {
+      const agent = {
+        createConnection() {},
+        defaultPort: 80,
+        protocol: 'https:',
+      };
+      const { proxyAgent } = new Sitemapper({ proxyAgent: agent as any });
+
+      proxyAgent.should.deepEqual({ https: agent });
+    });
+
+    it('should identify an HTTPS agent by its constructor name', () => {
+      const agent = {
+        createConnection() {},
+        constructor: { name: 'HttpsProxyAgent' },
+      };
+      const { proxyAgent } = new Sitemapper({ proxyAgent: agent as any });
+
+      proxyAgent.should.deepEqual({ https: agent });
+    });
+
+    it('should preserve an explicitly supplied empty agent map', () => {
+      const agents = {};
+      const { proxyAgent } = new Sitemapper({ proxyAgent: agents });
+
+      proxyAgent.should.equal(agents);
+    });
   });
 
   describe('Instance properties', function () {
